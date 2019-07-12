@@ -18,7 +18,7 @@ class App extends React.Component {
           <div className="spacing" />
           <p>
             Please visit us from a desktop, this visualization is not
-            responsive...
+            responsive....
           </p>
         </div>
         <Legend />
