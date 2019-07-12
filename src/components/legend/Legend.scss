@@ -1,0 +1,27 @@
+@import "../../globals";
+
+.legend {
+  position: absolute;
+  z-index: 10;
+  height: 30vh;
+  width: 200px;
+  background-color: transparent;
+  padding: 20px;
+  top: 100px;
+  &.hidden {
+    transform: translateX(-100%);
+  }
+  ul {
+    list-style-type: none;
+    li {
+      margin-bottom: 10px;
+    }
+  }
+
+  a {
+    font-size: 0.875em;
+    color: rgb(106, 102, 111) !important;
+    font-weight: 700;
+    text-decoration: none;
+  }
+}

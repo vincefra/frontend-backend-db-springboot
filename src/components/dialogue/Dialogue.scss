@@ -1,0 +1,60 @@
+@import "../../globals";
+
+.dialogue {
+  position: absolute;
+  z-index: 10;
+  width: 20vw;
+  background-color: $color-light-gray;
+  padding: 20px;
+  right: 2.5%;
+  top: 10%;
+  box-shadow: $box-shadow;
+  &.hidden {
+    transform: translateX(150%);
+  }
+  .identification {
+    display: flex;
+    align-items: center;
+    border-radius: $border-radius;
+    img {
+      border-radius: $img-round;
+      display: block;
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      background-color: $color-gray;
+      margin-right: 25px;
+    }
+    h2 {
+      font-size: 1.375em;
+    }
+    p {
+      font-size: 1em;
+      span {
+        font-size: 15px;
+        opacity: 0.8;
+        display: flex;
+        align-items: center;
+        i {
+          font-size: 6px;
+          margin-right: 5px;
+        }
+      }
+      margin-bottom: 5px;
+      &:last-child {
+        margin-bottom: 0px;
+      }
+    }
+    margin-bottom: 30px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
+  }
+
+  .information {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+}
