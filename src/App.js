@@ -2,8 +2,13 @@ import React from 'react';
 import VizCircle from './components/vizCircle/VizCircle';
 import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
+import {load} from './components/general';
 
 class App extends React.Component {
+  componentDidMount() {
+    load();
+  }
+
   state = {};
 
   render() {
