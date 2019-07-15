@@ -51,7 +51,7 @@ class Employee extends React.Component {
                   <image
                     height={this.props.radius * 2}
                     width={this.props.radius * 2}
-                    xlinkHref="http://www.find-out.se/wp-content/uploads/2018/04/F_Brady_Ledger_FINDOUT_19_2_2284_sRGB_600px.jpg"
+                    xlinkHref={this.props.img}
                   />
                 </pattern>
               </defs>

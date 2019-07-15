@@ -2,25 +2,15 @@ import React from "react";
 import * as d3 from "d3";
 
 let radius = 0;
-const sliceHeight = 80;
-const projectHeight = sliceHeight / 2;
+const sliceHeight = 50;
+const projectHeight = 10;
+const projectRadius = sliceHeight / 2;
+const vizHeight = 0.67;
+const imageSize = 50;
+const imageDistance = 10;
+
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
-const colors = [
-  "#98abc5",
-  "#8a89a6",
-  "#7b6888",
-  "#6b486b",
-  "#a05d56",
-  "#d0743c",
-  "#ff8c00",
-  "#8a89a6",
-  "#8a89a6",
-  "#7b6888",
-  "#6b486b",
-  "#a05d56",
-  "#d0743c"
-];
 
 class VizClient extends React.Component {
   constructor(props) {
@@ -33,7 +23,7 @@ class VizClient extends React.Component {
 
   componentDidMount() {
     const height = this.props.size[1];
-    radius = height - height * 0.6;
+    radius = height - height * vizHeight;
     this.calculatePieClient(this.props);
   }
 
@@ -50,25 +40,22 @@ class VizClient extends React.Component {
       .cornerRadius(4); //cornerRadius
 
     //arc generator for the Text labels
-    const labelArcGenerator = d3
+    const LogoArcGenerator = d3
       .arc()
-      .outerRadius(radius + 50)
-      .innerRadius(radius + 50);
+      .outerRadius(radius + imageDistance)
+      .innerRadius(radius + imageDistance);
 
     //PIE object to calculate the arc distribution
     const pie = d3
       .pie()
       .sort(null)
       .value(function(d) {
-        return d.population;
+        return d.hours;
       });
 
     //arc array with the position and information in the pie
     const arcs = pie(props.clients);
-    //Add to the information the fill of each one
-    arcs.forEach((d, i) => {
-      d.fill = colors[i];
-    });
+
     //create an object SLICES in order to update the state
     //contains all the information one slice needs in order to be rendered
     let projectSlice = [];
@@ -80,10 +67,21 @@ class VizClient extends React.Component {
         outerRadius: radius
       });
 
-      const centroid = labelArcGenerator.centroid(d);
-      const label = {
-        centroid: centroid,
-        text: d.data.age
+      const centroid = LogoArcGenerator.centroid(d);
+      //calculate the anchor point of the image depending on its position on the center
+      let anchor = centroid;
+      if (anchor[0] > 0 && anchor[1] < 0) {
+        anchor = [centroid[0], centroid[1] - imageSize];
+      } else if (anchor[0] < 0 && anchor[1] < 0) {
+        anchor = [centroid[0] - imageSize, centroid[1] - imageSize];
+      } else if (anchor[0] < 0 && anchor[1] > 0) {
+        anchor = [centroid[0] - imageSize, centroid[1]];
+      } else if (anchor[0] > 0 && anchor[1] > 0) {
+        anchor = [centroid[0], centroid[1]];
+      }
+
+      const logo = {
+        centroid: anchor
       };
 
       const projectSlices = this.calculatePieProject(
@@ -93,19 +91,11 @@ class VizClient extends React.Component {
       );
       projectSlice = projectSlice.concat(projectSlices);
 
-      // d3.xml(
-      //   "d3.svg",
-      //   "https://upload.wikimedia.org/wikipedia/commons/e/e9/Ericsson_logo.svg",
-      //   function(xml) {
-      //     const importedNode = document.importNode(xml.documentElement, true);
-      //     console.log(importedNode);
-      //   }
-      // );
-
       return {
         path,
-        fill: colors[i],
-        label
+        fill: d.data.color,
+        logo,
+        img: d.data.logo
       };
     });
     this.setState({ clientSlice: slices, projectSlice: projectSlice });
@@ -142,14 +132,13 @@ class VizClient extends React.Component {
       const path = arcGenerator({
         startAngle: angleScale(d.startAngle),
         endAngle: angleScale(d.endAngle),
-        innerRadius: radius - projectHeight,
-        outerRadius: radius - projectHeight + 10,
+        innerRadius: radius - projectRadius - projectHeight / 2,
+        outerRadius: radius - projectRadius + projectHeight / 2,
         fill: d.fill
       });
 
       return {
-        path,
-        fill: "#FFFFFF"
+        path
       };
     });
     return slices;
@@ -170,19 +159,20 @@ class VizClient extends React.Component {
         </g>
         <g transform={`translate(${width / 2}, ${height / 2})`}>
           {this.state.projectSlice.map((d, i) => (
-            <path key={i} d={d.path} fill={d.fill} />
+            <path key={i} d={d.path} fill="#FFFFFF" />
           ))}
         </g>
         <g transform={`translate(${width / 2}, ${height / 2})`}>
           {this.state.clientSlice.map((d, i) => (
-            <text
+            <image
               key={i}
-              x={d.label.centroid[0]}
-              y={d.label.centroid[1]}
-              className="small"
-            >
-              {/* {d.label.text} */}
-            </text>
+              width={imageSize}
+              height={imageSize}
+              x={d.logo.centroid[0]}
+              y={d.logo.centroid[1]}
+              xlinkHref={d.img}
+              textAnchor={d.anchor}
+            />
           ))}
         </g>
       </g>

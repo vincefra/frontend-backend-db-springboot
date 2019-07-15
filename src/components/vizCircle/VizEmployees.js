@@ -2,6 +2,8 @@ import React from "react";
 import Employee from "./Employee";
 import * as d3 from "d3";
 
+const vizHeight = 0.7;
+
 class VizEmployees extends React.Component {
   constructor(props) {
     super(props);
@@ -21,7 +23,7 @@ class VizEmployees extends React.Component {
   setLayout() {
     const root = d3.hierarchy(this.props.employees);
     const height = this.props.size[1];
-    const width = height - height * 0.6;
+    const width = height - height * vizHeight;
 
     const packLayout = d3.pack();
     packLayout.size([width, width]);
@@ -46,7 +48,8 @@ class VizEmployees extends React.Component {
     //Get the size and diameter of the viz
     const width = this.props.size[0];
     const height = this.props.size[1];
-    const diameter = height - height * 0.8;
+    const diameter = height - height * vizHeight;
+
     //Create the Employee object with the photo
     const employeeLayout =
       this.state.layout !== undefined ? (
@@ -71,8 +74,8 @@ class VizEmployees extends React.Component {
       // MOVE the GRAPHIC OBJECT TO THE CENTER
       <g
         ref="employees"
-        transform={`translate(${width / 2 - diameter}, ${height / 2 -
-          diameter})`}
+        transform={`translate(${width / 2 - diameter / 2}, ${height / 2 -
+          diameter / 2})`}
       >
         {/* BACKGROUND CIRCLE */}
         <g ref="graph">

@@ -427,8 +427,10 @@ const nodes = {
 
 const data = [
   {
-    age: "Ericcson",
-    population: 2704659,
+    name: "H&M",
+    hours: 2704659,
+    color: "#e00026",
+    logo: "/img/logos/h&m.png",
     projects: [
       {
         name: "name",
@@ -445,8 +447,10 @@ const data = [
     ]
   },
   {
-    age: "FindOut",
-    population: 4499890,
+    name: "Ericcson",
+    hours: 4499890,
+    color: "#002661",
+    logo: "/img/logos/ericsson.png",
     projects: [
       {
         name: "name",
@@ -463,8 +467,10 @@ const data = [
     ]
   },
   {
-    age: "H&M",
-    population: 2159981,
+    name: "Atlas",
+    hours: 2159981,
+    color: "#0098be",
+    logo: "/img/logos/Atlas_Copco.png",
     projects: [
       {
         name: "name",
@@ -481,8 +487,10 @@ const data = [
     ]
   },
   {
-    age: "Ikea",
-    population: 3853788,
+    name: "Thales",
+    hours: 3853788,
+    color: "#242a75",
+    logo: "/img/logos/maquet.png",
     projects: [
       {
         name: "name",
@@ -499,8 +507,10 @@ const data = [
     ]
   },
   {
-    age: "Nordea",
-    population: 14106543,
+    name: "Maquet",
+    hours: 14106543,
+    color: "#005aaa",
+    logo: "/img/logos/maquet.png",
     projects: [
       {
         name: "name",
@@ -517,8 +527,10 @@ const data = [
     ]
   },
   {
-    age: "Bombardier RCS",
-    population: 8819342,
+    name: "Tele2",
+    hours: 8819342,
+    color: "#141414",
+    logo: "/img/logos/tele2.png",
     projects: [
       {
         name: "name",
@@ -535,8 +547,10 @@ const data = [
     ]
   },
   {
-    age: "Saab",
-    population: 4499890,
+    name: "Thales",
+    hours: 4499890,
+    color: "#00009f",
+    logo: "/img/logos/thales.png",
     projects: [
       {
         name: "name",
@@ -553,8 +567,10 @@ const data = [
     ]
   },
   {
-    age: "Maquet",
-    population: 6122463,
+    name: "Saab",
+    hours: 6122463,
+    color: "#a20031",
+    logo: "/img/logos/saab.png",
     projects: [
       {
         name: "name",
