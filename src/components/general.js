@@ -1,5 +1,5 @@
 import request from 'request';
-import config from '../config.json';
+import config from 'config.json';
 
 export function load() {
   const requestURL = 'https://api.dropboxapi.com/2/files/get_metadata';
