@@ -1,7 +1,7 @@
-import React from "react";
-import VizClient from "./VizVizClient";
-import VizEmployees from "./VizEmployees";
-import Skills from "./Skills";
+import React from 'react';
+import VizClient from './VizVizClient';
+import VizEmployees from './VizEmployees';
+import Skills from './Skills';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -26,7 +26,7 @@ class VizCircle extends React.Component {
 
   render() {
     return (
-      <svg className="circle-visualization" width={width} height={height}>
+      <svg className='circle-visualization' width={width} height={height}>
         <VizClient clients={this.state.clients} size={this.state.size} />
         <VizEmployees employees={this.state.employees} size={this.state.size} />
         <Skills skills={skills} size={this.state.size} />
@@ -36,536 +36,536 @@ class VizCircle extends React.Component {
 }
 
 const skills = {
-  name: "Front-End",
+  name: 'Front-End',
   children: [
     {
       id: 0,
-      name: "Java"
+      name: 'Java'
     },
     {
       id: 1,
-      name: "Angular"
+      name: 'Angular'
     },
     {
       id: 3,
-      name: "jQuery"
+      name: 'jQuery'
     },
     {
       id: 4,
-      name: "Underscore"
+      name: 'Underscore'
     },
     {
       id: 5,
-      name: "Hibernate"
+      name: 'Hibernate'
     },
     {
       id: 6,
-      name: "MySQL"
+      name: 'MySQL'
     },
     {
       id: 7,
-      name: "Python"
+      name: 'Python'
     },
     {
       id: 8,
-      name: "REST"
+      name: 'REST'
     },
     {
       id: 9,
-      name: "Git"
+      name: 'Git'
     },
     {
       id: 10,
-      name: "test automation"
+      name: 'test automation'
     },
     {
       id: 11,
-      name: "Jenkins"
+      name: 'Jenkins'
     },
     {
       id: 12,
-      name: "GORM"
+      name: 'GORM'
     },
     {
       id: 13,
-      name: "MongoDB"
+      name: 'MongoDB'
     },
     {
       id: 14,
-      name: "Spock"
+      name: 'Spock'
     },
     {
       id: 15,
-      name: "pivotaltracker"
+      name: 'pivotaltracker'
     },
     {
       id: 16,
-      name: "Subversion"
+      name: 'Subversion'
     },
     {
       id: 17,
-      name: "IntelliJ IDEA"
+      name: 'IntelliJ IDEA'
     },
     {
       id: 18,
-      name: "Slack"
+      name: 'Slack'
     },
     {
       id: 19,
-      name: "MAMP"
+      name: 'MAMP'
     },
     {
       id: 20,
-      name: "Postman"
+      name: 'Postman'
     },
     {
       id: 21,
-      name: "Trello"
+      name: 'Trello'
     },
     {
       id: 22,
-      name: "MySQL"
+      name: 'MySQL'
     },
     {
       id: 23,
-      name: "workbench"
+      name: 'workbench'
     },
     {
       id: 24,
-      name: "Java SE"
+      name: 'Java SE'
     },
     {
       id: 25,
-      name: "Springboot"
+      name: 'Springboot'
     },
     {
       id: 26,
-      name: "JPA (Hibernate)"
+      name: 'JPA (Hibernate)'
     },
     {
       id: 27,
-      name: "Vue.js"
+      name: 'Vue.js'
     },
     {
       id: 28,
-      name: "Vuetify.js"
+      name: 'Vuetify.js'
     },
     {
       id: 29,
-      name: "MySQL"
+      name: 'MySQL'
     },
     {
       id: 30,
-      name: "Vuex"
+      name: 'Vuex'
     },
     {
       id: 31,
-      name: "Travis CI"
+      name: 'Travis CI'
     },
     {
       id: 32,
-      name: "Maven"
+      name: 'Maven'
     },
     {
       id: 33,
-      name: "Bash"
+      name: 'Bash'
     },
     {
       id: 34,
-      name: "Atlassian SDK"
+      name: 'Atlassian SDK'
     },
     {
       id: 12,
-      name: "GORM"
+      name: 'GORM'
     },
     {
       id: 13,
-      name: "MongoDB"
+      name: 'MongoDB'
     },
     {
       id: 14,
-      name: "Spock"
+      name: 'Spock'
     },
     {
       id: 15,
-      name: "pivotaltracker"
+      name: 'pivotaltracker'
     },
     {
       id: 16,
-      name: "Subversion"
+      name: 'Subversion'
     },
     {
       id: 17,
-      name: "IntelliJ IDEA"
+      name: 'IntelliJ IDEA'
     },
     {
       id: 18,
-      name: "Slack"
+      name: 'Slack'
     },
     {
       id: 19,
-      name: "MAMP"
+      name: 'MAMP'
     },
     {
       id: 20,
-      name: "Postman"
+      name: 'Postman'
     },
     {
       id: 21,
-      name: "Trello"
+      name: 'Trello'
     },
     {
       id: 22,
-      name: "MySQL"
+      name: 'MySQL'
     },
     {
       id: 23,
-      name: "workbench"
+      name: 'workbench'
     },
     {
       id: 24,
-      name: "Java SE"
+      name: 'Java SE'
     },
     {
       id: 25,
-      name: "Springboot"
+      name: 'Springboot'
     },
     {
       id: 26,
-      name: "JPA (Hibernate)"
+      name: 'JPA (Hibernate)'
     },
     {
       id: 27,
-      name: "Vue.js"
+      name: 'Vue.js'
     },
     {
       id: 28,
-      name: "Vuetify.js"
+      name: 'Vuetify.js'
     },
     {
       id: 29,
-      name: "MySQL"
+      name: 'MySQL'
     },
     {
       id: 30,
-      name: "Vuex"
+      name: 'Vuex'
     },
     {
       id: 31,
-      name: "Travis CI"
+      name: 'Travis CI'
     },
     {
       id: 32,
-      name: "Maven"
+      name: 'Maven'
     },
     {
       id: 33,
-      name: "Bash"
+      name: 'Bash'
     },
     {
       id: 34,
-      name: "Atlassian SDK"
+      name: 'Atlassian SDK'
     }
   ]
 };
 
 const nodes = {
-  name: "employees",
+  name: 'employees',
   children: [
     {
-      name: "Peter Roos",
+      name: 'Peter Roos',
       id: 0,
-      img: "img/Anki_Andersson.jpg"
+      img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: "Dag Rende",
+      name: 'Dag Rende',
       id: 1,
-      img: "img/Bjorn_Arnelid.jpg"
+      img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: "Fredik Ejhed",
+      name: 'Fredik Ejhed',
       id: 2,
-      img: "img/Christopher_Saarinen_Big.jpg"
+      img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: "Staffan Nystrom",
+      name: 'Staffan Nystrom',
       id: 3,
-      img: "img/cynthia_smith.jpg"
+      img: 'img/cynthia_smith.jpg'
     },
     {
-      name: "Malin Pålsson",
+      name: 'Malin Pålsson',
       id: 4,
-      img: "img/dag.jpg"
+      img: 'img/dag.jpg'
     },
     {
-      name: "Andreas	Arledal",
+      name: 'Andreas	Arledal',
       id: 5,
-      img: "img/David_Kupersmidt.jpg"
+      img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: "Peter Roos",
+      name: 'Peter Roos',
       id: 0,
-      img: "img/Anki_Andersson.jpg"
+      img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: "Dag Rende",
+      name: 'Dag Rende',
       id: 1,
-      img: "img/Bjorn_Arnelid.jpg"
+      img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: "Fredik Ejhed",
+      name: 'Fredik Ejhed',
       id: 2,
-      img: "img/Christopher_Saarinen_Big.jpg"
+      img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: "Staffan Nystrom",
+      name: 'Staffan Nystrom',
       id: 3,
-      img: "img/cynthia_smith.jpg"
+      img: 'img/cynthia_smith.jpg'
     },
     {
-      name: "Malin Pålsson",
+      name: 'Malin Pålsson',
       id: 4,
-      img: "img/dag.jpg"
+      img: 'img/dag.jpg'
     },
     {
-      name: "Andreas	Arledal",
+      name: 'Andreas	Arledal',
       id: 5,
-      img: "img/David_Kupersmidt.jpg"
+      img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: "Peter Roos",
+      name: 'Peter Roos',
       id: 0,
-      img: "img/Anki_Andersson.jpg"
+      img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: "Dag Rende",
+      name: 'Dag Rende',
       id: 1,
-      img: "img/Bjorn_Arnelid.jpg"
+      img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: "Fredik Ejhed",
+      name: 'Fredik Ejhed',
       id: 2,
-      img: "img/Christopher_Saarinen_Big.jpg"
+      img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: "Staffan Nystrom",
+      name: 'Staffan Nystrom',
       id: 3,
-      img: "img/cynthia_smith.jpg"
+      img: 'img/cynthia_smith.jpg'
     },
     {
-      name: "Malin Pålsson",
+      name: 'Malin Pålsson',
       id: 4,
-      img: "img/dag.jpg"
+      img: 'img/dag.jpg'
     },
     {
-      name: "Andreas	Arledal",
+      name: 'Andreas	Arledal',
       id: 5,
-      img: "img/David_Kupersmidt.jpg"
+      img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: "Peter Roos",
+      name: 'Peter Roos',
       id: 0,
-      img: "img/Anki_Andersson.jpg"
+      img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: "Dag Rende",
+      name: 'Dag Rende',
       id: 1,
-      img: "img/Bjorn_Arnelid.jpg"
+      img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: "Fredik Ejhed",
+      name: 'Fredik Ejhed',
       id: 2,
-      img: "img/Christopher_Saarinen_Big.jpg"
+      img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: "Staffan Nystrom",
+      name: 'Staffan Nystrom',
       id: 3,
-      img: "img/cynthia_smith.jpg"
+      img: 'img/cynthia_smith.jpg'
     },
     {
-      name: "Malin Pålsson",
+      name: 'Malin Pålsson',
       id: 4,
-      img: "img/dag.jpg"
+      img: 'img/dag.jpg'
     },
     {
-      name: "Andreas	Arledal",
+      name: 'Andreas	Arledal',
       id: 5,
-      img: "img/David_Kupersmidt.jpg"
+      img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: "Peter Roos",
+      name: 'Peter Roos',
       id: 0,
-      img: "img/Anki_Andersson.jpg"
+      img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: "Dag Rende",
+      name: 'Dag Rende',
       id: 1,
-      img: "img/Bjorn_Arnelid.jpg"
+      img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: "Fredik Ejhed",
+      name: 'Fredik Ejhed',
       id: 2,
-      img: "img/Christopher_Saarinen_Big.jpg"
+      img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: "Staffan Nystrom",
+      name: 'Staffan Nystrom',
       id: 3,
-      img: "img/cynthia_smith.jpg"
+      img: 'img/cynthia_smith.jpg'
     },
     {
-      name: "Malin Pålsson",
+      name: 'Malin Pålsson',
       id: 4,
-      img: "img/dag.jpg"
+      img: 'img/dag.jpg'
     },
     {
-      name: "Andreas	Arledal",
+      name: 'Andreas	Arledal',
       id: 5,
-      img: "img/David_Kupersmidt.jpg"
+      img: 'img/David_Kupersmidt.jpg'
     }
   ]
 };
 
 const data = [
   {
-    age: "Ericcson",
+    age: 'Ericcson',
     population: 2704659,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 10
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 10
       }
     ]
   },
   {
-    age: "FindOut",
+    age: 'FindOut',
     population: 4499890,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 20
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 90
       }
     ]
   },
   {
-    age: "H&M",
+    age: 'H&M',
     population: 2159981,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 100
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 100
       }
     ]
   },
   {
-    age: "Ikea",
+    age: 'Ikea',
     population: 3853788,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 10
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 50
       }
     ]
   },
   {
-    age: "Nordea",
+    age: 'Nordea',
     population: 14106543,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 300
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 140
       }
     ]
   },
   {
-    age: "Bombardier RCS",
+    age: 'Bombardier RCS',
     population: 8819342,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 40
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 200
       }
     ]
   },
   {
-    age: "Saab",
+    age: 'Saab',
     population: 4499890,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 80
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 10
       }
     ]
   },
   {
-    age: "Maquet",
+    age: 'Maquet',
     population: 6122463,
     projects: [
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 100
       },
       {
-        name: "name",
-        dateInit: "01 Jan 2004",
-        dateEnd: "01 Jan 2004",
+        name: 'name',
+        dateInit: '01 Jan 2004',
+        dateEnd: '01 Jan 2004',
         hours: 100
       }
     ]
