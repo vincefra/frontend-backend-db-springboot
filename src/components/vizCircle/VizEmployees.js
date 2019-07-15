@@ -1,6 +1,6 @@
-import React from "react";
-import Employee from "./Employee";
-import * as d3 from "d3";
+import React from 'react';
+import Employee from './Employee';
+import * as d3 from 'd3';
 
 class VizEmployees extends React.Component {
   constructor(props) {
@@ -70,15 +70,15 @@ class VizEmployees extends React.Component {
     return (
       // MOVE the GRAPHIC OBJECT TO THE CENTER
       <g
-        ref="employees"
+        ref='employees'
         transform={`translate(${width / 2 - diameter}, ${height / 2 -
           diameter})`}
       >
         {/* BACKGROUND CIRCLE */}
-        <g ref="graph">
+        <g ref='graph'>
           {/* <circle
             r={diameter}
-            fill="#eceeef"
+            fill='#eceeef'
             transform={`translate(${diameter}, ${diameter})`}
           /> */}
           {/* ALL EMPLOYEES */}

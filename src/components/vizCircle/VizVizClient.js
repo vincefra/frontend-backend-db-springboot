@@ -1,5 +1,5 @@
-import React from "react";
-import * as d3 from "d3";
+import React from 'react';
+import * as d3 from 'd3';
 
 let radius = 0;
 const sliceHeight = 80;
@@ -7,19 +7,19 @@ const projectHeight = sliceHeight / 2;
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
 const colors = [
-  "#98abc5",
-  "#8a89a6",
-  "#7b6888",
-  "#6b486b",
-  "#a05d56",
-  "#d0743c",
-  "#ff8c00",
-  "#8a89a6",
-  "#8a89a6",
-  "#7b6888",
-  "#6b486b",
-  "#a05d56",
-  "#d0743c"
+  '#98abc5',
+  '#8a89a6',
+  '#7b6888',
+  '#6b486b',
+  '#a05d56',
+  '#d0743c',
+  '#ff8c00',
+  '#8a89a6',
+  '#8a89a6',
+  '#7b6888',
+  '#6b486b',
+  '#a05d56',
+  '#d0743c'
 ];
 
 class VizClient extends React.Component {
@@ -94,8 +94,8 @@ class VizClient extends React.Component {
       projectSlice = projectSlice.concat(projectSlices);
 
       // d3.xml(
-      //   "d3.svg",
-      //   "https://upload.wikimedia.org/wikipedia/commons/e/e9/Ericsson_logo.svg",
+      //   'd3.svg',
+      //   'https://upload.wikimedia.org/wikipedia/commons/e/e9/Ericsson_logo.svg',
       //   function(xml) {
       //     const importedNode = document.importNode(xml.documentElement, true);
       //     console.log(importedNode);
@@ -134,7 +134,7 @@ class VizClient extends React.Component {
     const arcs = pie(projects);
     // //Add to the information the fill of each one
     arcs.forEach((d, i) => {
-      d.fill = "#FF00FF";
+      d.fill = '#FF00FF';
     });
     //create an object SLICES in order to update the state
     //contains all the information one slice needs in order to be rendered
@@ -149,7 +149,7 @@ class VizClient extends React.Component {
 
       return {
         path,
-        fill: "#FFFFFF"
+        fill: '#FFFFFF'
       };
     });
     return slices;
@@ -179,7 +179,7 @@ class VizClient extends React.Component {
               key={i}
               x={d.label.centroid[0]}
               y={d.label.centroid[1]}
-              className="small"
+              className='small'
             >
               {/* {d.label.text} */}
             </text>

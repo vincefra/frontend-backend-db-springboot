@@ -1,5 +1,4 @@
-import React from "react";
-import "./Legend.scss";
+import React from 'react';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -9,9 +8,9 @@ class Legend extends React.Component {
 
   render() {
     return (
-      <div className="legend">
+      <div className='legend'>
         <ul>
-          <li className="legend-item">
+          <li className='legend-item'>
             <a>
               <div>
                 <div>{/* SPACE FOR ICON */}</div>
@@ -19,7 +18,7 @@ class Legend extends React.Component {
               25 Employees
             </a>
           </li>
-          <li className="legend-item">
+          <li className='legend-item'>
             <a>
               <div>
                 <div>{/* SPACE FOR ICON */}</div>
@@ -27,7 +26,7 @@ class Legend extends React.Component {
               25 Clients
             </a>
           </li>
-          <li className="legend-item">
+          <li className='legend-item'>
             <a>
               <div>
                 <div>{/* SPACE FOR ICON */}</div>
@@ -35,7 +34,7 @@ class Legend extends React.Component {
               45 Projects
             </a>
           </li>
-          <li className="legend-item">
+          <li className='legend-item'>
             <a>
               <div>
                 <div>{/* SPACE FOR ICON */}</div>

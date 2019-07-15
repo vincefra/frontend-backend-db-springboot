@@ -4,7 +4,7 @@
     "es6": true
   },
   "parser": "babel-eslint",
-  "extends": ["eslint:recommended"],
+  "extends": ["eslint:recommended", "react-app"],
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
@@ -14,9 +14,7 @@
   },
   "globals": {
   },
-  "plugins": ["jasmine"],
   "rules": {
-    "jasmine/no-focused-tests": 2,
     "indent": [
       "error",
       2, {
