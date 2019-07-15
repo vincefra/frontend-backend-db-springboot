@@ -12,7 +12,8 @@
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "xlsx": "^0.14.3"
   },
   "scripts": {
     "start": "react-scripts start",
