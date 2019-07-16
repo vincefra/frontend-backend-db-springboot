@@ -44,11 +44,11 @@ class App extends React.Component {
     return (
       <React.Fragment>
         { this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> : 
-          <div>
+          <React.Fragment>
             <Legend />
             <Dialogue />
             <VizCircle />
-          </div>
+          </React.Fragment>
         }
       </React.Fragment>
     );
