@@ -1,10 +1,10 @@
 import axios from 'axios';
-import config from 'config.json';
+import config from '../config.json';
 import XLSX from 'xlsx';
 axios.defaults.headers.common['Authorization'] = `Bearer ${config.accessToken}`;
 
 export async function load() {
-  const projects =  await getProjects();
+  const projects = await getProjects();
   const { employees, employeesProject } = await getEmployees();
   return { projects, employees, employeesProject };
 }
@@ -16,10 +16,10 @@ async function getProjects() {
     responseType: 'arraybuffer',
     method: 'POST',
     headers: {
-      'Dropbox-API-Arg': JSON.stringify({'path':'id:tj_uftrYnS8AAAAAAABpHw'})
+      'Dropbox-API-Arg': JSON.stringify({ 'path': 'id:tj_uftrYnS8AAAAAAABpHw' })
     }
   };
-  
+
   let response;
   try {
     response = await axios(options);
@@ -29,15 +29,15 @@ async function getProjects() {
 
   if (response.status === 200) {
     const uniCodedData = new Uint8Array(response.data);
-    const workbook = XLSX.read(uniCodedData, {type:'array'});
+    const workbook = XLSX.read(uniCodedData, { type: 'array' });
     const firstSheet = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[firstSheet];
     const headers = ['ID', 'projectName', 'projectType', 'startDates', 'endDates', 'customer', 'employees'];
-    let projects = XLSX.utils.sheet_to_json(worksheet, {header: headers});
+    let projects = XLSX.utils.sheet_to_json(worksheet, { header: headers });
     projects.shift();
     return projects;
   }
-    
+
 }
 
 async function getEmployees() {
@@ -47,7 +47,7 @@ async function getEmployees() {
     responseType: 'arraybuffer',
     method: 'POST',
     headers: {
-      'Dropbox-API-Arg': JSON.stringify({'path':'id:tj_uftrYnS8AAAAAAABo_A'})
+      'Dropbox-API-Arg': JSON.stringify({ 'path': 'id:tj_uftrYnS8AAAAAAABo_A' })
     }
   };
 
@@ -57,13 +57,13 @@ async function getEmployees() {
   } catch {
     return {};
   }
-  
+
   if (response.status === 200) {
     const uniCodedData = new Uint8Array(response.data);
-    const workbook = XLSX.read(uniCodedData, {type:'array'});
+    const workbook = XLSX.read(uniCodedData, { type: 'array' });
     const employeeSheet = workbook.Sheets[workbook.SheetNames[0]];
     const employeesProjectSheet = workbook.Sheets[workbook.SheetNames[1]];
-    
+
     let employees = XLSX.utils.sheet_to_json(employeeSheet);
     let employeesProject = XLSX.utils.sheet_to_json(employeesProjectSheet);
     return { employees, employeesProject };
