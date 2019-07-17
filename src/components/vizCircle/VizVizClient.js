@@ -1,5 +1,5 @@
-import React from "react";
-import * as d3 from "d3";
+import React from 'react';
+import * as d3 from 'd3';
 
 let radius = 0;
 const sliceHeight = 50;
@@ -49,7 +49,7 @@ class VizClient extends React.Component {
     const pie = d3
       .pie()
       .sort(null)
-      .value(function(d) {
+      .value(function (d) {
         return d.hours;
       });
 
@@ -116,7 +116,7 @@ class VizClient extends React.Component {
     const pie = d3
       .pie()
       .sort(null)
-      .value(function(d) {
+      .value(function (d) {
         return d.hours;
       });
 
@@ -124,7 +124,7 @@ class VizClient extends React.Component {
     const arcs = pie(projects);
     // //Add to the information the fill of each one
     arcs.forEach((d, i) => {
-      d.fill = "#FF00FF";
+      d.fill = '#FF00FF';
     });
     //create an object SLICES in order to update the state
     //contains all the information one slice needs in order to be rendered
@@ -144,7 +144,7 @@ class VizClient extends React.Component {
     return slices;
   }
 
-  calculateDate(props) {}
+  calculateDate(props) { }
 
   render() {
     const width = this.props.size[0];

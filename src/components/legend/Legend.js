@@ -1,5 +1,4 @@
-import React from "react";
-import "./Legend.scss";
+import React from 'react';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -9,39 +8,39 @@ class Legend extends React.Component {
 
   render() {
     return (
-      <div className="legend">
+      <div className='legend'>
         <ul>
-          <li className="legend-item">
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              25 Employees
-            </a>
+          <li className='legend-item'>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            25 Employees
+
           </li>
-          <li className="legend-item">
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              25 Clients
-            </a>
+          <li className='legend-item'>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            25 Clients
+
           </li>
-          <li className="legend-item">
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              45 Projects
-            </a>
+          <li className='legend-item'>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            45 Projects
+
           </li>
-          <li className="legend-item">
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              40 Skills
-            </a>
+          <li className='legend-item'>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            40 Skills
+
           </li>
         </ul>
       </div>

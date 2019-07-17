@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 class Employee extends React.Component {
   constructor(props) {
@@ -18,10 +18,10 @@ class Employee extends React.Component {
 
   calculateEmployee() {
     const circle = {
-      radius: "28",
-      fill: "#98abc5",
-      x: "0",
-      y: "0"
+      radius: '28',
+      fill: '#98abc5',
+      x: '0',
+      y: '0'
     };
 
     return {
@@ -31,8 +31,8 @@ class Employee extends React.Component {
   render() {
     const circle = this.state.circle !== undefined ? this.state.circle : null;
     //create a unique id for each image mask
-    const maskName = "mask" + this.props.id;
-    const fillMask = "url(#mask" + this.props.id + ")";
+    const maskName = 'mask' + this.props.id;
+    const fillMask = 'url(#mask' + this.props.id + ')';
 
     return (
       <g>
@@ -46,8 +46,8 @@ class Employee extends React.Component {
             />
 
             <g>
-              <defs id="imgdefs">
-                <pattern id={maskName} height="1" width="1" x="0" y="0">
+              <defs id='imgdefs'>
+                <pattern id={maskName} height='1' width='1' x='0' y='0'>
                   <image
                     height={this.props.radius * 2}
                     width={this.props.radius * 2}
@@ -64,8 +64,8 @@ class Employee extends React.Component {
             </g>
           </g>
         ) : (
-          <h4>No image</h4>
-        )}
+            <h4>No image</h4>
+          )}
       </g>
     );
   }

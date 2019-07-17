@@ -1,6 +1,5 @@
-import React from "react";
-import * as d3 from "d3";
-import "./Skills.scss";
+import React from 'react';
+import * as d3 from 'd3';
 
 class Skills extends React.Component {
   constructor(props) {
@@ -38,7 +37,7 @@ class Skills extends React.Component {
       let node = layOut.children[i];
       node.angle = angleScale(node.x); //set angle in radians
       node.textRotation = node.angle >= 90 && node.angle <= 270 ? 180 : 0;
-      node.anchorText = node.angle < 90 || node.angle > 270 ? "start" : "end";
+      node.anchorText = node.angle < 90 || node.angle > 270 ? 'start' : 'end';
     }
 
     this.setState({
@@ -49,14 +48,14 @@ class Skills extends React.Component {
   render() {
     const width = this.props.size[0];
     const height = this.props.size[1];
-    const radius = (height - height * 0.13) / 2;
+    const radius = (height - height * 0.05) / 2;
     return (
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {this.state.nodes.children !== undefined ? (
           this.state.nodes.children.map((d, i) => {
             return (
               <g
-                className="skills"
+                className='skills'
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
               >
@@ -71,8 +70,8 @@ class Skills extends React.Component {
             );
           })
         ) : (
-          <g />
-        )}
+            <g />
+          )}
       </g>
     );
   }

@@ -1,6 +1,6 @@
-import React from "react";
-import Employee from "./Employee";
-import * as d3 from "d3";
+import React from 'react';
+import Employee from './Employee';
+import * as d3 from 'd3';
 
 const vizHeight = 0.7;
 
@@ -66,8 +66,8 @@ class VizEmployees extends React.Component {
           );
         })
       ) : (
-        <div />
-      );
+          <div />
+        );
 
     //return all the things to render
     return (
@@ -78,10 +78,10 @@ class VizEmployees extends React.Component {
           diameter / 2})`}
       >
         {/* BACKGROUND CIRCLE */}
-        <g ref="graph">
+        <g ref='graph'>
           {/* <circle
             r={diameter}
-            fill="#eceeef"
+            fill='#eceeef'
             transform={`translate(${diameter}, ${diameter})`}
           /> */}
           {/* ALL EMPLOYEES */}
