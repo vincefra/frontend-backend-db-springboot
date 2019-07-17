@@ -4,8 +4,8 @@ import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
 import TimeLine from './components/vizTimeline/TimeLine';
 import Header from './components/header/Header';
-import Loader from 'components/loader/Loader';
-import { load } from 'components/general';
+import Loader from './components/loader/Loader';
+import { load } from './components/general';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
