@@ -4,6 +4,8 @@ import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
 import TimeLine from './components/vizTimeline/TimeLine';
 import Header from './components/header/Header';
+import Loader from 'components/loader/Loader';
+import { load } from 'components/general';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -17,30 +19,52 @@ class App extends React.Component {
       employees: employees,
       size: [width, height],
       skills: skills,
-      projects: projects
+      projects: projects,
+      isLoading: false,
+      isMobileView: false
     };
   }
 
+  async componentDidMount() {
+    window.addEventListener('resize', this.resize.bind(this));
+    this.resize();
+    this.setState({ isLoading: true });
+    await load();
+    this.setState({ isLoading: false });
+  }
+
+  resize() {
+    this.setState({ isMobileView: window.innerWidth <= 1180 });
+  }
+
   render() {
-    return (
-      <div>
-        <div className='mobile-message'>
-          <div className='logo d-flex large'>
-            <div className='spacing-h small' />
-            <h1>Find Out Visualization</h1>
-          </div>
-          <div className='spacing' />
-          <p>
-            Please visit us from a desktop, this visualization is not
-            responsive....
-          </p>
+    const mobileView = (
+      <div className='mobile-message'>
+        <div className='logo d-flex large'>
+          <div className='spacing-h small' />
+          <h1>FindOut Visualization</h1>
         </div>
-        <Header />
-        <Legend />
-        <Dialogue />
-        <TimeLine projects={this.state.projects} size={this.state.size} />
-        <VizCircle clients={this.state.clients} employees={this.state.employees} size={this.state.size} skills={this.state.skills} />
-      </div>
+        <div className='spacing' />
+        <p>
+          Please visit us from a desktop, this visualization is not
+          responsive....
+        </p>
+      </div >
+    );
+
+    return (
+      <React.Fragment>
+        {this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> :
+          <React.Fragment>
+            <Header />
+            <Legend />
+            <Dialogue />
+            <TimeLine projects={this.state.projects} size={this.state.size} />
+            <VizCircle clients={this.state.clients} employees={this.state.employees} size={this.state.size} skills={this.state.skills} />
+
+          </React.Fragment>
+        }
+      </React.Fragment>
     );
   }
 }
