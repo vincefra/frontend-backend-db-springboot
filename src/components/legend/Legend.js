@@ -11,36 +11,36 @@ class Legend extends React.Component {
       <div className='legend'>
         <ul>
           <li className='legend-item'>
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              25 Employees
-            </a>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            25 Employees
+
           </li>
           <li className='legend-item'>
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              25 Clients
-            </a>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            25 Clients
+
           </li>
           <li className='legend-item'>
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              45 Projects
-            </a>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            45 Projects
+
           </li>
           <li className='legend-item'>
-            <a>
-              <div>
-                <div>{/* SPACE FOR ICON */}</div>
-              </div>
-              40 Skills
-            </a>
+
+            <div>
+              <div>{/* SPACE FOR ICON */}</div>
+            </div>
+            40 Skills
+
           </li>
         </ul>
       </div>
