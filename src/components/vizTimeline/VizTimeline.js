@@ -26,8 +26,7 @@ class VizTimeline extends Component {
 
   componentDidMount() {
     this.setState({
-      clients: this.props.clients,
-      size: this.props.size
+
     });
 
 
@@ -57,8 +56,10 @@ class VizTimeline extends Component {
         y: height - margin.bottom,
         width: (xScale(d.dateEnd) - xScale(d.dateInit)),
         height: heightProject,
-        fill: d.color,
-        level: 0
+        fill: !d.highlight ? '#333333' : d.color,
+        level: 0,
+        id: d.id,
+        opacity: '0.5'
       };
     });
     let numLevels = 0;
@@ -121,9 +122,9 @@ class VizTimeline extends Component {
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
           <g className='topAxis' ref="topAxis" transform={`translate(${margin.left}, ${0})`} />
 
-          {this.state.bars.map((d, i) => (
+          {this.state.bars.map((d) => (
             <rect
-              key={i}
+              key={d.id}
               x={d.x}
               y={d.y - barHeight - (barHeight * d.level)}
               rx="5"
@@ -131,7 +132,10 @@ class VizTimeline extends Component {
               width={d.width}
               height={barHeight}
               fill={d.fill}
-              fillOpacity='0.5' />
+              fillOpacity={d.opacity}
+              onMouseOver={() => { this.props.selectProject(d.id); }}
+              onMouseOut={this.props.mouseOutProject}
+            />
           ))}
 
           <g ref="xAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
@@ -151,6 +155,7 @@ class VizTimeline extends Component {
           afterChangeFunction={this.handleDateChange}
         />
       </React.Fragment>;
+
     return (
       content
     );

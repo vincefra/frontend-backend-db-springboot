@@ -15,15 +15,53 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      clients: clients, //array of svg path commands, representing projects,
-      employees: employees,
-      size: [width, height],
-      skills: skills,
+      clients: clients,
       projects: projects,
+      employees: employees,
+      skills: skills,
+      size: [width, height],
       isLoading: false,
-      isMobileView: false
+      isMobileView: false,
     };
+
+    this.showProjectInfo = (id) => {
+      this.getProjectById(id);
+      this.highLightProject(id);
+    };
+
+    this.unHighLightProject = () => {
+      console.log("hey")
+      const highLightProjects = this.state.projects.map(d => {
+        d.highlight = true;
+        return d;
+      });
+      this.setState({ projects: highLightProjects });
+    };
+
   }
+
+  getProjectById(id) {
+    // const project = this.state.projects.filter(d => d.id === id ? d : null); //get project id
+    //TO DO: unhighlight previus items
+    //modify the project highlight state in the projects array to true
+
+  }
+
+  //modifies the highlight state  of the projects to TRUE
+  //modifies previous highlight projects to FALSE
+  highLightProject(id) {
+    const highLightProjects = this.state.projects.map(d => {
+      if (d.id === id) {
+        d.highlight = true;
+      } else {
+        d.highlight = false;
+      }
+      return d;
+    });
+    this.setState({ projects: highLightProjects });
+  }
+
+
 
   async componentDidMount() {
     window.addEventListener('resize', this.resize.bind(this));
@@ -59,7 +97,7 @@ class App extends React.Component {
             <Header />
             <Legend />
             <Dialogue />
-            <TimeLine projects={this.state.projects} size={this.state.size} />
+            <TimeLine projects={this.state.projects} size={this.state.size} selectProject={this.showProjectInfo} mouseOutProject={this.unHighLightProject} />
             <VizCircle clients={this.state.clients} employees={this.state.employees} size={this.state.size} skills={this.state.skills} />
 
           </React.Fragment>
@@ -623,116 +661,148 @@ const clients = [
 ];
 const projects = [
   {
+    id: 1,
     color: '#e00026',
     name: 'name',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-03-01'),
-    hours: 10
+    hours: 10,
+    highlight: true
   },
   {
+    id: 2,
     color: '#e00026',
     name: 'name',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
-    hours: 10
+    hours: 10,
+    highlight: true
   },
   {
+    id: 3,
     color: '#002661',
     name: 'name',
     dateInit: new Date('2004-04-01'),
     dateEnd: new Date('2004-06-01'),
-    hours: 20
+    hours: 20,
+    highlight: true
   },
   {
+    id: 4,
     color: '#002661',
     name: 'name',
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-10-01'),
-    hours: 90
+    hours: 90,
+    highlight: true
   },
   {
+    id: 5,
     color: '#0098be',
     name: 'name',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
-    hours: 100
+    hours: 100,
+    highlight: true
   },
   {
+    id: 6,
     name: 'name',
     color: '#0098be',
     dateInit: new Date('2004-03-01'),
     dateEnd: new Date('2004-06-01'),
-    hours: 100
+    hours: 100,
+    highlight: true
   },
   {
+    id: 7,
     color: '#242a75',
     name: 'name',
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-12-01'),
-    hours: 10
+    hours: 10,
+    highlight: true
   },
   {
+    id: 8,
     name: 'name',
     color: '#242a75',
     dateInit: new Date('2005-01-01'),
     dateEnd: new Date('2005-04-01'),
-    hours: 50
+    hours: 50,
+    highlight: true
   },
   {
+    id: 9,
     color: '#005aaa',
     name: 'name',
     dateInit: new Date('2005-02-01'),
     dateEnd: new Date('2005-08-01'),
-    hours: 300
+    hours: 300,
+    highlight: true
   },
   {
+    id: 10,
     name: 'name',
     color: '#005aaa',
     dateInit: new Date('2005-07-01'),
     dateEnd: new Date('2005-12-01'),
-    hours: 140
+    hours: 140,
+    highlight: true
   },
   {
+    id: 11,
     color: '#141414',
     name: 'name',
     dateInit: new Date('2006-01-01'),
     dateEnd: new Date('2006-12-01'),
-    hours: 40
+    hours: 40,
+    highlight: true
   },
   {
+    id: 12,
     name: 'name',
     color: '#141414',
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
-    hours: 200
+    hours: 200,
+    highlight: true
   },
   {
+    id: 13,
     color: '#00009f',
     name: 'name',
     dateInit: new Date('2007-03-01'),
     dateEnd: new Date('2007-05-01'),
-    hours: 80
+    hours: 80,
+    highlight: true
   },
   {
+    id: 14,
     name: 'name',
     color: '#00009f',
     dateInit: new Date('2007-06-01'),
     dateEnd: new Date('2007-09-01'),
-    hours: 10
+    hours: 10,
+    highlight: true
   },
   {
+    id: 15,
     color: '#a20031',
     name: 'name',
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
-    hours: 100
+    hours: 100,
+    highlight: true
   },
   {
+    id: 16,
     name: 'name',
     color: '#a20031',
     dateInit: new Date('2007-02-01'),
     dateEnd: new Date('2007-04-01'),
-    hours: 100
+    hours: 100,
+    highlight: true
   }
 ];
 
