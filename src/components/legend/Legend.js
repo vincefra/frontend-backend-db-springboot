@@ -7,6 +7,11 @@ class Legend extends React.Component {
   }
 
   render() {
+    const totalEmployees = this.props.employees.children.filter(emp => emp.highlight === true).length;
+    const totalClients = this.props.clients.filter(cli => cli.highlight === true).length;
+    const totalProjects = this.props.projects.filter(pro => pro.highlight === true).length;
+    const totalSkills = this.props.skills.children.filter(ski => ski.highlight === true).length;
+
     return (
       <div className='legend'>
         <ul>
@@ -15,7 +20,7 @@ class Legend extends React.Component {
             <div>
               <div>{/* SPACE FOR ICON */}</div>
             </div>
-            25 Employees
+            {totalEmployees} Employees
 
           </li>
           <li className='legend-item'>
@@ -23,7 +28,7 @@ class Legend extends React.Component {
             <div>
               <div>{/* SPACE FOR ICON */}</div>
             </div>
-            25 Clients
+            {totalClients} Clients
 
           </li>
           <li className='legend-item'>
@@ -31,7 +36,7 @@ class Legend extends React.Component {
             <div>
               <div>{/* SPACE FOR ICON */}</div>
             </div>
-            45 Projects
+            {totalProjects} Projects
 
           </li>
           <li className='legend-item'>
@@ -39,7 +44,7 @@ class Legend extends React.Component {
             <div>
               <div>{/* SPACE FOR ICON */}</div>
             </div>
-            40 Skills
+            {totalSkills} Skills
 
           </li>
         </ul>

@@ -59,7 +59,7 @@ class VizTimeline extends Component {
         fill: !d.highlight ? '#333333' : d.color,
         level: 0,
         id: d.id,
-        opacity: '0.5'
+        opacity: d.highlight ? '1' : '0.5'
       };
     });
     let numLevels = 0;

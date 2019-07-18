@@ -95,10 +95,25 @@ class App extends React.Component {
         {this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> :
           <React.Fragment>
             <Header />
-            <Legend />
+            <Legend
+              clients={this.state.clients}
+              projects={this.state.projects}
+              employees={this.state.employees}
+              skills={this.state.skills}
+            />
             <Dialogue />
-            <TimeLine projects={this.state.projects} size={this.state.size} selectProject={this.showProjectInfo} mouseOutProject={this.unHighLightProject} />
-            <VizCircle clients={this.state.clients} employees={this.state.employees} size={this.state.size} skills={this.state.skills} />
+            <TimeLine
+              projects={this.state.projects}
+              size={this.state.size}
+              selectProject={this.showProjectInfo}
+              mouseOutProject={this.unHighLightProject}
+            />
+            <VizCircle
+              clients={this.state.clients}
+              employees={this.state.employees}
+              size={this.state.size}
+              skills={this.state.skills}
+            />
 
           </React.Fragment>
         }
@@ -112,230 +127,287 @@ const skills = {
   children: [
     {
       id: 0,
+      highlight: true,
       name: 'Java'
     },
     {
       id: 1,
+      highlight: true,
       name: 'Angular'
     },
     {
       id: 3,
+      highlight: true,
       name: 'jQuery'
     },
     {
       id: 4,
+      highlight: true,
       name: 'Underscore'
     },
     {
       id: 5,
+      highlight: true,
       name: 'Hibernate'
     },
     {
       id: 6,
+      highlight: true,
       name: 'MySQL'
     },
     {
       id: 7,
+      highlight: true,
       name: 'Python'
     },
     {
       id: 8,
+      highlight: true,
       name: 'REST'
     },
     {
       id: 9,
+      highlight: true,
       name: 'Git'
     },
     {
       id: 10,
+      highlight: true,
       name: 'test automation'
     },
     {
       id: 11,
+      highlight: true,
       name: 'Jenkins'
     },
     {
       id: 12,
+      highlight: true,
       name: 'GORM'
     },
     {
       id: 13,
+      highlight: true,
       name: 'MongoDB'
     },
     {
       id: 14,
+      highlight: true,
       name: 'Spock'
     },
     {
       id: 15,
+      highlight: true,
       name: 'pivotaltracker'
     },
     {
       id: 16,
+      highlight: true,
       name: 'Subversion'
     },
     {
       id: 17,
+      highlight: true,
       name: 'IntelliJ IDEA'
     },
     {
       id: 18,
+      highlight: true,
       name: 'Slack'
     },
     {
       id: 19,
+      highlight: true,
       name: 'MAMP'
     },
     {
       id: 20,
+      highlight: true,
       name: 'Postman'
     },
     {
       id: 21,
+      highlight: true,
       name: 'Trello'
     },
     {
       id: 22,
+      highlight: true,
       name: 'MySQL'
     },
     {
       id: 23,
+      highlight: true,
       name: 'workbench'
     },
     {
       id: 24,
+      highlight: true,
       name: 'Java SE'
     },
     {
       id: 25,
+      highlight: true,
       name: 'Springboot'
     },
     {
       id: 26,
+      highlight: true,
       name: 'JPA (Hibernate)'
     },
     {
       id: 27,
+      highlight: true,
       name: 'Vue.js'
     },
     {
       id: 28,
+      highlight: true,
       name: 'Vuetify.js'
     },
     {
       id: 29,
+      highlight: true,
       name: 'MySQL'
     },
     {
       id: 30,
+      highlight: true,
       name: 'Vuex'
     },
     {
       id: 31,
+      highlight: true,
       name: 'Travis CI'
     },
     {
       id: 32,
+      highlight: true,
       name: 'Maven'
     },
     {
       id: 33,
+      highlight: true,
       name: 'Bash'
     },
     {
       id: 34,
+      highlight: true,
       name: 'Atlassian SDK'
     },
     {
       id: 12,
+      highlight: true,
       name: 'GORM'
     },
     {
       id: 13,
+      highlight: true,
       name: 'MongoDB'
     },
     {
       id: 14,
+      highlight: true,
       name: 'Spock'
     },
     {
       id: 15,
+      highlight: true,
       name: 'pivotaltracker'
     },
     {
       id: 16,
+      highlight: true,
       name: 'Subversion'
     },
     {
       id: 17,
+      highlight: true,
       name: 'IntelliJ IDEA'
     },
     {
       id: 18,
+      highlight: true,
       name: 'Slack'
     },
     {
       id: 19,
+      highlight: true,
       name: 'MAMP'
     },
     {
       id: 20,
+      highlight: true,
       name: 'Postman'
     },
     {
       id: 21,
+      highlight: true,
       name: 'Trello'
     },
     {
       id: 22,
+      highlight: true,
       name: 'MySQL'
     },
     {
       id: 23,
+      highlight: true,
       name: 'workbench'
     },
     {
       id: 24,
+      highlight: true,
       name: 'Java SE'
     },
     {
       id: 25,
+      highlight: true,
       name: 'Springboot'
     },
     {
       id: 26,
+      highlight: true,
       name: 'JPA (Hibernate)'
     },
     {
       id: 27,
+      highlight: true,
       name: 'Vue.js'
     },
     {
       id: 28,
+      highlight: true,
       name: 'Vuetify.js'
     },
     {
       id: 29,
+      highlight: true,
       name: 'MySQL'
     },
     {
       id: 30,
+      highlight: true,
       name: 'Vuex'
     },
     {
       id: 31,
+      highlight: true,
       name: 'Travis CI'
     },
     {
       id: 32,
+      highlight: true,
       name: 'Maven'
     },
     {
       id: 33,
+      highlight: true,
       name: 'Bash'
     },
     {
       id: 34,
+      highlight: true,
       name: 'Atlassian SDK'
     }
   ]
@@ -345,153 +417,183 @@ const employees = {
   name: 'employees',
   children: [
     {
-      name: 'Peter Roos',
       id: 0,
+      name: 'Peter Roos',
+      highlight: true,
       img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: 'Dag Rende',
       id: 1,
+      name: 'Dag Rende',
+      highlight: true,
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: 'Fredik Ejhed',
       id: 2,
+      name: 'Fredik Ejhed',
+      highlight: true,
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: 'Staffan Nystrom',
       id: 3,
+      name: 'Staffan Nystrom',
+      highlight: true,
       img: 'img/cynthia_smith.jpg'
     },
     {
-      name: 'Malin Pålsson',
       id: 4,
+      name: 'Malin Pålsson',
+      highlight: true,
       img: 'img/dag.jpg'
     },
     {
-      name: 'Andreas	Arledal',
       id: 5,
+      name: 'Andreas	Arledal',
+      highlight: true,
       img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: 'Peter Roos',
       id: 0,
+      name: 'Peter Roos',
+      highlight: true,
       img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: 'Dag Rende',
       id: 1,
+      name: 'Dag Rende',
+      highlight: true,
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: 'Fredik Ejhed',
       id: 2,
+      name: 'Fredik Ejhed',
+      highlight: true,
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: 'Staffan Nystrom',
       id: 3,
+      name: 'Staffan Nystrom',
+      highlight: true,
       img: 'img/cynthia_smith.jpg'
     },
     {
-      name: 'Malin Pålsson',
       id: 4,
+      name: 'Malin Pålsson',
+      highlight: true,
       img: 'img/dag.jpg'
     },
     {
-      name: 'Andreas	Arledal',
       id: 5,
+      name: 'Andreas	Arledal',
+      highlight: true,
       img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: 'Peter Roos',
       id: 0,
+      name: 'Peter Roos',
+      highlight: true,
       img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: 'Dag Rende',
       id: 1,
+      name: 'Dag Rende',
+      highlight: true,
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: 'Fredik Ejhed',
       id: 2,
+      name: 'Fredik Ejhed',
+      highlight: true,
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: 'Staffan Nystrom',
       id: 3,
+      name: 'Staffan Nystrom',
+      highlight: true,
       img: 'img/cynthia_smith.jpg'
     },
     {
-      name: 'Malin Pålsson',
       id: 4,
+      name: 'Malin Pålsson',
+      highlight: true,
       img: 'img/dag.jpg'
     },
     {
-      name: 'Andreas	Arledal',
       id: 5,
+      name: 'Andreas	Arledal',
+      highlight: true,
       img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: 'Peter Roos',
       id: 0,
+      name: 'Peter Roos',
+      highlight: true,
       img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: 'Dag Rende',
       id: 1,
+      name: 'Dag Rende',
+      highlight: true,
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: 'Fredik Ejhed',
       id: 2,
+      name: 'Fredik Ejhed',
+      highlight: true,
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: 'Staffan Nystrom',
       id: 3,
+      name: 'Staffan Nystrom',
+      highlight: true,
       img: 'img/cynthia_smith.jpg'
     },
     {
-      name: 'Malin Pålsson',
       id: 4,
+      name: 'Malin Pålsson',
+      highlight: true,
       img: 'img/dag.jpg'
     },
     {
-      name: 'Andreas	Arledal',
       id: 5,
+      name: 'Andreas	Arledal',
+      highlight: true,
       img: 'img/David_Kupersmidt.jpg'
     },
     {
-      name: 'Peter Roos',
       id: 0,
+      name: 'Peter Roos',
+      highlight: true,
       img: 'img/Anki_Andersson.jpg'
     },
     {
-      name: 'Dag Rende',
       id: 1,
+      name: 'Dag Rende',
+      highlight: true,
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
-      name: 'Fredik Ejhed',
       id: 2,
+      name: 'Fredik Ejhed',
+      highlight: true,
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
-      name: 'Staffan Nystrom',
       id: 3,
+      name: 'Staffan Nystrom',
+      highlight: true,
       img: 'img/cynthia_smith.jpg'
     },
     {
-      name: 'Malin Pålsson',
       id: 4,
+      name: 'Malin Pålsson',
+      highlight: true,
       img: 'img/dag.jpg'
     },
     {
-      name: 'Andreas	Arledal',
       id: 5,
+      name: 'Andreas	Arledal',
+      highlight: true,
       img: 'img/David_Kupersmidt.jpg'
     }
   ]
@@ -503,6 +605,7 @@ const clients = [
     hours: 2704659,
     color: '#e00026',
     logo: '/img/logos/h&m.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -523,6 +626,7 @@ const clients = [
     hours: 4499890,
     color: '#002661',
     logo: '/img/logos/ericsson.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -543,6 +647,7 @@ const clients = [
     hours: 2159981,
     color: '#0098be',
     logo: '/img/logos/Atlas_Copco.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -563,6 +668,7 @@ const clients = [
     hours: 3853788,
     color: '#242a75',
     logo: '/img/logos/maquet.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -583,6 +689,7 @@ const clients = [
     hours: 14106543,
     color: '#005aaa',
     logo: '/img/logos/maquet.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -603,6 +710,7 @@ const clients = [
     hours: 8819342,
     color: '#141414',
     logo: '/img/logos/tele2.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -623,6 +731,7 @@ const clients = [
     hours: 4499890,
     color: '#00009f',
     logo: '/img/logos/thales.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
@@ -643,6 +752,7 @@ const clients = [
     hours: 6122463,
     color: '#a20031',
     logo: '/img/logos/saab.png',
+    highlight: true,
     projects: [
       {
         name: 'name',
