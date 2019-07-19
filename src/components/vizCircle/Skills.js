@@ -48,7 +48,7 @@ class Skills extends React.Component {
   render() {
     const width = this.props.size[0];
     const height = this.props.size[1];
-    const radius = (height - height * 0.05) / 2;
+    const radius = (height - height * 0.11) / 2;
     return (
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {this.state.nodes.children !== undefined ? (
@@ -59,8 +59,11 @@ class Skills extends React.Component {
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
               >
+                <circle r="2.5"></circle>
                 <text
                   key={i}
+                  x="-10"
+                  dy=".31em"
                   transform={`rotate(${d.textRotation}) `}
                   textAnchor={d.anchorText}
                 >

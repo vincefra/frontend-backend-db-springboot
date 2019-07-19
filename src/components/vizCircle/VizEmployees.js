@@ -62,6 +62,9 @@ class VizEmployees extends React.Component {
               pX={d.x}
               pY={d.y}
               id={d.data.id}
+              mouseOnEmployee={this.props.mouseOnEmployee}
+              mouseOutEmployee={this.props.mouseOutEmployee}
+              opacity={d.data.highlight ? '1' : '0.1'}
             />
           );
         })

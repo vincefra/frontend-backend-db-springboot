@@ -37,7 +37,11 @@ class Employee extends React.Component {
     return (
       <g>
         {circle ? (
-          <g>
+          <g
+            onMouseOver={() => this.props.mouseOnEmployee(this.props.id)}
+            onMouseOut={() => this.props.mouseOutEmployee(this.props.id)}
+            opacity={this.props.opacity}
+          >
             <circle
               cx={this.props.pX}
               cy={this.props.pY}
