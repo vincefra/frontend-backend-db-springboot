@@ -25,12 +25,22 @@ class App extends React.Component {
       dialogueIsShown: false
     };
 
+    this.showSkill = (id) => {
+      this.highLightSkills([id]);
+      this.hightLightProjectsWithSkill(id);
+      //hightlight projects with that skill
+      //hightlight clients with that skill
+      //hightlight employees with that skill
+    };
+
     this.showProject = (id) => {
       const project = this.getProjectById(id);
       this.highLightEmployee(project.employeeId);
       this.highLightClient([project.clientId]);
+      this.highLightSkills(project.skills);
       this.highLightProject([id]);
       this.toggleDialogue();
+
 
     };
 
@@ -38,7 +48,7 @@ class App extends React.Component {
       this.highLightEmployee([id]);
       this.showEmployeeInfo(id);
       this.toggleDialogue();
-      //TO DO highlight projects where the employee is in
+      //highlight projects where the employee is in
       let clients = [];
       const projects = this.state.projects.map(d => {
         if (!d.employeeId.includes(id)) {
@@ -55,6 +65,9 @@ class App extends React.Component {
       //TO DO highlight clientes where the employee is in
       this.highLightClient(clients);
       //TO DO hightlights employee skills
+      //get employee
+      const employee = this.getEmployeeById(id);
+      this.highLightSkills(employee.skills);
     };
 
     this.showClient = (id) => {
@@ -67,13 +80,17 @@ class App extends React.Component {
 
       //highlight all the employees related to the client
       let employeesId = [];
-      const projects = this.state.projects.filter(function (el) {
-        return ~client.projects.indexOf(el.id);
+      let skillsId = [];
+      const projects = this.state.projects.filter(prj => {
+        return ~client.projects.indexOf(prj.id);
       });
       //get the employeesId from the project and add it to the array of employeesId of the client
       for (let i in projects) {
+        skillsId = skillsId.concat(projects[i].skills);
         employeesId = employeesId.concat(projects[i].employeeId);
       }
+      skillsId = [...new Set(skillsId)];
+      this.highLightSkills(skillsId);
       //highlight employeesId
       this.highLightEmployee(employeesId);
     };
@@ -82,7 +99,8 @@ class App extends React.Component {
       this.unHighLightEmployees();
       this.unHighLightProject();
       this.unHighlightClients();
-      this.toggleDialogue();
+      if (this.state.dialogueIsShown) this.toggleDialogue();
+      this.unHighlightSKills();
 
     };
 
@@ -90,6 +108,29 @@ class App extends React.Component {
       const showDialogue = this.state.dialogueIsShown ? false : true;
       this.setState({ dialogueIsShown: showDialogue });
     };
+  }
+  hightLightProjectsWithSkill(id) {
+    let clients = [];
+    //modify all projects with id
+    const projectsHighLight = this.state.projects.map(d => {
+      if (d.skills.includes(id)) {
+        d.highlight = true;
+        if (!clients.includes(d.clientId)) clients.push(d.clientId);
+      } else {
+        d.highlight = false;
+      }
+      return d;
+    });
+    this.setState({ projects: projectsHighLight });
+    //hightlight clients with that skill in
+    this.highLightClient(clients);
+  }
+  unHighlightSKills() {
+    const highLightSkills = this.state.skills.children.map(d => {
+      d.highlight = true;
+      return d;
+    });
+    this.setState({ skill: highLightSkills });
   }
 
   unHighlightClients() {
@@ -123,8 +164,8 @@ class App extends React.Component {
     console.log('show this guy info');
   }
 
-  getEmployee(id) {
-    const employee = '1';
+  getEmployeeById(id) {
+    const employee = this.state.employees.children.filter(d => d.id === id ? d : null)[0]; //get client id
     return employee;
   }
 
@@ -160,6 +201,18 @@ class App extends React.Component {
     employees.children = highLightEmployees;
     this.setState({ employees: employees });
 
+  }
+
+  highLightSkills(idArray) {
+    const highLightSkills = this.state.skills.children.map(d => {
+      if (!idArray.includes(d.id)) {
+        d.highlight = false;
+      }
+      return d;
+    });
+    let skills = this.state.skills;
+    skills.children = highLightSkills;
+    this.setState({ skills: skills });
   }
 
   //modifies the highlight state  of the projects to TRUE
@@ -231,11 +284,10 @@ class App extends React.Component {
               size={this.state.size}
               skills={this.state.skills}
               mouseOnClient={this.showClient}
-              mouseOutClient={this.unHighlightElements}
               mouseOnEmployee={this.showEmployee}
-              mouseOutEmployee={this.unHighlightElements}
               mouseOnProject={this.showProject}
-              mouseOutProject={this.unHighlightElements}
+              mouseOnSKill={this.showSkill}
+              unHighlightElements={this.unHighlightElements}
             />
 
           </React.Fragment>
@@ -243,6 +295,16 @@ class App extends React.Component {
       </React.Fragment>
     );
   }
+}
+
+function randomSKills(num) {
+  let randomNums = [];
+  for (let i = 0; i < num; i++) {
+
+    const randNum = Math.floor(Math.random() * 20) + 1;
+    randomNums.push(randNum);
+  }
+  return randomNums;
 }
 
 const skills = {
@@ -419,117 +481,117 @@ const skills = {
       name: 'Atlassian SDK'
     },
     {
-      id: 12,
+      id: 35,
       highlight: true,
       name: 'GORM'
     },
     {
-      id: 13,
+      id: 36,
       highlight: true,
       name: 'MongoDB'
     },
     {
-      id: 14,
+      id: 37,
       highlight: true,
       name: 'Spock'
     },
     {
-      id: 15,
+      id: 38,
       highlight: true,
       name: 'pivotaltracker'
     },
     {
-      id: 16,
+      id: 39,
       highlight: true,
       name: 'Subversion'
     },
     {
-      id: 17,
+      id: 40,
       highlight: true,
       name: 'IntelliJ IDEA'
     },
     {
-      id: 18,
+      id: 41,
       highlight: true,
       name: 'Slack'
     },
     {
-      id: 19,
+      id: 42,
       highlight: true,
       name: 'MAMP'
     },
     {
-      id: 20,
+      id: 43,
       highlight: true,
       name: 'Postman'
     },
     {
-      id: 21,
+      id: 44,
       highlight: true,
       name: 'Trello'
     },
     {
-      id: 22,
+      id: 45,
       highlight: true,
       name: 'MySQL'
     },
     {
-      id: 23,
+      id: 46,
       highlight: true,
       name: 'workbench'
     },
     {
-      id: 24,
+      id: 47,
       highlight: true,
       name: 'Java SE'
     },
     {
-      id: 25,
+      id: 48,
       highlight: true,
       name: 'Springboot'
     },
     {
-      id: 26,
+      id: 49,
       highlight: true,
       name: 'JPA (Hibernate)'
     },
     {
-      id: 27,
+      id: 50,
       highlight: true,
       name: 'Vue.js'
     },
     {
-      id: 28,
+      id: 51,
       highlight: true,
       name: 'Vuetify.js'
     },
     {
-      id: 29,
+      id: 52,
       highlight: true,
       name: 'MySQL'
     },
     {
-      id: 30,
+      id: 53,
       highlight: true,
       name: 'Vuex'
     },
     {
-      id: 31,
+      id: 54,
       highlight: true,
       name: 'Travis CI'
     },
     {
-      id: 32,
+      id: 55,
       highlight: true,
       name: 'Maven'
     },
     {
-      id: 33,
+      id: 56,
       highlight: true,
       name: 'Bash'
     },
     {
-      id: 34,
+      id: 57,
       highlight: true,
       name: 'Atlassian SDK'
     }
@@ -544,6 +606,7 @@ const employees = {
       name: 'Peter Roos',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Anki_Andersson.jpg'
     },
     {
@@ -551,6 +614,7 @@ const employees = {
       name: 'Dag Rende',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
@@ -558,6 +622,7 @@ const employees = {
       name: 'Fredik Ejhed',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
@@ -565,6 +630,7 @@ const employees = {
       name: 'Staffan Nystrom',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/cynthia_smith.jpg'
     },
     {
@@ -572,6 +638,7 @@ const employees = {
       name: 'Malin Pålsson',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/dag.jpg'
     },
     {
@@ -579,6 +646,7 @@ const employees = {
       name: 'Andreas	Arledal',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/David_Kupersmidt.jpg'
     },
     {
@@ -586,6 +654,7 @@ const employees = {
       name: 'Peter Roos',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Anki_Andersson.jpg'
     },
     {
@@ -593,6 +662,7 @@ const employees = {
       name: 'Dag Rende',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
@@ -600,6 +670,7 @@ const employees = {
       name: 'Fredik Ejhed',
       highlight: true,
       roll: 'Management',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
@@ -607,6 +678,7 @@ const employees = {
       name: 'Staffan Nystrom',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/cynthia_smith.jpg'
     },
     {
@@ -614,6 +686,7 @@ const employees = {
       name: 'Malin Pålsson',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/dag.jpg'
     },
     {
@@ -621,6 +694,7 @@ const employees = {
       name: 'Andreas	Arledal',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/David_Kupersmidt.jpg'
     },
     {
@@ -628,6 +702,7 @@ const employees = {
       name: 'Peter Roos',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Anki_Andersson.jpg'
     },
     {
@@ -635,6 +710,7 @@ const employees = {
       name: 'Dag Rende',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
@@ -642,6 +718,7 @@ const employees = {
       name: 'Fredik Ejhed',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
@@ -649,6 +726,7 @@ const employees = {
       name: 'Staffan Nystrom',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/cynthia_smith.jpg'
     },
     {
@@ -656,6 +734,7 @@ const employees = {
       name: 'Malin Pålsson',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/dag.jpg'
     },
     {
@@ -663,6 +742,7 @@ const employees = {
       name: 'Andreas	Arledal',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/David_Kupersmidt.jpg'
     },
     {
@@ -670,6 +750,7 @@ const employees = {
       name: 'Peter Roos',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Anki_Andersson.jpg'
     },
     {
@@ -677,6 +758,7 @@ const employees = {
       name: 'Dag Rende',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
@@ -684,6 +766,7 @@ const employees = {
       name: 'Fredik Ejhed',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
@@ -691,6 +774,7 @@ const employees = {
       name: 'Staffan Nystrom',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/cynthia_smith.jpg'
     },
     {
@@ -698,6 +782,7 @@ const employees = {
       name: 'Malin Pålsson',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/dag.jpg'
     },
     {
@@ -705,6 +790,7 @@ const employees = {
       name: 'Andreas	Arledal',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/David_Kupersmidt.jpg'
     },
     {
@@ -712,6 +798,7 @@ const employees = {
       name: 'Peter Roos',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Anki_Andersson.jpg'
     },
     {
@@ -719,6 +806,7 @@ const employees = {
       name: 'Dag Rende',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Bjorn_Arnelid.jpg'
     },
     {
@@ -726,6 +814,7 @@ const employees = {
       name: 'Fredik Ejhed',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/Christopher_Saarinen_Big.jpg'
     },
     {
@@ -733,6 +822,7 @@ const employees = {
       name: 'Staffan Nystrom',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/cynthia_smith.jpg'
     },
     {
@@ -740,6 +830,7 @@ const employees = {
       name: 'Malin Pålsson',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/dag.jpg'
     },
     {
@@ -747,6 +838,7 @@ const employees = {
       name: 'Andreas	Arledal',
       highlight: true,
       roll: 'Konsulter',
+      skills: randomSKills(Math.floor(Math.random() * 20)),
       img: 'img/David_Kupersmidt.jpg'
     }
   ]
@@ -836,6 +928,7 @@ const projects = [
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-03-01'),
     hours: 10,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -847,6 +940,7 @@ const projects = [
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
     hours: 10,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -858,6 +952,7 @@ const projects = [
     dateInit: new Date('2004-04-01'),
     dateEnd: new Date('2004-06-01'),
     hours: 20,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -869,6 +964,7 @@ const projects = [
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-10-01'),
     hours: 90,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -880,6 +976,7 @@ const projects = [
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
     hours: 100,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -891,6 +988,7 @@ const projects = [
     dateInit: new Date('2004-03-01'),
     dateEnd: new Date('2004-06-01'),
     hours: 100,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -902,6 +1000,7 @@ const projects = [
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-12-01'),
     hours: 10,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -913,6 +1012,7 @@ const projects = [
     dateInit: new Date('2005-01-01'),
     dateEnd: new Date('2005-04-01'),
     hours: 50,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -924,6 +1024,7 @@ const projects = [
     dateInit: new Date('2005-02-01'),
     dateEnd: new Date('2005-08-01'),
     hours: 300,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -935,6 +1036,7 @@ const projects = [
     dateInit: new Date('2005-07-01'),
     dateEnd: new Date('2005-12-01'),
     hours: 140,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -946,6 +1048,7 @@ const projects = [
     dateInit: new Date('2006-01-01'),
     dateEnd: new Date('2006-12-01'),
     hours: 40,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -957,6 +1060,7 @@ const projects = [
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
     hours: 200,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -968,6 +1072,7 @@ const projects = [
     dateInit: new Date('2007-03-01'),
     dateEnd: new Date('2007-05-01'),
     hours: 80,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -979,6 +1084,7 @@ const projects = [
     dateInit: new Date('2007-06-01'),
     dateEnd: new Date('2007-09-01'),
     hours: 10,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -990,6 +1096,7 @@ const projects = [
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
     hours: 100,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   },
   {
@@ -1001,6 +1108,7 @@ const projects = [
     dateInit: new Date('2007-02-01'),
     dateEnd: new Date('2007-04-01'),
     hours: 100,
+    skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true
   }
 ];

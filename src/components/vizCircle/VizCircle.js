@@ -16,17 +16,22 @@ class VizCircle extends React.Component {
           projects={this.props.projects}
           size={this.props.size}
           mouseOnProject={this.props.mouseOnProject}
-          mouseOutProject={this.props.mouseOutProject}
+          mouseOutProject={this.props.unHighlightElements}
           mouseOnClient={this.props.mouseOnClient}
-          mouseOutClient={this.props.mouseOutClient}
+          mouseOutClient={this.props.unHighlightElements}
         />
         <VizEmployees
           employees={this.props.employees}
           size={this.props.size}
           mouseOnEmployee={this.props.mouseOnEmployee}
-          mouseOutEmployee={this.props.mouseOutEmployee}
+          mouseOutEmployee={this.props.unHighlightElements}
         />
-        <Skills skills={this.props.skills} size={this.props.size} />
+        <Skills
+          skills={this.props.skills}
+          size={this.props.size}
+          mouseOnSKill={this.props.mouseOnSKill}
+          mouseOutSkill={this.props.unHighlightElements}
+        />
       </svg>;
 
     return content;
