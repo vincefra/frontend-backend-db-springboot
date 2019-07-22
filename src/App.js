@@ -28,8 +28,7 @@ class App extends React.Component {
     this.showSkill = (id) => {
       this.highLightSkills([id]);
       this.hightLightProjectsWithSkill(id);
-      //hightlight projects with that skill
-      //hightlight clients with that skill
+      this.hightEmployeesWithSkills(id);
       //hightlight employees with that skill
     };
 
@@ -108,6 +107,21 @@ class App extends React.Component {
       const showDialogue = this.state.dialogueIsShown ? false : true;
       this.setState({ dialogueIsShown: showDialogue });
     };
+  }
+
+  hightEmployeesWithSkills(id) {
+    let employees = this.state.employees;
+    const employeesHighLight = employees.children.map(d => {
+      if (d.skills.includes(id)) {
+        d.highlight = true;
+      } else {
+        d.highlight = false;
+      }
+      return d;
+    });
+
+    employees.children = employeesHighLight;
+    this.setState({ employees: employees });
   }
   hightLightProjectsWithSkill(id) {
     let clients = [];
@@ -301,7 +315,7 @@ function randomSKills(num) {
   let randomNums = [];
   for (let i = 0; i < num; i++) {
 
-    const randNum = Math.floor(Math.random() * 20) + 1;
+    const randNum = Math.floor(Math.random() * 57) + 1;
     randomNums.push(randNum);
   }
   return randomNums;
