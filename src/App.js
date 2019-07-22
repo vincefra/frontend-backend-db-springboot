@@ -22,6 +22,7 @@ class App extends React.Component {
       size: [width, height],
       isLoading: false,
       isMobileView: false,
+      dialogueIsShown: false
     };
 
     this.showProject = (id) => {
@@ -29,12 +30,14 @@ class App extends React.Component {
       this.highLightEmployee(project.employeeId);
       this.highLightClient([project.clientId]);
       this.highLightProject([id]);
+      this.toggleDialogue();
+
     };
 
     this.showEmployee = (id) => {
       this.highLightEmployee([id]);
       this.showEmployeeInfo(id);
-
+      this.toggleDialogue();
       //TO DO highlight projects where the employee is in
       let clients = [];
       const projects = this.state.projects.map(d => {
@@ -56,6 +59,7 @@ class App extends React.Component {
 
     this.showClient = (id) => {
       this.highLightClient([id]);
+      this.toggleDialogue();
 
       //hightlight all the projects related to the client
       const client = this.getClientById(id);
@@ -78,6 +82,13 @@ class App extends React.Component {
       this.unHighLightEmployees();
       this.unHighLightProject();
       this.unHighlightClients();
+      this.toggleDialogue();
+
+    };
+
+    this.toggleDialogue = () => {
+      const showDialogue = this.state.dialogueIsShown ? false : true;
+      this.setState({ dialogueIsShown: showDialogue });
     };
   }
 
@@ -149,17 +160,6 @@ class App extends React.Component {
     employees.children = highLightEmployees;
     this.setState({ employees: employees });
 
-    // const highLightEmployees = this.state.employees.children.map(d => {
-    //   if (d.id === id) {
-    //     d.highlight = true;
-    //   } else {
-    //     d.highlight = false;
-    //   }
-    //   return d;
-    // });
-    // let employees = this.state.employees;
-    // employees.children = highLightEmployees;
-    // this.setState({ employees: employees });
   }
 
   //modifies the highlight state  of the projects to TRUE
@@ -214,7 +214,10 @@ class App extends React.Component {
               employees={this.state.employees}
               skills={this.state.skills}
             />
-            <Dialogue />
+            <Dialogue
+              dialogueIsShown={this.state.dialogueIsShown}
+              toggleDialogue={this.toggleDialogue}
+            />
             <TimeLine
               projects={this.state.projects}
               size={this.state.size}

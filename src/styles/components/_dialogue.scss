@@ -1,14 +1,16 @@
 .dialogue {
+  transition: 0.3s all cubic-bezier(1, 0, 0, 1);
   position: absolute;
   z-index: 10;
   width: 20vw;
   background-color: $color-light-gray;
   padding: 20px;
   right: 2.5%;
-  top: 10%;
+  top: 5%;
   box-shadow: $box-shadow;
   &.hidden {
-    transform: translateX(150%);
+    opacity: 0;
+    transform: translateY(10%);
   }
   .identification {
     display: flex;
