@@ -15,11 +15,6 @@ class Header extends Component {
 
         <Form inline>
           <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Form.Control as="select">
-            <option>Employee</option>
-            <option>Project</option>
-            <option>Client</option>
-          </Form.Control>
         </Form>
 
         <Button className="ml-auto p-2" variant="light">
