@@ -24,7 +24,13 @@ class App extends React.Component {
       isLoading: true,
       isMobileView: false,
       dialogueIsShown: false,
-      range: []
+      range: [],
+      dialogueInfo: {
+        image: '',
+        name: '',
+        type: '',
+        children: ''
+      }
     };
 
     this.showSkill = (id) => {
@@ -42,12 +48,21 @@ class App extends React.Component {
       this.highLightProject([id]);
       this.toggleDialogue();
 
+      const client = this.getClientById(project.clientId);
+      const children = <div>
+        <p><span>Client: </span><br></br>{client.name}</p>
+        <p><span>Starting date: </span><br></br>{project.dateInit.getDay() + '-' + project.dateInit.getMonth() + '-' + project.dateInit.getFullYear()}</p>
+        <p><span>Finishing date: </span><br></br>{project.dateEnd.getDay() + '-' + project.dateEnd.getMonth() + '-' + project.dateEnd.getFullYear()}</p>
+        <p><span>Description: </span>{project.description}</p>
+      </div>;
+
+
+      this.modifyDialogueInfo(null, project.name, project.type, children);
 
     };
 
     this.showEmployee = (id) => {
       this.highLightEmployee([id]);
-      this.showEmployeeInfo(id);
       this.toggleDialogue();
       //highlight projects where the employee is in
       let clients = [];
@@ -68,6 +83,13 @@ class App extends React.Component {
       //TO DO hightlights employee skills
       //get employee
       const employee = this.getEmployeeById(id);
+
+      const children = <div>
+        <p><span>Date in: </span><br></br>{employee.initDate}</p>
+        <p><span>Date out: </span><br></br>{employee.endDate}</p>
+      </div>;
+
+      this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
       this.highLightSkills(employee.skills);
     };
 
@@ -94,6 +116,13 @@ class App extends React.Component {
       this.highLightSkills(skillsId);
       //highlight employeesId
       this.highLightEmployee(employeesId);
+      //show client information
+      const children = <div>
+        <p><span>Location: </span><br></br>{client.location}</p>
+        <p><span>Description: </span><br></br>{client.description}</p>
+      </div>;
+
+      this.modifyDialogueInfo(client.logo, client.name, client.type, children);
     };
 
     this.unHighlightElements = () => {
@@ -118,35 +147,31 @@ class App extends React.Component {
     this.HighlightElements = (name) => {
       switch (name) {
         case 'EMPLOYEES':
-          console.log('show employees');
           this.unhightLightElements('CLIENTS');
           this.unhightLightElements('PROJECTS');
           this.unhightLightElements('SKILLS');
-          console.log(clients);
           break;
         case 'CLIENTS':
-          console.log('show clients');
           this.unhightLightElements('EMPLOYEES');
           this.unhightLightElements('PROJECTS');
           this.unhightLightElements('SKILLS');
           break;
         case 'PROJECTS':
-          console.log('show projects');
           this.unhightLightElements('EMPLOYEES');
           this.unhightLightElements('SKILLS');
           break;
         case 'SKILLS':
-          console.log('show skills');
           this.unhightLightElements('EMPLOYEES');
           this.unhightLightElements('CLIENTS');
           this.unhightLightElements('PROJECTS');
           break;
         default:
-          console.log('nothing to show');
           this.unHighlightElements();
       }
 
     };
+
+
   }
 
   unhightLightElements(name) {
@@ -245,9 +270,16 @@ class App extends React.Component {
     this.setState({ projects: highLightProjects });
   }
 
+  modifyDialogueInfo(image, name, typeWork, children) {
+    const dialogueInfo = {
+      image: image === null ? null : image,
+      name: name,
+      type: typeWork,
+      children: children
+    };
 
-  showEmployeeInfo(id) {
-    console.log('show this guy info');
+    this.setState({ dialogueInfo: dialogueInfo });
+
   }
 
   getEmployeeById(id) {
@@ -362,6 +394,10 @@ class App extends React.Component {
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}
       toggleDialogue={this.toggleDialogue}
+      image={this.state.dialogueInfo.image}
+      name={this.state.dialogueInfo.name}
+      type={this.state.dialogueInfo.type}
+      childrenInfo={this.state.dialogueInfo.children}
     />;
     const timeline = <TimeLine
       projects={this.state.projects}
@@ -710,7 +746,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Anki_Andersson.jpg'
+      img: 'img/Anki_Andersson.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 1,
@@ -718,7 +757,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Bjorn_Arnelid.jpg'
+      img: 'img/Bjorn_Arnelid.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 2,
@@ -726,7 +768,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Christopher_Saarinen_Big.jpg'
+      img: 'img/Christopher_Saarinen_Big.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 3,
@@ -734,7 +779,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/cynthia_smith.jpg'
+      img: 'img/cynthia_smith.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 4,
@@ -742,7 +790,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/dag.jpg'
+      img: 'img/dag.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 5,
@@ -750,7 +801,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/David_Kupersmidt.jpg'
+      img: 'img/David_Kupersmidt.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 6,
@@ -758,7 +812,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Anki_Andersson.jpg'
+      img: 'img/Anki_Andersson.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 7,
@@ -766,7 +823,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Bjorn_Arnelid.jpg'
+      img: 'img/Bjorn_Arnelid.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 8,
@@ -774,7 +834,10 @@ const employees = {
       highlight: true,
       roll: 'Management',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Christopher_Saarinen_Big.jpg'
+      img: 'img/Christopher_Saarinen_Big.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 9,
@@ -782,7 +845,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/cynthia_smith.jpg'
+      img: 'img/cynthia_smith.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 10,
@@ -790,7 +856,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/dag.jpg'
+      img: 'img/dag.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 11,
@@ -798,7 +867,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/David_Kupersmidt.jpg'
+      img: 'img/David_Kupersmidt.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 12,
@@ -806,7 +878,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Anki_Andersson.jpg'
+      img: 'img/Anki_Andersson.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 13,
@@ -814,7 +889,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Bjorn_Arnelid.jpg'
+      img: 'img/Bjorn_Arnelid.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 14,
@@ -822,7 +900,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Christopher_Saarinen_Big.jpg'
+      img: 'img/Christopher_Saarinen_Big.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 15,
@@ -830,7 +911,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/cynthia_smith.jpg'
+      img: 'img/cynthia_smith.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 16,
@@ -838,7 +922,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/dag.jpg'
+      img: 'img/dag.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 17,
@@ -846,7 +933,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/David_Kupersmidt.jpg'
+      img: 'img/David_Kupersmidt.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 18,
@@ -854,7 +944,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Anki_Andersson.jpg'
+      img: 'img/Anki_Andersson.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 19,
@@ -862,7 +955,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Bjorn_Arnelid.jpg'
+      img: 'img/Bjorn_Arnelid.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 20,
@@ -870,7 +966,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Christopher_Saarinen_Big.jpg'
+      img: 'img/Christopher_Saarinen_Big.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 21,
@@ -878,7 +977,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/cynthia_smith.jpg'
+      img: 'img/cynthia_smith.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 22,
@@ -886,7 +988,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/dag.jpg'
+      img: 'img/dag.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 23,
@@ -894,7 +999,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/David_Kupersmidt.jpg'
+      img: 'img/David_Kupersmidt.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 24,
@@ -902,7 +1010,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Anki_Andersson.jpg'
+      img: 'img/Anki_Andersson.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 25,
@@ -910,7 +1021,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Bjorn_Arnelid.jpg'
+      img: 'img/Bjorn_Arnelid.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 26,
@@ -918,7 +1032,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/Christopher_Saarinen_Big.jpg'
+      img: 'img/Christopher_Saarinen_Big.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 27,
@@ -926,7 +1043,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/cynthia_smith.jpg'
+      img: 'img/cynthia_smith.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 28,
@@ -934,7 +1054,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/dag.jpg'
+      img: 'img/dag.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     },
     {
       id: 29,
@@ -942,7 +1065,10 @@ const employees = {
       highlight: true,
       roll: 'Konsulter',
       skills: randomSKills(Math.floor(Math.random() * 20)),
-      img: 'img/David_Kupersmidt.jpg'
+      img: 'img/David_Kupersmidt.jpg',
+      initDate: '2004/04/08',
+      endDate: '2014/10/10',
+
     }
   ]
 };
@@ -955,7 +1081,10 @@ const clients = [
     color: '#e00026',
     logo: '/img/logos/h&m.png',
     highlight: true,
-    projects: [1, 2]
+    projects: [1, 2],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 2,
@@ -964,7 +1093,10 @@ const clients = [
     color: '#002661',
     logo: '/img/logos/ericsson.png',
     highlight: true,
-    projects: [3, 4]
+    projects: [3, 4],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 3,
@@ -973,7 +1105,10 @@ const clients = [
     color: '#0098be',
     logo: '/img/logos/Atlas_Copco.png',
     highlight: true,
-    projects: [5, 6]
+    projects: [5, 6],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 4,
@@ -982,7 +1117,10 @@ const clients = [
     color: '#242a75',
     logo: '/img/logos/maquet.png',
     highlight: true,
-    projects: [7, 8]
+    projects: [7, 8],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 5,
@@ -991,7 +1129,10 @@ const clients = [
     color: '#005aaa',
     logo: '/img/logos/maquet.png',
     highlight: true,
-    projects: [9, 10]
+    projects: [9, 10],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 6,
@@ -1000,7 +1141,10 @@ const clients = [
     color: '#141414',
     logo: '/img/logos/tele2.png',
     highlight: true,
-    projects: [11, 12]
+    projects: [11, 12],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 7,
@@ -1009,7 +1153,10 @@ const clients = [
     color: '#00009f',
     logo: '/img/logos/thales.png',
     highlight: true,
-    projects: [13, 14]
+    projects: [13, 14],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   },
   {
     id: 8,
@@ -1018,7 +1165,10 @@ const clients = [
     color: '#a20031',
     logo: '/img/logos/saab.png',
     highlight: true,
-    projects: [15, 16]
+    projects: [15, 16],
+    type: 'Technology',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin velit purus, ultrices eget sodales pharetra, ultricies sed quam. Sed ante nisl, lobortis vitae quam a, tristique interdum elit. Cras venenatis turpis dui, in feugiat enim semper nec.',
+    location: 'Stockholm'
   }
 ];
 const projects = [
@@ -1032,7 +1182,9 @@ const projects = [
     dateEnd: new Date('2004-03-01'),
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 2,
@@ -1044,7 +1196,9 @@ const projects = [
     dateEnd: new Date('2004-04-01'),
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 3,
@@ -1056,7 +1210,9 @@ const projects = [
     dateEnd: new Date('2004-06-01'),
     hours: 20,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 4,
@@ -1068,7 +1224,9 @@ const projects = [
     dateEnd: new Date('2004-10-01'),
     hours: 90,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 5,
@@ -1080,7 +1238,9 @@ const projects = [
     dateEnd: new Date('2004-04-01'),
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 6,
@@ -1092,7 +1252,9 @@ const projects = [
     dateEnd: new Date('2004-06-01'),
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 7,
@@ -1104,7 +1266,9 @@ const projects = [
     dateEnd: new Date('2004-12-01'),
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 8,
@@ -1116,7 +1280,9 @@ const projects = [
     dateEnd: new Date('2005-04-01'),
     hours: 50,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 9,
@@ -1128,7 +1294,9 @@ const projects = [
     dateEnd: new Date('2005-08-01'),
     hours: 300,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 10,
@@ -1140,7 +1308,9 @@ const projects = [
     dateEnd: new Date('2005-12-01'),
     hours: 140,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 11,
@@ -1152,7 +1322,9 @@ const projects = [
     dateEnd: new Date('2006-12-01'),
     hours: 40,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 12,
@@ -1164,7 +1336,9 @@ const projects = [
     dateEnd: new Date('2007-03-01'),
     hours: 200,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 13,
@@ -1176,7 +1350,9 @@ const projects = [
     dateEnd: new Date('2007-05-01'),
     hours: 80,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 14,
@@ -1188,7 +1364,9 @@ const projects = [
     dateEnd: new Date('2007-09-01'),
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 15,
@@ -1200,7 +1378,9 @@ const projects = [
     dateEnd: new Date('2007-03-01'),
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
   {
     id: 16,
@@ -1212,7 +1392,9 @@ const projects = [
     dateEnd: new Date('2007-04-01'),
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
-    highlight: true
+    highlight: true,
+    type: 'consultancy',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   }
 ];
 
