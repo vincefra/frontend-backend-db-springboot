@@ -4,50 +4,18 @@ import XLSX from 'xlsx';
 axios.defaults.headers.common['Authorization'] = `Bearer ${config.accessToken}`;
 
 export async function load() {
-  const projects = await getProjects();
-  const { employees, employeesProject } = await getEmployees();
-  return { projects, employees, employeesProject };
+  const data = await getData();
+  return data;
 }
 
-async function getProjects() {
+async function getData() {
   const requestURL = 'https://content.dropboxapi.com/2/files/download';
   const options = {
     url: requestURL,
     responseType: 'arraybuffer',
     method: 'POST',
     headers: {
-      'Dropbox-API-Arg': JSON.stringify({ 'path': 'id:tj_uftrYnS8AAAAAAABpHw' })
-    }
-  };
-
-  let response;
-  try {
-    response = await axios(options);
-  } catch {
-    return [];
-  }
-
-  if (response.status === 200) {
-    const uniCodedData = new Uint8Array(response.data);
-    const workbook = XLSX.read(uniCodedData, { type: 'array' });
-    const firstSheet = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[firstSheet];
-    const headers = ['ID', 'projectName', 'projectType', 'startDates', 'endDates', 'customer', 'employees'];
-    let projects = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-    projects.shift();
-    return projects;
-  }
-
-}
-
-async function getEmployees() {
-  const requestURL = 'https://content.dropboxapi.com/2/files/download';
-  const options = {
-    url: requestURL,
-    responseType: 'arraybuffer',
-    method: 'POST',
-    headers: {
-      'Dropbox-API-Arg': JSON.stringify({ 'path': 'id:tj_uftrYnS8AAAAAAABo_A' })
+      'Dropbox-API-Arg': JSON.stringify({ 'path': 'id:tj_uftrYnS8AAAAAAABpIg' })
     }
   };
 
@@ -61,12 +29,15 @@ async function getEmployees() {
   if (response.status === 200) {
     const uniCodedData = new Uint8Array(response.data);
     const workbook = XLSX.read(uniCodedData, { type: 'array' });
-    const employeeSheet = workbook.Sheets[workbook.SheetNames[0]];
-    const employeesProjectSheet = workbook.Sheets[workbook.SheetNames[1]];
-
-    let employees = XLSX.utils.sheet_to_json(employeeSheet);
-    let employeesProject = XLSX.utils.sheet_to_json(employeesProjectSheet);
-    return { employees, employeesProject };
+    const projectSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const employeeSheet = workbook.Sheets[workbook.SheetNames[1]];
+    const projectHeaders = ['id', 'projectName', 'projectType', 'startDates', 'endDates', 'customer', 'employees', 'technologies'];
+    const employeeHeaders = ['id', 'firstName', 'lastName', 'role', 'birthYear', 'yearStart', 'yearEnd', 'location', 'technologies', 'languages'];
+    let projects = XLSX.utils.sheet_to_json(projectSheet, { header: projectHeaders });
+    let employees = XLSX.utils.sheet_to_json(employeeSheet, {header: employeeHeaders });
+    projects.shift();
+    employees.shift();
+    return { projects, employees };
   }
 }
 
