@@ -15,37 +15,46 @@ class Legend extends React.Component {
     return (
       <div className='legend'>
         <ul>
+
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('EMPLOYEES')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalEmployees} Employees
             </div>
-            {totalEmployees} Employees
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('CLIENTS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalClients} Clients
             </div>
-            {totalClients} Clients
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('PROJECTS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalProjects} Projects
             </div>
-            {totalProjects} Projects
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('SKILLS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalSkills} Skills
             </div>
-            {totalSkills} Skills
-
           </li>
         </ul>
       </div>

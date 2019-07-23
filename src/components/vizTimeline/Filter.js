@@ -20,8 +20,7 @@ class Filter extends Component {
           max={this.props.maxFilterValue}
           defaultValue={[this.props.defaultValueMin, this.props.defaultValueMax]}
           steps={1}
-          onChange={(value) => this.props.afterChangeFunction(value)} //TO-DO: Call proper function from here
-        // tipFormatter={value => 'hello ' + `${value}`}
+          onChange={(value) => this.props.afterChangeFunction(value[0], value[1])} //TO-DO: Call proper function from here
         />
       </div>
     );

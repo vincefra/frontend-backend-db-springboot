@@ -6,6 +6,7 @@ import TimeLine from './components/vizTimeline/TimeLine';
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
 import { load } from './components/general';
+import * as d3 from 'd3';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -20,9 +21,10 @@ class App extends React.Component {
       employees: employees,
       skills: skills,
       size: [width, height],
-      isLoading: false,
+      isLoading: true,
       isMobileView: false,
-      dialogueIsShown: false
+      dialogueIsShown: false,
+      range: []
     };
 
     this.showSkill = (id) => {
@@ -107,6 +109,76 @@ class App extends React.Component {
       const showDialogue = this.state.dialogueIsShown ? false : true;
       this.setState({ dialogueIsShown: showDialogue });
     };
+
+    this.modifyRange = (initDate, endDate) => {
+
+      console.log(initDate, endDate);
+    };
+
+    this.HighlightElements = (name) => {
+      switch (name) {
+        case 'EMPLOYEES':
+          console.log('show employees');
+          this.unhightLightElements('CLIENTS');
+          this.unhightLightElements('PROJECTS');
+          this.unhightLightElements('SKILLS');
+          console.log(clients);
+          break;
+        case 'CLIENTS':
+          console.log('show clients');
+          this.unhightLightElements('EMPLOYEES');
+          this.unhightLightElements('PROJECTS');
+          this.unhightLightElements('SKILLS');
+          break;
+        case 'PROJECTS':
+          console.log('show projects');
+          this.unhightLightElements('EMPLOYEES');
+          this.unhightLightElements('SKILLS');
+          break;
+        case 'SKILLS':
+          console.log('show skills');
+          this.unhightLightElements('EMPLOYEES');
+          this.unhightLightElements('CLIENTS');
+          this.unhightLightElements('PROJECTS');
+          break;
+        default:
+          console.log('nothing to show');
+          this.unHighlightElements();
+      }
+
+    };
+  }
+
+  unhightLightElements(name) {
+    if (name === 'EMPLOYEES') {
+      const children = this.state.employees.children.map(d => {
+        d.highlight = false;
+        return d;
+      });
+      const employees = this.state.employees;
+      employees.children = children;
+      this.setState({ employees: employees });
+    } else if (name === 'CLIENTS') {
+      const clients = this.state.clients.map(d => {
+        d.highlight = false;
+        return d;
+      });
+      this.setState({ clients: clients });
+    } else if (name === 'PROJECTS') {
+      const projects = this.state.projects.map(d => {
+        d.highlight = false;
+        return d;
+      });
+      this.setState({ projects: projects });
+    } else if (name === 'SKILLS') {
+      const children = this.state.skills.children.map(d => {
+        d.highlight = false;
+        return d;
+      });
+      const skills = this.state.skills;
+      skills.children = children;
+      this.setState({ skills: skills });
+    }
   }
 
   hightEmployeesWithSkills(id) {
@@ -244,11 +316,19 @@ class App extends React.Component {
 
 
   async componentDidMount() {
+    const projects = this.state.projects;
+    const min = d3.min(projects, d => d.dateInit);
+    const max = d3.max(projects, d => d.dateEnd);
+    const selectedRange = [min, max];
+    this.setState({ range: selectedRange });
+
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
     await load();
     this.setState({ isLoading: false });
+
+
   }
 
   resize() {
@@ -270,40 +350,49 @@ class App extends React.Component {
       </div >
     );
 
+    const header = <Header />;
+    const legend = <Legend
+      clients={this.state.clients}
+      projects={this.state.projects}
+      employees={this.state.employees}
+      skills={this.state.skills}
+      overEvent={this.HighlightElements}
+      outEvent={this.unHighlightElements}
+    />;
+    const dialogue = <Dialogue
+      dialogueIsShown={this.state.dialogueIsShown}
+      toggleDialogue={this.toggleDialogue}
+    />;
+    const timeline = <TimeLine
+      projects={this.state.projects}
+      size={this.state.size}
+      selectProject={this.showProject}
+      mouseOutProject={this.unHighlightElements}
+      modifyRange={this.modifyRange}
+      range={this.state.range}
+
+    />;
+    const vizCircle = <VizCircle
+      clients={this.state.clients}
+      employees={this.state.employees}
+      projects={this.state.projects}
+      size={this.state.size}
+      skills={this.state.skills}
+      mouseOnClient={this.showClient}
+      mouseOnEmployee={this.showEmployee}
+      mouseOnProject={this.showProject}
+      mouseOnSKill={this.showSkill}
+      unHighlightElements={this.unHighlightElements}
+    />;
     return (
       <React.Fragment>
         {this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> :
           <React.Fragment>
-            <Header />
-            <Legend
-              clients={this.state.clients}
-              projects={this.state.projects}
-              employees={this.state.employees}
-              skills={this.state.skills}
-            />
-            <Dialogue
-              dialogueIsShown={this.state.dialogueIsShown}
-              toggleDialogue={this.toggleDialogue}
-            />
-            <TimeLine
-              projects={this.state.projects}
-              size={this.state.size}
-              selectProject={this.showProject}
-              mouseOutProject={this.unHighlightElements}
-            />
-            <VizCircle
-              clients={this.state.clients}
-              employees={this.state.employees}
-              projects={this.state.projects}
-              size={this.state.size}
-              skills={this.state.skills}
-              mouseOnClient={this.showClient}
-              mouseOnEmployee={this.showEmployee}
-              mouseOnProject={this.showProject}
-              mouseOnSKill={this.showSkill}
-              unHighlightElements={this.unHighlightElements}
-            />
-
+            {header}
+            {legend}
+            {dialogue}
+            {timeline}
+            {vizCircle}
           </React.Fragment>
         }
       </React.Fragment>
