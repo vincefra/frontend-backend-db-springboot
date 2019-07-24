@@ -57,5 +57,7 @@
     align-items: flex-start;
     flex-direction: column;
     flex-wrap: wrap;
+    max-height: 400px;
+    overflow: hidden;
   }
 }

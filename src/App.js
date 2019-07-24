@@ -131,7 +131,6 @@ class App extends React.Component {
       this.unHighlightClients();
       if (this.state.dialogueIsShown) this.toggleDialogue();
       this.unHighlightSKills();
-
     };
 
     this.toggleDialogue = () => {
