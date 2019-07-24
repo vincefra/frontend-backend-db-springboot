@@ -382,7 +382,17 @@ class App extends React.Component {
       </div >
     );
 
-    const header = <Header />;
+    const header = <Header
+      clients={this.state.clients}
+      projects={this.state.projects}
+      employees={this.state.employees}
+      skills={this.state.skills}
+      showProject={this.showProject}
+      showEmployee={this.showEmployee}
+      showSkill={this.showSkill}
+      showClient={this.showClient}
+      unHighlightElements={this.unHighlightElements}
+    />;
     const legend = <Legend
       clients={this.state.clients}
       projects={this.state.projects}
@@ -1177,7 +1187,7 @@ const projects = [
     clientId: 1,
     employeeId: [1, 2, 3],
     color: '#e00026',
-    name: 'name',
+    name: 'project',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-03-01'),
     hours: 10,
@@ -1191,7 +1201,7 @@ const projects = [
     clientId: 1,
     employeeId: [1, 5, 8, 2, 3],
     color: '#e00026',
-    name: 'name',
+    name: 'render',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
     hours: 10,
@@ -1205,7 +1215,7 @@ const projects = [
     clientId: 2,
     employeeId: [1],
     color: '#002661',
-    name: 'name',
+    name: 'dolores',
     dateInit: new Date('2004-04-01'),
     dateEnd: new Date('2004-06-01'),
     hours: 20,
@@ -1219,7 +1229,7 @@ const projects = [
     clientId: 2,
     employeeId: [10, 6, 5],
     color: '#002661',
-    name: 'name',
+    name: 'long search',
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-10-01'),
     hours: 90,
@@ -1233,7 +1243,7 @@ const projects = [
     clientId: 3,
     employeeId: [11, 12, 3],
     color: '#0098be',
-    name: 'name',
+    name: 'table',
     dateInit: new Date('2004-01-01'),
     dateEnd: new Date('2004-04-01'),
     hours: 100,
@@ -1261,7 +1271,7 @@ const projects = [
     clientId: 4,
     employeeId: [12, 28, 15],
     color: '#242a75',
-    name: 'name',
+    name: 'find out',
     dateInit: new Date('2004-06-01'),
     dateEnd: new Date('2004-12-01'),
     hours: 10,
@@ -1274,7 +1284,7 @@ const projects = [
     id: 8,
     clientId: 4,
     employeeId: [15],
-    name: 'name',
+    name: 'agile workshop',
     color: '#242a75',
     dateInit: new Date('2005-01-01'),
     dateEnd: new Date('2005-04-01'),
@@ -1289,7 +1299,7 @@ const projects = [
     clientId: 5,
     employeeId: [29, 1, 15],
     color: '#005aaa',
-    name: 'name',
+    name: 'java workshop',
     dateInit: new Date('2005-02-01'),
     dateEnd: new Date('2005-08-01'),
     hours: 300,
@@ -1302,7 +1312,7 @@ const projects = [
     id: 10,
     clientId: 5,
     employeeId: [28, 25, 1, 4, 5, 7, 8, 9],
-    name: 'name',
+    name: 'front end documentation',
     color: '#005aaa',
     dateInit: new Date('2005-07-01'),
     dateEnd: new Date('2005-12-01'),
@@ -1317,7 +1327,7 @@ const projects = [
     clientId: 6,
     employeeId: [1, 2, 3, 15, 16, 18],
     color: '#141414',
-    name: 'name',
+    name: 'documentation',
     dateInit: new Date('2006-01-01'),
     dateEnd: new Date('2006-12-01'),
     hours: 40,
@@ -1330,7 +1340,7 @@ const projects = [
     id: 12,
     clientId: 6,
     employeeId: [1, 2, 3, 9, 4, 19],
-    name: 'name',
+    name: 'dropbox organization',
     color: '#141414',
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
@@ -1345,7 +1355,7 @@ const projects = [
     clientId: 7,
     employeeId: [14, 9, 13],
     color: '#00009f',
-    name: 'name',
+    name: 'agile workshop',
     dateInit: new Date('2007-03-01'),
     dateEnd: new Date('2007-05-01'),
     hours: 80,
@@ -1359,7 +1369,7 @@ const projects = [
     clientId: 7,
     employeeId: [29, 5],
     name: 'name',
-    color: '#00009f',
+    color: 'front end development',
     dateInit: new Date('2007-06-01'),
     dateEnd: new Date('2007-09-01'),
     hours: 10,
@@ -1373,7 +1383,7 @@ const projects = [
     clientId: 8,
     employeeId: [6, 12, 15, 18, 21],
     color: '#a20031',
-    name: 'name',
+    name: 'come to work',
     dateInit: new Date('2007-01-01'),
     dateEnd: new Date('2007-03-01'),
     hours: 100,
