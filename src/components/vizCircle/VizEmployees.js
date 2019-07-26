@@ -9,7 +9,6 @@ class VizEmployees extends React.Component {
     super(props);
     this.state = {
       employees: [],
-      size: [500, 500]
     };
   }
 

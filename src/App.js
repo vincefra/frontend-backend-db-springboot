@@ -274,7 +274,7 @@ class App extends React.Component {
   }
   unHighlightSKills() {
     const highLightSkills = this.state.skills.children.map(d => {
-      d.highlight = true;
+      d.highlight = false;
       return d;
     });
     this.setState({ skill: highLightSkills });
@@ -363,8 +363,8 @@ class App extends React.Component {
 
   highLightSkills(idArray) {
     const highLightSkills = this.state.skills.children.map(d => {
-      if (!idArray.includes(d.id)) {
-        d.highlight = false;
+      if (idArray.includes(d.id)) {
+        d.highlight = true;
       }
       return d;
     });

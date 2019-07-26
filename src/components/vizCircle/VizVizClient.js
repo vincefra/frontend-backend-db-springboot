@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react';
 import * as d3 from 'd3';
 
@@ -48,7 +49,9 @@ class VizClient extends React.Component {
     //PIE object to calculate the arc distribution
     const pie = d3
       .pie()
-      .sort(null)
+      .sort((a, b) => {
+        return b.hours - a.hours;
+      })
       .value(function (d) {
         return d.hours;
       });
