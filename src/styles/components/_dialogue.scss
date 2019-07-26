@@ -1,4 +1,5 @@
 .dialogue {
+  transition: 0.3s all cubic-bezier(1, 0, 0, 1);
   position: absolute;
   z-index: 10;
   width: 20vw;
@@ -8,26 +9,28 @@
   top: 10%;
   box-shadow: $box-shadow;
   &.hidden {
-    transform: translateX(150%);
+    opacity: 0;
+    transform: translateY(10%);
+  }
+  img {
+    // border-radius: $img-round;
+    display: block;
+    width: auto;
+    max-width: 200px;
+    max-height: 90px;
+    // background-color: $color-gray;
   }
   .identification {
     display: flex;
     align-items: center;
+    flex-direction: column;
     border-radius: $border-radius;
-    img {
-      border-radius: $img-round;
-      display: block;
-      width: 90px;
-      height: 90px;
-      object-fit: cover;
-      background-color: $color-gray;
-      margin-right: 25px;
-    }
     h2 {
       font-size: 1.375em;
+      margin-bottom: 0;
     }
     p {
-      font-size: 1em;
+      font-size: 0.875em;
       span {
         font-size: 15px;
         opacity: 0.8;
@@ -43,7 +46,7 @@
         margin-bottom: 0px;
       }
     }
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     &:last-child {
       margin-bottom: 0px;
     }
@@ -54,5 +57,7 @@
     align-items: flex-start;
     flex-direction: column;
     flex-wrap: wrap;
+    max-height: 400px;
+    overflow: hidden;
   }
 }

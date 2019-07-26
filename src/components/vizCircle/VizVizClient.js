@@ -83,22 +83,34 @@ class VizClient extends React.Component {
       const logo = {
         centroid: anchor
       };
-
+      const projects = this.getClientProjects(d.data.projects);
       const projectSlices = this.calculatePieProject(
         d.startAngle + projectPadding,
         d.endAngle - projectPadding,
-        d.data.projects
+        projects
       );
-      projectSlice = projectSlice.concat(projectSlices);
 
+      projectSlice = projectSlice.concat(projectSlices);
       return {
         path,
         fill: d.data.color,
         logo,
-        img: d.data.logo
+        img: d.data.logo,
+        id: d.data.id,
+        highlight: d.data.highlight
       };
     });
     this.setState({ clientSlice: slices, projectSlice: projectSlice });
+  }
+
+  // recieves projects 
+  // projectsID : array of ID numbers of the projects 
+  // returns array with objects with the projects information
+  getClientProjects(projectsId) {
+    const projects = this.props.projects.filter(function (el) {
+      return ~projectsId.indexOf(el.id);
+    });
+    return projects;
   }
 
   //add to the state slices of clients to draw
@@ -122,23 +134,19 @@ class VizClient extends React.Component {
 
     //arc array with the position and information in the pie
     const arcs = pie(projects);
-    // //Add to the information the fill of each one
-    arcs.forEach((d, i) => {
-      d.fill = '#FF00FF';
-    });
+
     //create an object SLICES in order to update the state
     //contains all the information one slice needs in order to be rendered
-    const slices = arcs.map((d, i) => {
+    const slices = arcs.map((d) => {
       const path = arcGenerator({
         startAngle: angleScale(d.startAngle),
         endAngle: angleScale(d.endAngle),
         innerRadius: radius - projectRadius - projectHeight / 2,
         outerRadius: radius - projectRadius + projectHeight / 2,
-        fill: d.fill
       });
-
+      d.path = path;
       return {
-        path
+        d
       };
     });
     return slices;
@@ -147,35 +155,58 @@ class VizClient extends React.Component {
   calculateDate(props) { }
 
   render() {
+
     const width = this.props.size[0];
     const height = this.props.size[1];
+    const clients = <g transform={`translate(${width / 2}, ${height / 2})`}>
+      {this.state.clientSlice.map((d, i) => (
+        <path
+          key={i}
+          d={d.path}
+          fill={d.fill}
+          opacity={d.highlight ? '1' : '0.2'}
+          onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+          onMouseOut={() => this.props.mouseOutClient()}
 
+        />
+      ))}
+    </g>;
+    const projects = <g transform={`translate(${width / 2}, ${height / 2})`}>
+      {this.state.projectSlice.map((d, i) => (
+        <path
+          key={i}
+          d={d.d.path}
+          fill='#FFFFFF'
+          opacity={d.d.data.highlight ? '1' : '0.1'}
+          onMouseOver={() => this.props.mouseOnProject(d.d.data.id)} //TO DO:organize DATA array 
+          onMouseOut={() => this.props.mouseOutProject()}
+        />
+      ))}
+    </g>;
+    const clientLogos = <g transform={`translate(${width / 2}, ${height / 2})`}>
+      {this.state.clientSlice.map((d, i) => (
+        <image
+          key={i}
+          width={imageSize}
+          height={imageSize}
+          x={d.logo.centroid[0]}
+          y={d.logo.centroid[1]}
+          xlinkHref={d.img}
+          textAnchor={d.anchor}
+          opacity={d.highlight ? '1' : '0.2'}
+          onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+          onMouseOut={() => this.props.mouseOutClient()}
+
+        />
+      ))}
+    </g>;
     return (
-      <g>
-        <g transform={`translate(${width / 2}, ${height / 2})`}>
-          {this.state.clientSlice.map((d, i) => (
-            <path key={i} d={d.path} fill={d.fill} />
-          ))}
-        </g>
-        <g transform={`translate(${width / 2}, ${height / 2})`}>
-          {this.state.projectSlice.map((d, i) => (
-            <path key={i} d={d.path} fill="#FFFFFF" />
-          ))}
-        </g>
-        <g transform={`translate(${width / 2}, ${height / 2})`}>
-          {this.state.clientSlice.map((d, i) => (
-            <image
-              key={i}
-              width={imageSize}
-              height={imageSize}
-              x={d.logo.centroid[0]}
-              y={d.logo.centroid[1]}
-              xlinkHref={d.img}
-              textAnchor={d.anchor}
-            />
-          ))}
-        </g>
-      </g>
+      <React.Fragment>
+        {clients}
+        {clientLogos}
+        {projects}
+
+      </React.Fragment>
     );
   }
 }

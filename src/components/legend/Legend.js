@@ -7,40 +7,54 @@ class Legend extends React.Component {
   }
 
   render() {
+    const totalEmployees = this.props.employees.children.filter(emp => emp.highlight === true).length;
+    const totalClients = this.props.clients.filter(cli => cli.highlight === true).length;
+    const totalProjects = this.props.projects.filter(pro => pro.highlight === true).length;
+    const totalSkills = this.props.skills.children.filter(ski => ski.highlight === true).length;
+
     return (
       <div className='legend'>
         <ul>
+
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('EMPLOYEES')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalEmployees} Employees
             </div>
-            25 Employees
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('CLIENTS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalClients} Clients
             </div>
-            25 Clients
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('PROJECTS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalProjects} Projects
             </div>
-            45 Projects
-
           </li>
           <li className='legend-item'>
-
-            <div>
-              <div>{/* SPACE FOR ICON */}</div>
+            <div
+              role="menuitem"
+              className={'thing'}
+              onMouseEnter={() => this.props.overEvent('SKILLS')}
+              onMouseLeave={() => this.props.outEvent()}
+            >
+              {totalSkills} Skills
             </div>
-            40 Skills
-
           </li>
         </ul>
       </div>
