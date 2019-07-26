@@ -33,7 +33,7 @@ async function getData() {
   let employeeList = [];
   let clientList = [];
   let technologyList = [];
-  let clientIdCounter = 0;
+  let projectList = [];
   let technologyIdCounter = 0;
 
   function getTechList(technologies) {
@@ -69,33 +69,9 @@ async function getData() {
     });
   }
 
-  async function getClientId(client) {
-    if (!client) client = '';
+  function getClientId(client) {
+    if (!client) return -1;
     let clientObj = clientList.find(c => c.name.toLowerCase() === client.toLowerCase());
-    let src = `/img/logos/${client.trim().replace(/\s/g, '_')}.png`;
-    let color = '';
-    try {
-      color = await getColor(src);
-    } catch (error) {
-      color = '';
-      src = '/img/logos/company_placeholder.png';
-    }
-
-    if (!clientObj) {
-      clientObj = {
-        id: clientIdCounter++,
-        name: client,
-        hours: 0,
-        color: color,
-        logo: src,
-        highlight: true,
-        projects: [],
-        type: '',
-        description: '',
-        location: ''
-      };
-      clientList.push(clientObj);
-    }
     return clientObj.id;
   }
 
@@ -125,12 +101,16 @@ async function getData() {
     const workbook = XLSX.read(uniCodedData, { type: 'array' });
     const projectSheet = workbook.Sheets[workbook.SheetNames[0]];
     const employeeSheet = workbook.Sheets[workbook.SheetNames[1]];
+    const clientSheet = workbook.Sheets[workbook.SheetNames[2]];
     const projectHeaders = ['id', 'name', 'type', 'startDates', 'endDates', 'client', 'employees', 'description', 'technologies'];
     const employeeHeaders = ['id', 'firstName', 'lastName', 'role', 'birthYear', 'startYear', 'endYear', 'location', 'technologies', 'languages'];
-    let projects = XLSX.utils.sheet_to_json(projectSheet, { header: projectHeaders });
-    let employees = XLSX.utils.sheet_to_json(employeeSheet, { header: employeeHeaders });
+    const clientHeaders = ['id', 'name', 'category', 'location', 'description'];
+    const projects = XLSX.utils.sheet_to_json(projectSheet, { header: projectHeaders });
+    const employees = XLSX.utils.sheet_to_json(employeeSheet, { header: employeeHeaders });
+    const clients = XLSX.utils.sheet_to_json(clientSheet, { header: clientHeaders });
     projects.shift();
     employees.shift();
+    clients.shift();
 
     employees.forEach(employee => {
       employeeList.push({
@@ -145,12 +125,47 @@ async function getData() {
       });
     });
 
-    let projectList = [];
+    for (const client of clients) {
+      let imageSrc = `/img/logos/${client.name.trim().replace(/\s/g, '_')}.png`;
+      try {
+        var color = await getColor(imageSrc);
+      } catch (error) {
+        color = '';
+        imageSrc = '/img/logos/company_placeholder.png';
+      }
+      clientList.push({
+        id: client.id,
+        name: client.name,
+        hours: 0,
+        color: color,
+        logo: imageSrc,
+        highlight: true,
+        projects: [],
+        type: client.category,
+        description: client.description,
+        location: client.location
+      });
+    }
+
+    clientList.push({
+      id: -1,
+      name: '',
+      hours: 0,
+      color: '#000000',
+      logo: '/img/logos/company_placeholder.png',
+      highlight: true,
+      projects: [],
+      type: 'Other',
+      description: '',
+      location: ''
+    });
+
+
     for (const project of projects) {
       const { startDate, endDate } = getDates(project.startDates, project.endDates);
       const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
-      const clientId = await getClientId(project.client);
-      updateClient(clientId, project.id, duration);
+      const clientId = getClientId(project.client);
+      updateClient(clientId === -1 ? clients.length : clientId, project.id, duration);
       projectList.push({
         id: project.id,
         name: project.name,
