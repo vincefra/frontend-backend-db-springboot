@@ -2,7 +2,7 @@ import React from 'react';
 import Employee from './Employee';
 import * as d3 from 'd3';
 
-const vizHeight = 0.7;
+const vizHeight = 0.58;
 
 class VizEmployees extends React.Component {
   constructor(props) {
