@@ -45,7 +45,7 @@ async function getData() {
         techObj = {
           id: technologyIdCounter++,
           name: technology,
-          highlight: true
+          highlight: false
         };
         technologyList.push(techObj);
       }
