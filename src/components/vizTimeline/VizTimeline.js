@@ -36,13 +36,9 @@ class VizTimeline extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { projects, size, ranges } = nextProps;
     if (!projects) return {};
-    const min = ranges[0];
-    const max = ranges[1];
-    const range = [min.getFullYear(), max.getFullYear()];
-    const extent = d3.extent([min, max]);
-    let stepsInMonths = ((max.getFullYear() - min.getFullYear()) * 12) + 1;
-    stepsInMonths -= min.getMonth() + 1;
-    stepsInMonths += max.getMonth();
+
+    const extent = d3.extent([ranges[0], ranges[1]]);
+
     const xScale = d3
       .scaleTime()
       .domain(extent)
@@ -82,10 +78,8 @@ class VizTimeline extends Component {
         }
       }
     }
-    const appSize = [size[0], size[1]];
-    const dates = [min, max];
 
-    return { bars, xScale, appSize, numLevels, range, stepsInMonths, dates };
+    return { bars, xScale, numLevels };
 
   }
   //add the axis of the visualization directly with d3
@@ -105,7 +99,6 @@ class VizTimeline extends Component {
     this.topAxis.tickFormat('');
     this.topAxis.tickSize(0);
 
-    // this.setState({ stepsInMonths: setpsMonths });
     d3.select(this.refs.topAxis).call(this.topAxis);
     d3.select(this.refs.xAxis).call(this.xAxis);
     d3.select(this.refs.monthAxis).call(this.monthAxis);
@@ -117,8 +110,8 @@ class VizTimeline extends Component {
     const barHeight = (height - margin.bottom) / (this.state.numLevels + 1);
     // const barHeight = height / level;
     const content =
-      <React.Fragment >
-        <svg width={this.state.appSize[0]} height={height}>
+      < div className="timeLine" >
+        <svg width={this.props.size[0]} height={height}>
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
           <g className='topAxis' ref="topAxis" transform={`translate(${margin.left}, ${0})`} />
 
@@ -148,13 +141,13 @@ class VizTimeline extends Component {
           filterLeftValue=""
           filterRightValue=""
           minFilterValue={0}
-          maxFilterValue={this.state.stepsInMonths}
+          maxFilterValue={this.props.totalProjectsMonths}
           defaultValueMin={0}
-          defaultValueMax={this.state.stepsInMonths}
+          defaultValueMax={this.props.totalProjectsMonths}
           step={1}
           afterChangeFunction={this.props.modifyRange}
         />
-      </React.Fragment>;
+      </div>;
 
     return (
       content

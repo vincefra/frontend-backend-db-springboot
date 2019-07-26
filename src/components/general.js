@@ -37,7 +37,7 @@ async function getData() {
   let technologyIdCounter = 0;
 
   function getTechList(technologies) {
-    if (!technologies || typeof(technologies) != 'string') return [];
+    if (!technologies || typeof (technologies) != 'string') return [];
     let techList = technologies.split(',').map(technology => technology.trim());
     return techList = techList.map(technology => {
       let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase());
@@ -52,7 +52,7 @@ async function getData() {
       return techObj.id;
     });
   }
-  
+
   function getColor(src) {
     return new Promise((resolve, reject) => {
       let img = new Image();
@@ -92,7 +92,7 @@ async function getData() {
         projects: [],
         type: '',
         description: '',
-        location:  ''
+        location: ''
       };
       clientList.push(clientObj);
     }
@@ -105,8 +105,8 @@ async function getData() {
   }
 
   function getEmployeeList(employees) {
-    if (!employees || typeof(employees) != 'string') return;
-    let empList = employees.split(',').map(employee => employee.trim());    
+    if (!employees || typeof (employees) != 'string') return;
+    let empList = employees.split(',').map(employee => employee.trim());
     return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
 
@@ -128,17 +128,17 @@ async function getData() {
     const projectHeaders = ['id', 'name', 'type', 'startDates', 'endDates', 'client', 'employees', 'description', 'technologies'];
     const employeeHeaders = ['id', 'firstName', 'lastName', 'role', 'birthYear', 'startYear', 'endYear', 'location', 'technologies', 'languages'];
     let projects = XLSX.utils.sheet_to_json(projectSheet, { header: projectHeaders });
-    let employees = XLSX.utils.sheet_to_json(employeeSheet, {header: employeeHeaders });
+    let employees = XLSX.utils.sheet_to_json(employeeSheet, { header: employeeHeaders });
     projects.shift();
     employees.shift();
-    
+
     employees.forEach(employee => {
       employeeList.push({
         id: employee.id,
         name: `${employee.firstName} ${employee.lastName}`,
         highlight: true,
         roll: `${employee.role ? employee.role : ''}`,
-        img: `img/${[employee.firstName,employee.lastName].join('_').replace(/\s/g, '_')}.jpg`,
+        img: `img/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`,
         initDate: moment(`${employee.startYear}-01-01`).format(dateFormat),
         endDate: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
         skills: getTechList(employee.technologies)
@@ -167,7 +167,7 @@ async function getData() {
       });
     }
     projects.forEach(async project => {
-      
+
     });
     return { projectList, employeeList, technologyList, clientList };
   }
