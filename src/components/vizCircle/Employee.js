@@ -18,7 +18,6 @@ class Employee extends React.Component {
 
   calculateEmployee() {
     const circle = {
-      radius: '28',
       fill: '#98abc5',
       x: '0',
       y: '0'

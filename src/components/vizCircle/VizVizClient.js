@@ -6,7 +6,7 @@ const sliceHeight = 50;
 const projectHeight = 10;
 const projectRadius = sliceHeight / 2;
 const vizHeight = 0.67;
-const imageSize = 50;
+const imageSize = 60;
 const imageDistance = 10;
 
 const projectPadding = (2 * Math.PI) / 180;

@@ -82,12 +82,6 @@ class VizEmployees extends React.Component {
       >
         {/* BACKGROUND CIRCLE */}
         <g ref='graph'>
-          {/* <circle
-            r={diameter}
-            fill='#eceeef'
-            transform={`translate(${diameter}, ${diameter})`}
-          /> */}
-          {/* ALL EMPLOYEES */}
           {employeeLayout}
         </g>
       </g>
