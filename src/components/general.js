@@ -147,7 +147,7 @@ async function getData() {
 
     let projectList = [];
     for (const project of projects) {
-      const { startDate, endDate } = getDates(project.startDates, project.endDate);
+      const { startDate, endDate } = getDates(project.startDates, project.endDates);
       const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
       const clientId = await getClientId(project.client);
       updateClient(clientId, project.id, duration);
