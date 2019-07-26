@@ -68,8 +68,8 @@ class Employee extends React.Component {
             </g>
           </g>
         ) : (
-            <h4>No image</h4>
-          )}
+          <h4>No image</h4>
+        )}
       </g>
     );
   }
