@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Navbar, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Form, Button } from 'react-bootstrap';
+import Search from '../search/Search';
 
 class Header extends Component {
   constructor(props) {
@@ -13,13 +14,19 @@ class Header extends Component {
           <img src='img/logos/findOut.png' alt='Find Out'></img>
         </Navbar.Brand>
 
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Form.Control as="select">
-            <option>Employee</option>
-            <option>Project</option>
-            <option>Client</option>
-          </Form.Control>
+        <Form inline className="searchForm" onSubmit={e => { e.preventDefault(); }}>
+          <Search
+            clients={this.props.clients}
+            projects={this.props.projects}
+            employees={this.props.employees}
+            skills={this.props.skills}
+            showProject={this.props.showProject}
+            showEmployee={this.props.showEmployee}
+            showSkill={this.props.showSkill}
+            showClient={this.props.showClient}
+            unHighlightElements={this.props.unHighlightElements}
+          />
+          {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
         </Form>
 
         <Button className="ml-auto p-2" variant="light">

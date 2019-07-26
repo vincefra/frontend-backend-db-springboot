@@ -26,8 +26,7 @@ class VizTimeline extends Component {
 
   componentDidMount() {
     this.setState({
-      clients: this.props.clients,
-      size: this.props.size
+
     });
 
 
@@ -35,10 +34,10 @@ class VizTimeline extends Component {
 
   //create all the data necessary for the timeline visualization and set it up in the state
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { projects, size } = nextProps;
+    const { projects, size, ranges } = nextProps;
     if (!projects) return {};
-    const min = d3.min(projects, d => d.dateInit);
-    const max = d3.max(projects, d => d.dateEnd);
+    const min = ranges[0];
+    const max = ranges[1];
     const range = [min.getFullYear(), max.getFullYear()];
     const extent = d3.extent([min, max]);
     let stepsInMonths = ((max.getFullYear() - min.getFullYear()) * 12) + 1;
@@ -57,8 +56,10 @@ class VizTimeline extends Component {
         y: height - margin.bottom,
         width: (xScale(d.dateEnd) - xScale(d.dateInit)),
         height: heightProject,
-        fill: d.color,
-        level: 0
+        fill: !d.highlight ? '#333333' : d.color,
+        level: 0,
+        id: d.id,
+        opacity: d.highlight ? '1' : '0.2'
       };
     });
     let numLevels = 0;
@@ -89,11 +90,11 @@ class VizTimeline extends Component {
   }
   //add the axis of the visualization directly with d3
   componentDidUpdate() {
+
     this.xAxis.ticks(d3.timeYear.every(1));
     this.xAxis.scale(this.state.xScale);
     this.xAxis.tickPadding(10);
     this.xAxis.tickSize(0);
-
 
     this.monthAxis.tickFormat('');
     this.monthAxis.tickSize(height - margin.bottom);
@@ -121,9 +122,9 @@ class VizTimeline extends Component {
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
           <g className='topAxis' ref="topAxis" transform={`translate(${margin.left}, ${0})`} />
 
-          {this.state.bars.map((d, i) => (
+          {this.state.bars.map((d) => (
             <rect
-              key={i}
+              key={d.id}
               x={d.x}
               y={d.y - barHeight - (barHeight * d.level)}
               rx="5"
@@ -131,11 +132,14 @@ class VizTimeline extends Component {
               width={d.width}
               height={barHeight}
               fill={d.fill}
-              fillOpacity='0.5' />
+              fillOpacity={d.opacity}
+              onMouseOver={() => { this.props.selectProject(d.id); }}
+              onMouseOut={this.props.mouseOutProject}
+            />
           ))}
 
           <g ref="xAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
-          <g ref="brush" />
+
         </svg>
         <Filter
           beforeVal=""
@@ -148,9 +152,10 @@ class VizTimeline extends Component {
           defaultValueMin={0}
           defaultValueMax={this.state.stepsInMonths}
           step={1}
-          afterChangeFunction={this.handleDateChange}
+          afterChangeFunction={this.props.modifyRange}
         />
       </React.Fragment>;
+
     return (
       content
     );

@@ -18,7 +18,14 @@ class TimeLine extends Component {
   render() {
     const content = !this.state.isLoading ?
       < div className="timeLine" >
-        <VizTimeLine projects={this.props.projects} size={this.props.size} />
+        <VizTimeLine
+          projects={this.props.projects}
+          size={this.props.size}
+          selectProject={this.props.selectProject}
+          mouseOutProject={this.props.mouseOutProject}
+          ranges={this.props.range}
+          modifyRange={this.props.modifyRange}
+        />
       </div > : <div></div>;
     return (
       content
