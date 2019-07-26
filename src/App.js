@@ -2,7 +2,8 @@ import React from 'react';
 import VizCircle from './components/vizCircle/VizCircle';
 import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
-import TimeLine from './components/vizTimeline/TimeLine';
+import VizTimeline from './components/vizTimeline/VizTimeline';
+
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
 import { load } from './components/general';
@@ -24,7 +25,9 @@ class App extends React.Component {
       isLoading: true,
       isMobileView: false,
       dialogueIsShown: false,
-      range: [],
+      initialDates: [],
+      datesBrushed: [],
+      totalProjectsMonths: 0,
       dialogueInfo: {
         image: '',
         name: '',
@@ -51,8 +54,8 @@ class App extends React.Component {
       const client = this.getClientById(project.clientId);
       const children = <div>
         <p><span>Client: </span><br></br>{client.name}</p>
-        <p><span>Starting date: </span><br></br>{project.dateInit.getDay() + '-' + project.dateInit.getMonth() + '-' + project.dateInit.getFullYear()}</p>
-        <p><span>Finishing date: </span><br></br>{project.dateEnd.getDay() + '-' + project.dateEnd.getMonth() + '-' + project.dateEnd.getFullYear()}</p>
+        <p><span>Starting date: </span><br></br>{project.dateInit.getDate() + '-' + (project.dateInit.getMonth() + 1) + '-' + project.dateInit.getFullYear()}</p>
+        <p><span>Finishing date: </span><br></br>{project.dateEnd.getDate() + '-' + (project.dateEnd.getMonth() + 1) + '-' + project.dateEnd.getFullYear()}</p>
         <p><span>Description: </span>{project.description}</p>
       </div>;
 
@@ -137,10 +140,32 @@ class App extends React.Component {
       const showDialogue = this.state.dialogueIsShown ? false : true;
       this.setState({ dialogueIsShown: showDialogue });
     };
+    /**
+   * Recieves an initial and ending date in number of weeks.  
+   * Returns the range in full date object
+   *
+   * @param initWeek the initial number of the week in the initial full date
+   * @param endWeek the ending number of the week in the end full date 
+   */
+    this.brushDates = (initWeek, endWeek) => {
+      const brushDate = new Date(this.state.initialDates[0]);
 
-    this.modifyRange = (initDate, endDate) => {
+      const initalDate = new Date(brushDate.setMonth(brushDate.getMonth() + initWeek));
+      const endingDate = new Date(brushDate.setMonth(brushDate.getMonth() + endWeek));
+      this.setState({
+        datesBrushed: [initalDate, endingDate]
+      });
 
-      console.log(initDate, endDate);
+      const brushedProjects = this.state.projects.map(project => {
+        project.inTimeRange = this.checkInTimeRange(project.dateInit, project.dateEnd, initalDate, endingDate);
+        return project;
+      });
+
+
+      this.setState({
+        datesBrushed: [initalDate, endingDate],
+        projects: brushedProjects
+      });
     };
 
     this.HighlightElements = (name) => {
@@ -170,8 +195,20 @@ class App extends React.Component {
 
     };
 
+  }
+
+  checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
+    const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
+    const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
+    // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
+    // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
+
+    // const inRange = (objRange[0].getTime() >= this.state.datesBrushed[0].getTime() && objRange[0].getTime() <= this.state.datesBrushed[1].getTime())
+    //   && (objRange[1].getTime() <= this.state.datesBrushed[1].getTime() && objRange[1].getTime() >= this.state.datesBrushed[0].getTime()) ? true : false;
+    return endRange;
 
   }
+
 
   unhightLightElements(name) {
     if (name === 'EMPLOYEES') {
@@ -290,7 +327,11 @@ class App extends React.Component {
     const client = this.state.clients.filter(d => d.id === id ? d : null)[0]; //get client id
     return client;
   }
-
+  /**
+   * Return a project from the state if it matches the given ID
+   *
+   * @param id The number of ID to compare 
+   */
   getProjectById(id) {
     const project = this.state.projects.filter(d => d.id === id ? d : null)[0]; //get project id
     return project;
@@ -347,12 +388,17 @@ class App extends React.Component {
 
 
   async componentDidMount() {
+
     const projects = this.state.projects;
     const min = d3.min(projects, d => d.dateInit);
     const max = d3.max(projects, d => d.dateEnd);
     const selectedRange = [min, max];
-    this.setState({ range: selectedRange });
-
+    let totalMonths = d3.timeMonth.count(min, max);
+    this.setState({
+      initialDates: selectedRange,
+      datesBrushed: selectedRange,
+      totalProjectsMonths: totalMonths
+    });
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
@@ -408,13 +454,14 @@ class App extends React.Component {
       type={this.state.dialogueInfo.type}
       childrenInfo={this.state.dialogueInfo.children}
     />;
-    const timeline = <TimeLine
+    const timeline = <VizTimeline
       projects={this.state.projects}
       size={this.state.size}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
-      modifyRange={this.modifyRange}
-      range={this.state.range}
+      modifyRange={this.brushDates}
+      ranges={this.state.initialDates}
+      totalProjectsMonths={this.state.totalProjectsMonths}
 
     />;
     const vizCircle = <VizCircle
@@ -1192,6 +1239,7 @@ const projects = [
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1206,6 +1254,7 @@ const projects = [
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1220,6 +1269,7 @@ const projects = [
     hours: 20,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1234,6 +1284,7 @@ const projects = [
     hours: 90,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1248,6 +1299,7 @@ const projects = [
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1262,6 +1314,7 @@ const projects = [
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1276,6 +1329,7 @@ const projects = [
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1290,6 +1344,7 @@ const projects = [
     hours: 50,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1304,6 +1359,7 @@ const projects = [
     hours: 300,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1318,6 +1374,7 @@ const projects = [
     hours: 140,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1332,6 +1389,7 @@ const projects = [
     hours: 40,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1346,6 +1404,7 @@ const projects = [
     hours: 200,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1360,6 +1419,7 @@ const projects = [
     hours: 80,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1368,12 +1428,13 @@ const projects = [
     clientId: 7,
     employeeId: [29, 5],
     name: 'name',
-    color: 'front end development',
-    dateInit: new Date('2007-06-01'),
-    dateEnd: new Date('2007-09-01'),
+    color: '#00009f',
+    dateInit: new Date('2007-01-01'),
+    dateEnd: new Date('2007-03-01'),
     hours: 10,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1388,6 +1449,7 @@ const projects = [
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   },
@@ -1397,11 +1459,12 @@ const projects = [
     employeeId: [1],
     name: 'name',
     color: '#a20031',
-    dateInit: new Date('2007-02-01'),
-    dateEnd: new Date('2007-04-01'),
+    dateInit: new Date('2007-9-01'),
+    dateEnd: new Date('2007-11-01'),
     hours: 100,
     skills: randomSKills(Math.floor(Math.random() * 20)),
     highlight: true,
+    inTimeRange: true,
     type: 'consultancy',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus purus eget mauris commodo porttitor. Fusce tristique nulla sit amet ante tempor, eget lobortis sem pharetra. Nunc ac viverra ex, sed aliquet urna. Duis dolor est, finibus eget urna eget, fringilla mattis odio. Phasellus eget viverra ipsum. Vivamus enim est.'
   }
