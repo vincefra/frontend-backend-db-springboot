@@ -413,7 +413,7 @@ class App extends React.Component {
       },
       skills: {
         name: 'Front-End',
-        children: data.technologyList
+        children: []
       },
       range: selectedRange
     });

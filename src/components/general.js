@@ -3,12 +3,15 @@ import config from '../config.json';
 import XLSX from 'xlsx';
 import moment from 'moment';
 import ColorThief from 'color-thief';
+
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
+const maxAnnularSectors = 7; // + 1 sector with the 'other' sector
 
 export async function load() {
   const data = await getData();
   const categories = groupCategories(data.clientList);
+  // const clientList = getLargestClients(categories[0].list);
   return { data, categories };
 }
 
@@ -185,6 +188,9 @@ async function getData() {
     projects.forEach(async project => {
 
     });
+
+    clientList.sort((a, b) => b.hours - a.hours);
+    projectList.sort((a, b) => b.hours - a.hours);
     return { projectList, employeeList, technologyList, clientList };
   }
 }
@@ -208,10 +214,8 @@ function groupCategories(clients) {
       highlight: true,
       projects: [],
     });
-
   sorted.sort((a, b) => b.list.length - a.list.length);
-  const maxCategories = 7;
-  const categories = sorted.slice(0, maxCategories);
+  const categories = sorted.slice(0, maxAnnularSectors);
   categories.push({ 
     id: counter++,
     name: 'Other', 
@@ -222,12 +226,32 @@ function groupCategories(clients) {
     projects: []
   });
   
-  for (let i = maxCategories; i < sorted.length; i++) categories[maxCategories].list = categories[maxCategories].list.concat(sorted[i].list);
-  categories[maxCategories].hours = categories[maxCategories].list.length;
+  for (let i = maxAnnularSectors; i < sorted.length; i++) categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
+  categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories.sort((a, b) => b.hours - a.hours);
   return categories;
 }
 
+function getLargestClients(clients) {
+  const clientList = clients.slice(0, maxAnnularSectors);
+  if (clients.length <= maxAnnularSectors) return clientList;
+  clientList.push({
+    id: -2,
+    name: 'Other',
+    highlight: true,
+    color: '#000',
+    hours: 0,
+    clients: [],
+    projects: []
+  });
+  for (let i = maxAnnularSectors; i < clients.length; i++) {
+    clientList[maxAnnularSectors].hours += clients[i].hours;
+    clientList[maxAnnularSectors].clients.push(clients[i]);
+  }
+  return clientList;
+}
+
 export default {
-  load
+  load,
+  getLargestClients
 };
