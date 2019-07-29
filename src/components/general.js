@@ -8,7 +8,8 @@ const dateFormat = 'YYYY-MM-DD';
 
 export async function load() {
   const data = await getData();
-  return data;
+  const categories = groupCategories(data.clientList);
+  return { data, categories };
 }
 
 async function getData() {
@@ -186,6 +187,45 @@ async function getData() {
     });
     return { projectList, employeeList, technologyList, clientList };
   }
+}
+
+function groupCategories(clients) {
+  const grouped = {};
+  for (let client of clients) {
+    if (!(client.type in grouped)) grouped[client.type] = [client];
+    else grouped[client.type].push(client);
+  }
+  
+  const sorted = [];
+  let counter = 0;
+  for (let category in grouped) 
+    sorted.push({
+      id: counter++,
+      name: category, 
+      list: grouped[category],
+      hours: grouped[category].length,
+      color: '#000',
+      highlight: true,
+      projects: [],
+    });
+
+  sorted.sort((a, b) => b.list.length - a.list.length);
+  const maxCategories = 7;
+  const categories = sorted.slice(0, maxCategories);
+  categories.push({ 
+    id: counter++,
+    name: 'Other', 
+    list: [],
+    hours: 0,
+    color: '#000',
+    highlight: true,
+    projects: []
+  });
+  
+  for (let i = maxCategories; i < sorted.length; i++) categories[maxCategories].list = categories[maxCategories].list.concat(sorted[i].list);
+  categories[maxCategories].hours = categories[maxCategories].list.length;
+  categories.sort((a, b) => b.hours - a.hours);
+  return categories;
 }
 
 export default {
