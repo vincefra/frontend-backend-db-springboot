@@ -6,7 +6,7 @@ let radius = 0;
 const sliceHeight = 50;
 const projectHeight = 10;
 const projectRadius = sliceHeight / 2;
-const vizHeight = 0.67;
+const vizHeight = 0.7;
 const imageSize = 60;
 const imageDistance = 10;
 
@@ -130,7 +130,9 @@ class VizClient extends React.Component {
     //PIE object to calculate the arc distribution
     const pie = d3
       .pie()
-      .sort(null)
+      .sort((a, b) => {
+        return b.hours - a.hours;
+      })
       .value(function (d) {
         return d.hours;
       });

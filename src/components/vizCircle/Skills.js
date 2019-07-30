@@ -59,13 +59,9 @@ class Skills extends React.Component {
                 className='skills'
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
-                opacity={d.data.highlight ? '1' : '0'}
-                onMouseOver={() => this.props.mouseOnSKill(d.data.id)}
-                onMouseOut={() => this.props.mouseOutSkill()}
               >
                 <circle
                   r="2.5"
-                  opacity={!d.data.highlight ? '1' : '0'}
                 ></circle>
                 <text
                   key={i}
