@@ -132,9 +132,6 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
   return slices;
 }
 
-function calculateDate(props) { }
-
-
 export function calculateLinks(props) {
   //Create a hierarchy and sort it alphabetically
   const data = props.skills;
