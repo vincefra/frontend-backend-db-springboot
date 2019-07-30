@@ -6,7 +6,7 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load } from './components/general';
+import { load, getLargestClients } from './components/general';
 import {
   setHighlight,
   setHightLightElement,
@@ -33,7 +33,7 @@ class App extends React.Component {
       employees: {},
       skills: {},
       filteredClients: [],
-      filteredProyects: [],
+      filteredProjects: [],
       filteredEmployees: [],
       filteredSkills: [],
       size: [width, height],
@@ -266,7 +266,7 @@ class App extends React.Component {
   }
 
   newMethod(id) {
-    console.log(id);
+    // console.log(id);
   }
 
   checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
@@ -315,37 +315,39 @@ class App extends React.Component {
   }
 
   async componentDidMount() {
-
-
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
-    const data = await load();
+    const {
+      categories,
+      projectList,
+      employeeList,
+      technologyList,
+      clientList
+    } = await load();
     //{TO DO} TAKE THIS CALCULATION AOUTISDE
-    const projects = data.projectList;
-    const min = d3.min(projects, d => d.dateInit);
-    const max = d3.max(projects, d => d.dateEnd);
+    const min = d3.min(projectList, d => d.dateInit);
+    const max = d3.max(projectList, d => d.dateEnd);
     const selectedRange = [min, max];
     let totalMonths = d3.timeMonth.count(min, max);
-
 
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
       totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
       isLoading: false,
-      clients: data.clientList,
-      projects: data.projectList,
+      clients: categories,
+      projects: projectList,
       employees: {
         name: 'employees',
-        children: data.employeeList
+        children: employeeList
       },
       skills: {
         name: 'Front-End',
-        children: data.technologyList
+        children: technologyList
       },
-      filteredClients: data.clientList,
-      filteredProyects: [],
+      filteredClients: clientList,
+      filteredProjects: [],
       filteredEmployees: [],
       filteredSkills: [],
       range: selectedRange
@@ -354,6 +356,12 @@ class App extends React.Component {
 
   resize() {
     this.setState({ isMobileView: window.innerWidth <= 1180 });
+  }
+
+  handleClick = (client) => { 
+    if (client.type === 'client') return;
+    const clientList = getLargestClients(client.list);
+    this.setState({ clients: clientList });
   }
 
   render() {
@@ -418,6 +426,7 @@ class App extends React.Component {
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
       unHighlightElements={this.unHighlightElements}
+      handleClick={this.handleClick}
     />;
     return (
       <React.Fragment>

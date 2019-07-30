@@ -9,9 +9,15 @@ const dateFormat = 'YYYY-MM-DD';
 const maxAnnularSectors = 7; // + 1 sector with the 'other' sector
 
 export async function load() {
-  const data = await getData();
-  const categories = groupCategories(data.clientList);
-  return data;
+  const { projectList, employeeList, technologyList, clientList } = await getData();
+  const categories = groupCategories(clientList);
+  return {
+    categories,
+    projectList,
+    employeeList,
+    technologyList,
+    clientList
+  };
 }
 
 async function getData() {
@@ -144,9 +150,10 @@ async function getData() {
         logo: imageSrc,
         highlight: true,
         projects: [],
-        type: client.category,
+        category: client.category,
         description: client.description,
-        location: client.location
+        location: client.location,
+        type: 'client'
       });
     }
 
@@ -158,9 +165,10 @@ async function getData() {
       logo: '/img/logos/company_placeholder.png',
       highlight: true,
       projects: [],
-      type: 'Other',
+      category: 'Other',
       description: '',
-      location: ''
+      location: '',
+      type: 'client'
     });
 
 
@@ -197,8 +205,8 @@ async function getData() {
 function groupCategories(clients) {
   const grouped = {};
   for (let client of clients) {
-    if (!(client.type in grouped)) grouped[client.type] = [client];
-    else grouped[client.type].push(client);
+    if (!(client.category in grouped)) grouped[client.category] = [client];
+    else grouped[client.category].push(client);
   }
   
   const sorted = [];
@@ -206,7 +214,9 @@ function groupCategories(clients) {
   for (let category in grouped) 
     sorted.push({
       id: counter++,
-      name: category, 
+      name: category,
+      category: '',
+      type: 'category',
       list: grouped[category],
       hours: grouped[category].length,
       color: '#000',
@@ -218,6 +228,8 @@ function groupCategories(clients) {
   categories.push({ 
     id: counter++,
     name: 'Other', 
+    category: '',
+    type: 'category',
     list: [],
     hours: 0,
     color: '#000',
@@ -231,21 +243,23 @@ function groupCategories(clients) {
   return categories;
 }
 
-function getLargestClients(clients) {
+export function getLargestClients(clients) {
   const clientList = clients.slice(0, maxAnnularSectors);
   if (clients.length <= maxAnnularSectors) return clientList;
   clientList.push({
     id: -2,
     name: 'Other',
+    category: '',
+    type: 'more',
     highlight: true,
     color: '#000',
     hours: 0,
-    clients: [],
+    list: [],
     projects: []
   });
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     clientList[maxAnnularSectors].hours += clients[i].hours;
-    clientList[maxAnnularSectors].clients.push(clients[i]);
+    clientList[maxAnnularSectors].list.push(clients[i]);
   }
   return clientList;
 }

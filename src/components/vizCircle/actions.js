@@ -33,7 +33,7 @@ export function calculatePieClient(props, radius) {
 
   //arc array with the position and information in the pie
   const arcs = pie(props.clients);
-
+  
   //create an object SLICES in order to update the state
   //contains all the information one slice needs in order to be rendered
   let projectSlice = [];
@@ -76,7 +76,8 @@ export function calculatePieClient(props, radius) {
       logo,
       img: d.data.logo,
       id: d.data.id,
-      highlight: d.data.highlight
+      highlight: d.data.highlight,
+      data: d.data
     };
   });
 
