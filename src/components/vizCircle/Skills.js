@@ -1,6 +1,9 @@
 import React from 'react';
 import * as d3 from 'd3';
 
+const distance = 0.1;
+const filterChildren = 40;
+
 class Skills extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +22,21 @@ class Skills extends React.Component {
 
   calculateLinks() {
     //Create a hierarchy and sort it alphabetically
-    const data = this.props.skills;
+    let children = this.props.skills.children !== undefined ? this.props.skills.children.length > filterChildren ? this.props.skills.children.slice(0, filterChildren) : this.props.skills.children : [];
+    const remainder = this.props.skills.children !== undefined ? this.props.skills.children.length > filterChildren ? this.props.skills.children.length - filterChildren : this.props.skills.children : 0;
+    if (remainder > 0) children.push(
+      {
+        id: -1,
+        name: '+' + remainder + ' technologies',
+        highlight: false
+      }
+    );
+    const skillsData = {
+      name: 'Front-End',
+      children: children
+    };
+    const data = skillsData;
+    // data.children = children;
     const root = d3
       .hierarchy(data)
       .sort((a, b) => a.data.name.localeCompare(b.data.name));
@@ -49,7 +66,7 @@ class Skills extends React.Component {
   render() {
     const width = this.props.size[0];
     const height = this.props.size[1];
-    const radius = (height - height * 0.15) / 2;
+    const radius = (height - height * distance) / 2;
     return (
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {this.state.nodes.children !== undefined ? (
@@ -60,12 +77,10 @@ class Skills extends React.Component {
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
               >
-                <circle
-                  r="2.5"
-                ></circle>
+
                 <text
                   key={i}
-                  x={d.txtPosX}
+                  cx={d.txtPosX}
                   dy=".31em"
                   transform={`rotate(${d.textRotation}) `}
                   textAnchor={d.anchorText}
