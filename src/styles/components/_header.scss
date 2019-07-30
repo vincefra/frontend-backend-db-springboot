@@ -1,10 +1,17 @@
 .header{
-    padding: 0, 50px;
-
-    // right-item: 
+  padding: 0, 50px;
 }
+
 .brandLogo{
-     img{
-         max-height: 40px;
-     }
+  img{
+    max-height: 40px;
+  }
  }
+ 
+.right {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
