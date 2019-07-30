@@ -162,4 +162,15 @@ export function calculateLinks(props) {
   return nodes;
 }
 
-export default { calculatePieClient, calculateLinks };
+export function calculateEmployee() {
+  const circle = {
+    radius: '28',
+    fill: '#98abc5',
+    x: '0',
+    y: '0'
+  };
+
+  return { circle };
+}
+
+export default { calculatePieClient, calculateLinks, calculateEmployee };
