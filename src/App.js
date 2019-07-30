@@ -15,7 +15,8 @@ import {
   getElementById,
   getSkillsIDsFromProject,
   getSkills,
-  getEmployees
+  getEmployees,
+  typeSelected
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -47,6 +48,10 @@ class App extends React.Component {
         name: '',
         type: '',
         children: ''
+      },
+      elementOver: {
+        type: 'none',
+        info: null
       }
     };
 
@@ -71,7 +76,9 @@ class App extends React.Component {
       });
     };
 
-
+    /**
+     * 
+     */
     this.showProject = (id) => {
       const project = getElementById(id, this.state.projects);
       const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.employees.children, false);
@@ -90,8 +97,10 @@ class App extends React.Component {
         clients: highLightClient,
         filteredSkills: skills,
         projects: highLightProjects,
-        employees: employees
+        employees: employees,
+        elementOver: typeSelected['PRO']
       });
+
 
       const client = getElementById(project.clientId, this.state.clients);
       const children = <div>
@@ -105,7 +114,9 @@ class App extends React.Component {
       this.modifyDialogueInfo(null, project.name, project.type, children);
 
     };
-
+    /**
+     * 
+     */
     this.showEmployee = (id) => {
       const employee = getElementById(id, this.state.employees.children);
       const highLightEmployees = setHightLightElement(false, [id], this.state.employees.children, false);
@@ -121,8 +132,10 @@ class App extends React.Component {
       this.setState({
         employees: employees,
         projects: ans[1],
-        clients: highLightClient
+        clients: highLightClient,
+        elementOver: typeSelected['EMP']
       });
+
 
       //get employee
       const children = <div>
@@ -132,7 +145,9 @@ class App extends React.Component {
 
       this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
     };
-
+    /**
+     * 
+     */
     this.showClient = (id) => {
       this.newMethod(id);
       this.toggleDialogue();
@@ -154,8 +169,10 @@ class App extends React.Component {
         // filteredSkills: skills,
         employees: employees,
         projects: highlightProjects,
-        clients: highLightClient
+        clients: highLightClient,
+        elementOver: typeSelected['CLI']
       });
+
 
       const children = <div>
         <p><span>Location: </span><br></br>{client.location}</p>
@@ -182,7 +199,8 @@ class App extends React.Component {
         clients: unHighlightClients,
         filteredSkills: skills,
         projects: unHighLightProject,
-        employees: employees
+        employees: employees,
+        elementOver: typeSelected['NON']
       });
     };
 
