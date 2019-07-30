@@ -392,7 +392,7 @@ class App extends React.Component {
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
-    const data = await load();
+    const { data, categories } = await load();
     const projects = data.projectList;
     const min = d3.min(projects, d => d.dateInit);
     const max = d3.max(projects, d => d.dateEnd);
@@ -403,7 +403,6 @@ class App extends React.Component {
       datesBrushed: selectedRange,
       totalProjectsMonths: totalMonths
     });
-
     this.setState({
       isLoading: false,
       clients: data.clientList,
@@ -414,7 +413,7 @@ class App extends React.Component {
       },
       skills: {
         name: 'Front-End',
-        children: data.technologyList
+        children: []
       },
       range: selectedRange
     });
