@@ -1,4 +1,5 @@
 import React from 'react';
+import { calculateEmployee } from './actions';
 
 class Employee extends React.Component {
   constructor(props) {
@@ -7,27 +8,13 @@ class Employee extends React.Component {
   }
 
   componentDidMount() {
-    const circle = this.calculateEmployee();
-    this.setState({ circle: circle });
+    this.setState({ circle: calculateEmployee() });
   }
 
   componentWillReceiveProps(nextProps) {
-    const circl = this.calculateEmployee();
-    this.setState({ circle: circl });
+    this.setState({ circle: calculateEmployee() });
   }
 
-  calculateEmployee() {
-    const circle = {
-      radius: '28',
-      fill: '#98abc5',
-      x: '0',
-      y: '0'
-    };
-
-    return {
-      circle
-    };
-  }
   render() {
     const circle = this.state.circle !== undefined ? this.state.circle : null;
     //create a unique id for each image mask

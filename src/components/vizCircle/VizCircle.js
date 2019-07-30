@@ -1,5 +1,5 @@
 import React from 'react';
-import VizClient from './VizVizClient';
+import VizClient from './VizClient';
 import VizEmployees from './VizEmployees';
 import Skills from './Skills';
 
