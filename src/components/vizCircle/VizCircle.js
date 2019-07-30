@@ -2,7 +2,6 @@ import React from 'react';
 import VizClient from './VizVizClient';
 import VizEmployees from './VizEmployees';
 import Skills from './Skills';
-import VizCategories from './vizCategories';
 
 //VizCircle is in charge of taking all the raw data and
 //calculate with D3 how to draw the visualization in SVG
