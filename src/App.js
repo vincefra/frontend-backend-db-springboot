@@ -359,9 +359,11 @@ class App extends React.Component {
   }
 
   handleClick = (client) => { 
-    if (client.type === 'client') return;
-    const clientList = getLargestClients(client.list);
-    this.setState({ clients: clientList });
+    if (client.type === 'client') this.setState({ clients: [client] });
+    else {
+      const clientList = getLargestClients(client.list);
+      this.setState({ clients: clientList });
+    }
   }
 
   render() {
