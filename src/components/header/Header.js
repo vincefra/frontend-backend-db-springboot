@@ -8,6 +8,7 @@ class Header extends Component {
     super(props);
     this.state = {};
   }
+  
   render() {
     return (
       <Navbar className="fixed-top header" variant="header" expand="lg">
@@ -30,7 +31,9 @@ class Header extends Component {
           {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
         </Form>
         <div className='right'>
-          <BreadCrumb />
+          <BreadCrumb  
+            clickedClient={this.props.clickedClient}
+          />
           <Button className="ml-auto p-2" variant="light">
             <i className="far fa-question-circle"></i>
           </Button>

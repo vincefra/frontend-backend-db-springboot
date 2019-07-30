@@ -350,7 +350,8 @@ class App extends React.Component {
       filteredProjects: [],
       filteredEmployees: [],
       filteredSkills: [],
-      range: selectedRange
+      range: selectedRange,
+      clickedClient: categories
     });
   }
 
@@ -359,10 +360,10 @@ class App extends React.Component {
   }
 
   handleClick = (client) => { 
-    if (client.type === 'client') this.setState({ clients: [client] });
+    if (client.type === 'client') this.setState({ clients: [client], clickedClient: [client] });
     else {
       const clientList = getLargestClients(client.list);
-      this.setState({ clients: clientList });
+      this.setState({ clients: clientList, clickedClient: clientList });
     }
   }
 
@@ -391,6 +392,7 @@ class App extends React.Component {
       showSkill={this.showSkill}
       showClient={this.showClient}
       unHighlightElements={this.unHighlightElements}
+      clickedClient={this.state.clickedClient}
     />;
     const legend = <Legend
       clients={this.state.clients}
