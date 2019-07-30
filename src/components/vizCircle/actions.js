@@ -5,7 +5,7 @@ const projectHeight = 10;
 const projectRadius = sliceHeight / 2;
 const imageSize = 50;
 const imageDistance = 10;
-
+const filterChildren = 40;
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
 
@@ -132,9 +132,24 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
   return slices;
 }
 
-export function calculateLinks(props) {
+export function createLinks(skills) {
   //Create a hierarchy and sort it alphabetically
-  const data = props.skills;
+  let children = skills.children !== undefined ? skills.children.length > filterChildren ? skills.children.slice(0, filterChildren) : skills.children : [];
+  const remainder = skills.children !== undefined ? skills.children.length > filterChildren ? skills.children.length - filterChildren : skills.children : 0;
+  if (remainder > 0) children.push(
+    {
+      id: -1,
+      name: '+' + remainder + ' technologies',
+      highlight: false
+    }
+  );
+  const skillsData = {
+    name: 'Front-End',
+    children: children
+  };
+
+  const data = skillsData;
+  // data.children = children;
   const root = d3
     .hierarchy(data)
     .sort((a, b) => a.data.name.localeCompare(b.data.name));
@@ -170,4 +185,4 @@ export function calculateEmployee() {
   return { circle };
 }
 
-export default { calculatePieClient, calculateLinks, calculateEmployee };
+export default { calculatePieClient, createLinks, calculateEmployee };

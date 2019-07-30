@@ -68,8 +68,8 @@ class VizEmployees extends React.Component {
           );
         })
       ) : (
-          <div />
-        );
+        <div />
+      );
 
     //return all the things to render
     return (

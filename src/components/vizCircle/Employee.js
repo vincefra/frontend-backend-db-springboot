@@ -15,20 +15,6 @@ class Employee extends React.Component {
     this.setState({ circle: calculateEmployee() });
   }
 
-<<<<<<< HEAD
-=======
-  calculateEmployee() {
-    const circle = {
-      fill: '#98abc5',
-      x: '0',
-      y: '0'
-    };
-
-    return {
-      circle
-    };
-  }
->>>>>>> secondIteration
   render() {
     const circle = this.state.circle !== undefined ? this.state.circle : null;
     //create a unique id for each image mask

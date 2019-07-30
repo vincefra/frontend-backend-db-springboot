@@ -1,5 +1,5 @@
 import React from 'react';
-import { createLinks } from './data';
+import { createLinks } from './actions';
 
 const distance = 0.1;
 

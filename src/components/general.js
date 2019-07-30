@@ -11,8 +11,7 @@ const maxAnnularSectors = 7; // + 1 sector with the 'other' sector
 export async function load() {
   const data = await getData();
   const categories = groupCategories(data.clientList);
-  // const clientList = getLargestClients(categories[0].list);
-  return { data, categories };
+  return data;
 }
 
 async function getData() {
@@ -252,11 +251,6 @@ function getLargestClients(clients) {
 }
 
 export default {
-<<<<<<< HEAD
   load,
   getLargestClients
 };
-=======
-  load
-};
->>>>>>> secondIteration

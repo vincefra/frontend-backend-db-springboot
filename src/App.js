@@ -1,13 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-import VizCircle from 'components/vizCircle/VizCircle';
-import Legend from 'components/legend/Legend';
-import Dialogue from 'components/dialogue/Dialogue';
-import VizTimeline from 'components/vizTimeline/VizTimeline';
-import Header from 'components/header/Header';
-import Loader from 'components/loader/Loader';
-import { load } from 'components/general';
-=======
 import VizCircle from './components/vizCircle/VizCircle';
 import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
@@ -27,7 +18,6 @@ import {
   getEmployees,
   typeSelected
 } from './components/interaction';
->>>>>>> secondIteration
 import * as d3 from 'd3';
 //width and height of the SVG visualization
 const width = window.innerWidth;
@@ -330,13 +320,8 @@ class App extends React.Component {
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
-<<<<<<< HEAD
-    const { data, categories } = await load();
-=======
     const data = await load();
-
     //{TO DO} TAKE THIS CALCULATION AOUTISDE
->>>>>>> secondIteration
     const projects = data.projectList;
     const min = d3.min(projects, d => d.dateInit);
     const max = d3.max(projects, d => d.dateEnd);
@@ -347,13 +332,7 @@ class App extends React.Component {
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
-<<<<<<< HEAD
-      totalProjectsMonths: totalMonths
-    });
-    this.setState({
-=======
       totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
->>>>>>> secondIteration
       isLoading: false,
       clients: data.clientList,
       projects: data.projectList,
@@ -363,7 +342,7 @@ class App extends React.Component {
       },
       skills: {
         name: 'Front-End',
-        children: []
+        children: data.technologyList
       },
       filteredClients: data.clientList,
       filteredProyects: [],
@@ -371,8 +350,6 @@ class App extends React.Component {
       filteredSkills: [],
       range: selectedRange
     });
-    // await load();
-    // this.setState({ isLoading: false });
   }
 
   resize() {
