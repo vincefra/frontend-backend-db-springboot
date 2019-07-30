@@ -252,6 +252,11 @@ function getLargestClients(clients) {
 }
 
 export default {
+<<<<<<< HEAD
   load,
   getLargestClients
 };
+=======
+  load
+};
+>>>>>>> secondIteration

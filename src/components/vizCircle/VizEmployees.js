@@ -2,14 +2,13 @@ import React from 'react';
 import Employee from './Employee';
 import * as d3 from 'd3';
 
-const vizHeight = 0.7;
+const vizHeight = 0.58;
 
 class VizEmployees extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       employees: [],
-      size: [500, 500]
     };
   }
 
@@ -82,12 +81,6 @@ class VizEmployees extends React.Component {
       >
         {/* BACKGROUND CIRCLE */}
         <g ref='graph'>
-          {/* <circle
-            r={diameter}
-            fill='#eceeef'
-            transform={`translate(${diameter}, ${diameter})`}
-          /> */}
-          {/* ALL EMPLOYEES */}
           {employeeLayout}
         </g>
       </g>

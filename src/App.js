@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import VizCircle from 'components/vizCircle/VizCircle';
 import Legend from 'components/legend/Legend';
 import Dialogue from 'components/dialogue/Dialogue';
@@ -6,6 +7,27 @@ import VizTimeline from 'components/vizTimeline/VizTimeline';
 import Header from 'components/header/Header';
 import Loader from 'components/loader/Loader';
 import { load } from 'components/general';
+=======
+import VizCircle from './components/vizCircle/VizCircle';
+import Legend from './components/legend/Legend';
+import Dialogue from './components/dialogue/Dialogue';
+import VizTimeline from './components/vizTimeline/VizTimeline';
+
+import Header from './components/header/Header';
+import Loader from './components/loader/Loader';
+import { load } from './components/general';
+import {
+  setHighlight,
+  setHightLightElement,
+  hightLightElementWithSkill,
+  highLightProjectWithEmployeeId,
+  getElementById,
+  getSkillsIDsFromProject,
+  getSkills,
+  getEmployees,
+  typeSelected
+} from './components/interaction';
+>>>>>>> secondIteration
 import * as d3 from 'd3';
 //width and height of the SVG visualization
 const width = window.innerWidth;
@@ -20,6 +42,10 @@ class App extends React.Component {
       projects: [],
       employees: {},
       skills: {},
+      filteredClients: [],
+      filteredProyects: [],
+      filteredEmployees: [],
+      filteredSkills: [],
       size: [width, height],
       isLoading: true,
       isMobileView: false,
@@ -32,25 +58,61 @@ class App extends React.Component {
         name: '',
         type: '',
         children: ''
+      },
+      elementOver: {
+        type: 'none',
+        info: null
       }
     };
 
+
     this.showSkill = (id) => {
-      this.highLightSkills([id]);
-      this.hightLightProjectsWithSkill(id);
-      this.hightEmployeesWithSkills(id);
-      //hightlight employees with that skill
+      //hightlight projects and get clients from that project
+      const ans = hightLightElementWithSkill(id, this.state.projects);
+      const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
+      const employeesHighLight = hightLightElementWithSkill(id, this.state.employees.children);
+      const highLightSkills = setHightLightElement(true, [id], this.state.skills.children, true);
+
+      let employees = this.state.employees;
+      employees.children = employeesHighLight;
+
+      let skills = this.state.skills;
+      skills.children = highLightSkills;
+      this.setState({
+        skills: skills,
+        projects: ans[1],
+        clients: highLightClient,
+        employees: employees
+      });
     };
 
+    /**
+     * 
+     */
     this.showProject = (id) => {
-      const project = this.getProjectById(id);
-      this.highLightEmployee(project.employeeId);
-      this.highLightClient([project.clientId]);
-      this.highLightSkills(project.skills);
-      this.highLightProject([id]);
-      this.toggleDialogue();
+      const project = getElementById(id, this.state.projects);
+      const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.employees.children, false);
+      const highLightProjects = setHightLightElement(false, [id], this.state.projects, false);
+      const highLightClient = setHightLightElement(false, [project.clientId], this.state.clients, false);
+      const highLightSkills = getSkills(project.skills, this.state.skills.children);
 
-      const client = this.getClientById(project.clientId);
+      let employees = this.state.employees;
+      employees.children = highLightEmployees;
+
+      let skills = this.state.filteredSkills;
+      skills.children = highLightSkills;
+
+
+      this.setState({
+        clients: highLightClient,
+        filteredSkills: skills,
+        projects: highLightProjects,
+        employees: employees,
+        elementOver: typeSelected['PRO']
+      });
+
+
+      const client = getElementById(project.clientId, this.state.clients);
       const children = <div>
         <p><span>Client: </span><br></br>{client.name}</p>
         <p><span>Starting date: </span><br></br>{project.dateInit.getDate() + '-' + (project.dateInit.getMonth() + 1) + '-' + project.dateInit.getFullYear()}</p>
@@ -58,67 +120,70 @@ class App extends React.Component {
         <p><span>Description: </span>{project.description}</p>
       </div>;
 
-
+      this.toggleDialogue();
       this.modifyDialogueInfo(null, project.name, project.type, children);
 
     };
-
+    /**
+     * 
+     */
     this.showEmployee = (id) => {
-      this.highLightEmployee([id]);
+      const employee = getElementById(id, this.state.employees.children);
+      const highLightEmployees = setHightLightElement(false, [id], this.state.employees.children, false);
+      const ans = highLightProjectWithEmployeeId(id, this.state.projects);
+      const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
+
+      let employees = this.state.employees;
+      employees.children = highLightEmployees;
+
+
       this.toggleDialogue();
-      //highlight projects where the employee is in
-      let clients = [];
-      const projects = this.state.projects.map(d => {
-        if (!d.employeeId.includes(id)) {
-          d.highlight = false;
-        } else {
-          clients.push(d.clientId);
-        }
-        return d;
+
+      this.setState({
+        employees: employees,
+        projects: ans[1],
+        clients: highLightClient,
+        elementOver: typeSelected['EMP']
       });
-      const uniqueClientsSet = new Set(clients);
-      clients = [...uniqueClientsSet];
-      this.setState({ projects: projects });
 
-      //TO DO highlight clientes where the employee is in
-      this.highLightClient(clients);
-      //TO DO hightlights employee skills
+
       //get employee
-      const employee = this.getEmployeeById(id);
-
       const children = <div>
         <p><span>Date in: </span><br></br>{employee.initDate}</p>
         <p><span>Date out: </span><br></br>{employee.endDate}</p>
       </div>;
 
       this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
-      this.highLightSkills(employee.skills);
     };
-
+    /**
+     * 
+     */
     this.showClient = (id) => {
-      this.highLightClient([id]);
+      this.newMethod(id);
       this.toggleDialogue();
 
-      //hightlight all the projects related to the client
-      const client = this.getClientById(id);
-      this.highLightProject(client.projects);
+      const client = getElementById(id, this.state.clients);
+      const clientEmployees = getEmployees(client.projects, this.state.projects, this.state.employees);
+      const highLightClient = setHightLightElement(false, [id], this.state.clients, false);
+      const highLightEmployees = setHightLightElement(false, clientEmployees, this.state.employees.children, false);
+      const highlightProjects = setHightLightElement(false, client.projects, this.state.projects, false);
+      const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
+      const highLightSkills = getSkills(skillsId, this.state.skills.children);
 
-      //highlight all the employees related to the client
-      let employeesId = [];
-      let skillsId = [];
-      const projects = this.state.projects.filter(prj => {
-        return ~client.projects.indexOf(prj.id);
+      let employees = this.state.employees;
+      employees.children = highLightEmployees;
+
+      let skills = this.state.filteredSkills;
+      skills.children = highLightSkills;
+      this.setState({
+        // filteredSkills: skills,
+        employees: employees,
+        projects: highlightProjects,
+        clients: highLightClient,
+        elementOver: typeSelected['CLI']
       });
-      //get the employeesId from the project and add it to the array of employeesId of the client
-      for (let i in projects) {
-        skillsId = skillsId.concat(projects[i].skills);
-        employeesId = employeesId.concat(projects[i].employeeId);
-      }
-      skillsId = [...new Set(skillsId)];
-      this.highLightSkills(skillsId);
-      //highlight employeesId
-      this.highLightEmployee(employeesId);
-      //show client information
+
+
       const children = <div>
         <p><span>Location: </span><br></br>{client.location}</p>
         <p><span>Description: </span><br></br>{client.description}</p>
@@ -127,12 +192,26 @@ class App extends React.Component {
       this.modifyDialogueInfo(client.logo, client.name, client.type, children);
     };
 
+
+
     this.unHighlightElements = () => {
-      this.unHighLightEmployees();
-      this.unHighLightProject();
-      this.unHighlightClients();
       if (this.state.dialogueIsShown) this.toggleDialogue();
-      this.unHighlightSKills();
+      const unHighlightClients = setHighlight(true, this.state.clients);
+      const unHighLightProject = setHighlight(true, this.state.projects);
+      const highLightEmployees = setHighlight(true, this.state.employees.children);
+
+      let employees = this.state.employees;
+      employees.children = highLightEmployees;
+      let skills = this.state.filteredSkills;
+      skills.children = [];
+
+      this.setState({
+        clients: unHighlightClients,
+        filteredSkills: skills,
+        projects: unHighLightProject,
+        employees: employees,
+        elementOver: typeSelected['NON']
+      });
     };
 
     this.toggleDialogue = () => {
@@ -196,8 +275,12 @@ class App extends React.Component {
 
   }
 
+  newMethod(id) {
+    console.log(id);
+  }
+
   checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
-    const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
+    // const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
     const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
     // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
     // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
@@ -211,98 +294,22 @@ class App extends React.Component {
 
   unhightLightElements(name) {
     if (name === 'EMPLOYEES') {
-      const children = this.state.employees.children.map(d => {
-        d.highlight = false;
-        return d;
-      });
+      const children = setHighlight(false, this.state.employees.children);
       const employees = this.state.employees;
       employees.children = children;
       this.setState({ employees: employees });
     } else if (name === 'CLIENTS') {
-      const clients = this.state.clients.map(d => {
-        d.highlight = false;
-        return d;
-      });
+      const clients = setHighlight(false, this.state.clients);
       this.setState({ clients: clients });
     } else if (name === 'PROJECTS') {
-      const projects = this.state.projects.map(d => {
-        d.highlight = false;
-        return d;
-      });
+      const projects = setHighlight(false, this.state.projects);
       this.setState({ projects: projects });
     } else if (name === 'SKILLS') {
-      const children = this.state.skills.children.map(d => {
-        d.highlight = false;
-        return d;
-      });
+      const children = setHighlight(false, this.state.skills.children);
       const skills = this.state.skills;
       skills.children = children;
       this.setState({ skills: skills });
     }
-  }
-
-  hightEmployeesWithSkills(id) {
-    let employees = this.state.employees;
-    const employeesHighLight = employees.children.map(d => {
-      if (d.skills.includes(id)) {
-        d.highlight = true;
-      } else {
-        d.highlight = false;
-      }
-      return d;
-    });
-
-    employees.children = employeesHighLight;
-    this.setState({ employees: employees });
-  }
-  hightLightProjectsWithSkill(id) {
-    let clients = [];
-    //modify all projects with id
-    const projectsHighLight = this.state.projects.map(d => {
-      if (d.skills.includes(id)) {
-        d.highlight = true;
-        if (!clients.includes(d.clientId)) clients.push(d.clientId);
-      } else {
-        d.highlight = false;
-      }
-      return d;
-    });
-    this.setState({ projects: projectsHighLight });
-    //hightlight clients with that skill in
-    this.highLightClient(clients);
-  }
-  unHighlightSKills() {
-    const highLightSkills = this.state.skills.children.map(d => {
-      d.highlight = true;
-      return d;
-    });
-    this.setState({ skill: highLightSkills });
-  }
-
-  unHighlightClients() {
-    const highLightClients = this.state.clients.map(d => {
-      d.highlight = true;
-      return d;
-    });
-    this.setState({ clients: highLightClients });
-  }
-
-  unHighLightEmployees() {
-    const highLightEmployees = this.state.employees.children.map(d => {
-      d.highlight = true;
-      return d;
-    });
-    let employees = this.state.employees;
-    employees.children = highLightEmployees;
-    this.setState({ employees: employees });
-  }
-
-  unHighLightProject() {
-    const highLightProjects = this.state.projects.map(d => {
-      d.highlight = true;
-      return d;
-    });
-    this.setState({ projects: highLightProjects });
   }
 
   modifyDialogueInfo(image, name, typeWork, children) {
@@ -317,93 +324,36 @@ class App extends React.Component {
 
   }
 
-  getEmployeeById(id) {
-    const employee = this.state.employees.children.filter(d => d.id === id ? d : null)[0]; //get client id
-    return employee;
-  }
-
-  getClientById(id) {
-    const client = this.state.clients.filter(d => d.id === id ? d : null)[0]; //get client id
-    return client;
-  }
-  /**
-   * Return a project from the state if it matches the given ID
-   *
-   * @param id The number of ID to compare 
-   */
-  getProjectById(id) {
-    const project = this.state.projects.filter(d => d.id === id ? d : null)[0]; //get project id
-    return project;
-  }
-
-  highLightClient(idArray) {
-    const highLightClients = this.state.clients.map(d => {
-      if (!idArray.includes(d.id)) {
-        d.highlight = false;
-      }
-      return d;
-    });
-
-    this.setState({ clients: highLightClients });
-  }
-
-  highLightEmployee(idArray) {
-    const highLightEmployees = this.state.employees.children.map(d => {
-      if (!idArray.includes(d.id)) {
-        d.highlight = false;
-      }
-      return d;
-    });
-    let employees = this.state.employees;
-    employees.children = highLightEmployees;
-    this.setState({ employees: employees });
-
-  }
-
-  highLightSkills(idArray) {
-    const highLightSkills = this.state.skills.children.map(d => {
-      if (!idArray.includes(d.id)) {
-        d.highlight = false;
-      }
-      return d;
-    });
-    let skills = this.state.skills;
-    skills.children = highLightSkills;
-    this.setState({ skills: skills });
-  }
-
-  //modifies the highlight state  of the projects to TRUE
-  //modifies previous highlight projects to FALSE
-  highLightProject(idArray) {
-    const highLightProjects = this.state.projects.map(d => {
-      if (!idArray.includes(d.id)) {
-        d.highlight = false;
-      }
-      return d;
-    });
-    this.setState({ projects: highLightProjects });
-  }
-
-
-
   async componentDidMount() {
 
 
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
+<<<<<<< HEAD
     const { data, categories } = await load();
+=======
+    const data = await load();
+
+    //{TO DO} TAKE THIS CALCULATION AOUTISDE
+>>>>>>> secondIteration
     const projects = data.projectList;
     const min = d3.min(projects, d => d.dateInit);
     const max = d3.max(projects, d => d.dateEnd);
     const selectedRange = [min, max];
     let totalMonths = d3.timeMonth.count(min, max);
+
+
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
+<<<<<<< HEAD
       totalProjectsMonths: totalMonths
     });
     this.setState({
+=======
+      totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
+>>>>>>> secondIteration
       isLoading: false,
       clients: data.clientList,
       projects: data.projectList,
@@ -415,12 +365,14 @@ class App extends React.Component {
         name: 'Front-End',
         children: []
       },
+      filteredClients: data.clientList,
+      filteredProyects: [],
+      filteredEmployees: [],
+      filteredSkills: [],
       range: selectedRange
     });
     // await load();
     // this.setState({ isLoading: false });
-
-
   }
 
   resize() {
@@ -484,11 +436,10 @@ class App extends React.Component {
       employees={this.state.employees}
       projects={this.state.projects}
       size={this.state.size}
-      skills={this.state.skills}
+      skills={this.state.filteredSkills}
       mouseOnClient={this.showClient}
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
-      mouseOnSKill={this.showSkill}
       unHighlightElements={this.unHighlightElements}
     />;
     return (

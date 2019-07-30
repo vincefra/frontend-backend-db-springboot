@@ -95,11 +95,6 @@ class VizTimeline extends Component {
     this.monthAxis.ticks(d3.timeMonth.every(1));
     this.monthAxis.scale(this.state.xScale);
 
-    this.topAxis.scale(this.state.xScale);
-    this.topAxis.tickFormat('');
-    this.topAxis.tickSize(0);
-
-    d3.select(this.refs.topAxis).call(this.topAxis);
     d3.select(this.refs.xAxis).call(this.xAxis);
     d3.select(this.refs.monthAxis).call(this.monthAxis);
   }
@@ -113,7 +108,6 @@ class VizTimeline extends Component {
       < div className="timeLine" >
         <svg width={this.props.size[0]} height={height}>
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
-          <g className='topAxis' ref="topAxis" transform={`translate(${margin.left}, ${0})`} />
 
           {this.state.bars.map((d) => (
             <rect

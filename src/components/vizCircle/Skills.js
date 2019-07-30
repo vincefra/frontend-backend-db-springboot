@@ -1,5 +1,7 @@
 import React from 'react';
-import { calculateLinks } from './actions';
+import { createLinks } from './data';
+
+const distance = 0.1;
 
 class Skills extends React.Component {
   constructor(props) {
@@ -9,18 +11,24 @@ class Skills extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.setState({ nodes: calculateLinks(this.props) });
+  componentDidMount(props) {
+    const layOut = createLinks(this.props.skills);
+    this.setState({
+      nodes: layOut
+    });
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ nodes: calculateLinks(props) });
+    const layOut = createLinks(this.props.skills);
+    this.setState({
+      nodes: layOut
+    });
   }
 
   render() {
     const width = this.props.size[0];
     const height = this.props.size[1];
-    const radius = (height - height * 0.15) / 2;
+    const radius = (height - height * distance) / 2;
     return (
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {this.state.nodes.children !== undefined ? (
@@ -30,17 +38,11 @@ class Skills extends React.Component {
                 className='skills'
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
-                opacity={d.data.highlight ? '1' : '0'}
-                onMouseOver={() => this.props.mouseOnSKill(d.data.id)}
-                onMouseOut={() => this.props.mouseOutSkill()}
               >
-                <circle
-                  r="2.5"
-                  opacity={!d.data.highlight ? '1' : '0'}
-                ></circle>
+
                 <text
                   key={i}
-                  x={d.txtPosX}
+                  cx={d.txtPosX}
                   dy=".31em"
                   transform={`rotate(${d.textRotation}) `}
                   textAnchor={d.anchorText}
