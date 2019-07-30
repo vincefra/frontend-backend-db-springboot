@@ -1,0 +1,33 @@
+.breadcrumbs {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+
+  .crumb {
+    height: 1em;
+    width: 1em;
+    margin: 0 1em;
+    border: 0.2em solid #ccc;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    padding: 0;
+    position: relative;
+  
+    &:before {
+      content: '';
+      position: absolute;
+      top: .25em;
+      left: -2.2em;
+      width: 2em;
+      height: .2em;
+      background: #ccc;
+      z-index: -1;
+    }
+
+    &:first-child:before {
+      display: none;
+    }
+  }
+}

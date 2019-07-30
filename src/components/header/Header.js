@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Navbar, Form, Button } from 'react-bootstrap';
-import Search from '../search/Search';
+import Search from 'components/search/Search';
+import BreadCrumb from 'components/breadcrumb/Breadcrumb';
 
 class Header extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class Header extends Component {
     return (
       <Navbar className="fixed-top header" variant="header" expand="lg">
         <Navbar.Brand className="brandLogo">
-          <img src='img/logos/findOut.png' alt='Find Out'></img>
+          <img src='img/logos/findOut.png' alt='FindOut'></img>
         </Navbar.Brand>
 
         <Form inline className="searchForm" onSubmit={e => { e.preventDefault(); }}>
@@ -28,10 +29,12 @@ class Header extends Component {
           />
           {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
         </Form>
-
-        <Button className="ml-auto p-2" variant="light">
-          <i className="far fa-question-circle"></i>
-        </Button>
+        <div className='right'>
+          <BreadCrumb />
+          <Button className="ml-auto p-2" variant="light">
+            <i className="far fa-question-circle"></i>
+          </Button>
+        </div>
 
       </Navbar>
     );
