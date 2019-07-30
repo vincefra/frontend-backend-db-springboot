@@ -9,8 +9,12 @@ class Breadcrumb extends React.Component {
     };
   }
 
-  onNavigate(index, client) {
-    // Return clients of index and remove from index and crumbs.length
+  handleClick(index, client) {
+    if (index + 1 === this.state.crumbs.length) return;
+    this.props.breadcrumbClick(client);
+    const crumbs = this.state.crumbs.slice(0, index + 1);
+    
+    this.setState({ crumbs });
   }
 
   componentDidMount() {
@@ -36,7 +40,7 @@ class Breadcrumb extends React.Component {
   newCrumb(clients) {
     return (
       <Crumb 
-        onNavigate={this.onNavigate.bind(this, this.state.crumbs.length)} 
+        handleClick={this.handleClick.bind(this, this.state.crumbs.length)} 
         clients={clients} 
         key={this.state.crumbs.length}
       />

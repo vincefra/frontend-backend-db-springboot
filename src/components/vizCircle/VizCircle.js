@@ -16,7 +16,7 @@ class VizCircle extends React.Component {
       mouseOutProject={this.props.unHighlightElements}
       mouseOnClient={this.props.mouseOnClient}
       mouseOutClient={this.props.unHighlightElements}
-      handleClick={this.props.handleClick}
+      clientClick={this.props.clientClick}
     />;
 
     const content =

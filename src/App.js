@@ -359,7 +359,14 @@ class App extends React.Component {
     this.setState({ isMobileView: window.innerWidth <= 1180 });
   }
 
-  handleClick = (client) => { 
+  breadcrumbClick = clients => {
+    console.log(clients);
+    this.setState({
+      clients
+    });
+  }
+
+  clientClick = client => { 
     if (client.type === 'client') this.setState({ clients: [client], clickedClient: [client] });
     else {
       const clientList = getLargestClients(client.list);
@@ -393,6 +400,7 @@ class App extends React.Component {
       showClient={this.showClient}
       unHighlightElements={this.unHighlightElements}
       clickedClient={this.state.clickedClient}
+      breadcrumbClick={this.breadcrumbClick}
     />;
     const legend = <Legend
       clients={this.state.clients}
@@ -430,7 +438,7 @@ class App extends React.Component {
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
       unHighlightElements={this.unHighlightElements}
-      handleClick={this.handleClick}
+      clientClick={this.clientClick}
     />;
     return (
       <React.Fragment>

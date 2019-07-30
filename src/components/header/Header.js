@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Navbar, Form, Button } from 'react-bootstrap';
 import Search from 'components/search/Search';
-import BreadCrumb from 'components/breadcrumb/Breadcrumb';
+import Breadcrumb from 'components/breadcrumb/Breadcrumb';
 
 class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
-  
+
   render() {
     return (
       <Navbar className="fixed-top header" variant="header" expand="lg">
@@ -31,8 +31,9 @@ class Header extends Component {
           {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
         </Form>
         <div className='right'>
-          <BreadCrumb  
+          <Breadcrumb  
             clickedClient={this.props.clickedClient}
+            breadcrumbClick={this.props.breadcrumbClick}
           />
           <Button className="ml-auto p-2" variant="light">
             <i className="far fa-question-circle"></i>

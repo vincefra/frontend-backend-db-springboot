@@ -11,7 +11,7 @@ class Crumb extends React.Component {
   }
 
   handleClick() {
-    this.props.onNavigate(this.state.clients);
+    this.props.handleClick(this.state.clients);
   }
 
   render() {
