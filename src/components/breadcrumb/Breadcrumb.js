@@ -5,7 +5,7 @@ class Breadcrumb extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      crumbs: []//this.props.clients
+      crumbs: []
     };
   }
 
@@ -13,14 +13,11 @@ class Breadcrumb extends React.Component {
     if (index + 1 === this.state.crumbs.length) return;
     this.props.breadcrumbClick(client);
     const crumbs = this.state.crumbs.slice(0, index + 1);
-    
     this.setState({ crumbs });
   }
 
   componentDidMount() {
-    this.setState({
-      crumbs: [this.newCrumb(this.props.clickedClient)]
-    });
+    this.setState({ crumbs: [this.newCrumb(this.props.clickedClient)] });
   }
 
   isEqual(previousList, nextList) {
@@ -30,10 +27,10 @@ class Breadcrumb extends React.Component {
     return previousIds.filter(x => !nextIds.includes(x)).length === 0;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
-      const crumbs = this.state.crumbs.push(this.newCrumb(this.props.clickedClient));
-      return ({ crumbs });
+      const crumbs = [...prevState.crumbs, this.newCrumb(this.props.clickedClient)];
+      this.setState({ crumbs });
     }
   }
 
