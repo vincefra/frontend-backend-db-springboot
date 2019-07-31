@@ -11,6 +11,7 @@ class Breadcrumb extends React.Component {
 
   handleClick(index, client) {
     if (index + 1 === this.state.crumbs.length) return;
+    this.resetHighlight(client);
     this.props.breadcrumbClick(client);
     const crumbs = this.state.crumbs.slice(0, index + 1);
     this.setState({ crumbs });
@@ -34,6 +35,10 @@ class Breadcrumb extends React.Component {
     }
   }
 
+  resetHighlight(clients) {
+    clients.forEach(client => client.highlight = true);
+    return clients;
+  }
   newCrumb(clients) {
     return (
       <Crumb 
