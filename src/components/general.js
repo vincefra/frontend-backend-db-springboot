@@ -78,6 +78,12 @@ async function getData() {
     return clientObj.id;
   }
 
+  function getClientColor(client) {
+    if (!client) return -1;
+    const clientObj = clientList.find(c => c.name.toLowerCase() === client.toLowerCase());
+    return clientObj.color;
+  }
+
   function updateClient(clientId, projectId, duration) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
@@ -168,6 +174,7 @@ async function getData() {
       const { startDate, endDate } = getDates(project.startDates, project.endDates);
       const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
       const clientId = getClientId(project.client);
+      const clientColor = getClientColor(project.client);
       updateClient(clientId === -1 ? clients.length : clientId, project.id, duration);
       projectList.push({
         id: project.id,
@@ -180,7 +187,7 @@ async function getData() {
         dateInit: new Date(startDate),
         dateEnd: new Date(endDate),
         skills: getTechList(project.technologies),
-        color: '#e00026',
+        color: clientColor,
         hours: duration
       });
     }
@@ -200,13 +207,13 @@ function groupCategories(clients) {
     if (!(client.type in grouped)) grouped[client.type] = [client];
     else grouped[client.type].push(client);
   }
-  
+
   const sorted = [];
   let counter = 0;
-  for (let category in grouped) 
+  for (let category in grouped)
     sorted.push({
       id: counter++,
-      name: category, 
+      name: category,
       list: grouped[category],
       hours: grouped[category].length,
       color: '#000',
@@ -215,16 +222,16 @@ function groupCategories(clients) {
     });
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = sorted.slice(0, maxAnnularSectors);
-  categories.push({ 
+  categories.push({
     id: counter++,
-    name: 'Other', 
+    name: 'Other',
     list: [],
     hours: 0,
     color: '#000',
     highlight: true,
     projects: []
   });
-  
+
   for (let i = maxAnnularSectors; i < sorted.length; i++) categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories.sort((a, b) => b.hours - a.hours);
