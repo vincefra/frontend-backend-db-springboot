@@ -360,9 +360,9 @@ class App extends React.Component {
   }
 
   breadcrumbClick = clients => {
-    console.log(clients);
     this.setState({
-      clients
+      clients,
+      clickedClient: []
     });
   }
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import Crumb from './Crumb';
 
 class Breadcrumb extends React.Component {
   constructor(props) {
@@ -9,8 +8,9 @@ class Breadcrumb extends React.Component {
     };
   }
 
-  handleClick(index, client) {
+  handleClick(index) {
     if (index + 1 === this.state.crumbs.length) return;
+    const client = this.state.crumbs[index];
     this.resetHighlight(client);
     this.props.breadcrumbClick(client);
     const crumbs = this.state.crumbs.slice(0, index + 1);
@@ -18,19 +18,20 @@ class Breadcrumb extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({ crumbs: [this.newCrumb(this.props.clickedClient)] });
+    this.setState({ crumbs: [this.props.clickedClient] });
   }
 
   isEqual(previousList, nextList) {
     if (previousList.length !== nextList.length) return false;
-    let previousIds = previousList.map(client => client.id);
-    let nextIds = nextList.map(client => client.id);
+    const previousIds = previousList.map(client => client.id);
+    const nextIds = nextList.map(client => client.id);
     return previousIds.filter(x => !nextIds.includes(x)).length === 0;
   }
-
+  
   componentDidUpdate(prevProps, prevState) {
-    if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
-      const crumbs = [...prevState.crumbs, this.newCrumb(this.props.clickedClient)];
+    const nextClients = this.props.clickedClient;
+    if (!this.isEqual(prevProps.clickedClient, nextClients) && nextClients.length !== 0) {
+      const crumbs = [...prevState.crumbs, nextClients];
       this.setState({ crumbs });
     }
   }
@@ -39,24 +40,17 @@ class Breadcrumb extends React.Component {
     clients.forEach(client => client.highlight = true);
     return clients;
   }
-  newCrumb(clients) {
-    return (
-      <Crumb 
-        handleClick={this.handleClick.bind(this, this.state.crumbs.length)} 
-        clients={clients} 
-        key={this.state.crumbs.length}
-      />
-    );
-  }
 
   render() {
+    const crumbs = this.state.crumbs.map((_, i) => (
+      <span className='crumb' onClick={this.handleClick.bind(this, i)} key={i} />
+    ));
     return (
       <div className='breadcrumbs'>
-        {this.state.crumbs}
+        {crumbs}
       </div>
     );
   }
-
 }
 
 export default Breadcrumb;
