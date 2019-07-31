@@ -266,7 +266,7 @@ class App extends React.Component {
   }
 
   newMethod(id) {
-    console.log(id);
+    // console.log(id);
   }
 
   checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {

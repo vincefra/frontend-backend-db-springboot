@@ -17,12 +17,12 @@ class VizClient extends React.Component {
     const height = this.props.size[1];
     const radius = height - height * vizHeight;
     const { clientSlice, projectSlice } = calculatePieClient(this.props, radius);
-    this.setState({ clientSlice, projectSlice, radius});
+    this.setState({ clientSlice, projectSlice, radius });
   }
 
   componentWillReceiveProps(nextProps) {
     const { clientSlice, projectSlice } = calculatePieClient(this.props, this.state.radius);
-    this.setState({ clientSlice, projectSlice});
+    this.setState({ clientSlice, projectSlice });
   }
 
   render() {
@@ -56,7 +56,7 @@ class VizClient extends React.Component {
     </g>;
     const clientLogos = <g transform={`translate(${width / 2}, ${height / 2})`}>
       {this.state.clientSlice.map((d, i) => (
-        <image
+        < image
           key={i}
           width={imageSize}
           height={imageSize}
