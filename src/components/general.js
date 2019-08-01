@@ -6,11 +6,12 @@ import ColorThief from 'color-thief';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
-const maxAnnularSectors = 7; // + 1 sector with the 'other' sector
+const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
   const { projectList, employeeList, technologyList, clientList } = await getData();
   const categories = groupCategories(clientList);
+  categories.employees = employeeList.map((_, i) => i);
   return {
     categories,
     projectList,
@@ -143,6 +144,7 @@ async function getData() {
         color = '';
         imageSrc = '/img/logos/company_placeholder.png';
       }
+
       clientList.push({
         id: client.id,
         name: client.name,
@@ -155,7 +157,8 @@ async function getData() {
         description: client.description ? client.description : '',
         location: client.location,
         type: 'client',
-        employees: []
+        employees: [],
+        list: []
       });
     }
 
@@ -252,7 +255,19 @@ function groupCategories(clients) {
   }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories.sort((a, b) => b.hours - a.hours);
-  return categories;
+  
+  return { 
+    id: counter++,
+    name: 'Other', 
+    category: '',
+    type: 'category',
+    list: categories,
+    hours: 0,
+    color: '#000',
+    highlight: true,
+    projects: [],
+    employees: []
+  };
 }
 
 export function getLargestClients(clients) {

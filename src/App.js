@@ -75,9 +75,6 @@ class App extends React.Component {
       });
     };
 
-    /**
-     * 
-     */
     this.showProject = (id) => {
       const project = getElementById(id, this.state.projects);
       const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.filteredEmployees.children, false);
@@ -113,9 +110,7 @@ class App extends React.Component {
       this.modifyDialogueInfo(null, project.name, project.type, children);
 
     };
-    /**
-     * 
-     */
+    
     this.showEmployee = (id) => {
       const employee = getElementById(id, this.state.filteredEmployees.children);
       const highLightEmployees = setHightLightElement(false, [id], this.state.filteredEmployees.children, false);
@@ -124,7 +119,6 @@ class App extends React.Component {
 
       let filteredEmployees = this.state.filteredEmployees;
       filteredEmployees.children = highLightEmployees;
-
 
       this.toggleDialogue();
 
@@ -135,8 +129,6 @@ class App extends React.Component {
         elementOver: typeSelected['EMP']
       });
 
-
-      //get employee
       const children = <div>
         <p><span>Date in: </span><br></br>{employee.initDate}</p>
         <p><span>Date out: </span><br></br>{employee.endDate}</p>
@@ -145,7 +137,7 @@ class App extends React.Component {
       this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
     };
 
-    
+
     this.showClient = (id) => {
       this.newMethod(id);
       this.toggleDialogue();
@@ -326,13 +318,13 @@ class App extends React.Component {
     const max = d3.max(projectList, d => d.dateEnd);
     const selectedRange = [min, max];
     let totalMonths = d3.timeMonth.count(min, max);
-    console.log(employeeList);
+
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
       totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
       isLoading: false,
-      clients: categories,
+      clients: categories.list,
       projects: projectList,
       employees: {
         name: 'employees',
@@ -359,35 +351,28 @@ class App extends React.Component {
   }
 
   breadcrumbClick = clients => {
+    const employees = getEmployeeObjs(clients.employees, this.state.employees.children);
     this.setState({
-      clients,
-      clickedClient: []
+      clients: clients.list,
+      clickedClient: { list: [] },
+      filteredEmployees: {
+        name: 'employees',
+        children: employees
+      } 
     });
   }
 
   clientClick = client => { 
     const employees = getEmployeeObjs(client.employees, this.state.employees.children);
-    if (client.type === 'client') 
-      this.setState({ 
-        clients: [client], 
-        clickedClient: [client],
-        filteredEmployees: {
-          name: 'employees',
-          children: employees
-        } 
-      });
-    else {
-      const clientList = getLargestClients(client.list);
-      this.setState({ 
-        clients: clientList, 
-        clickedClient: clientList,
-        filteredEmployees: {
-          name: 'employees',
-          children: employees
-        } 
-      });
-    }
-    console.log(client);
+    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    this.setState({ 
+      clients: clientList, 
+      clickedClient: client,
+      filteredEmployees: {
+        name: 'employees',
+        children: employees
+      } 
+    });
   }
 
   render() {

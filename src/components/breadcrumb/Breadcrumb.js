@@ -29,15 +29,16 @@ class Breadcrumb extends React.Component {
   }
   
   componentDidUpdate(prevProps, prevState) {
-    const nextClients = this.props.clickedClient;
-    if (!this.isEqual(prevProps.clickedClient, nextClients) && nextClients.length !== 0) {
-      const crumbs = [...prevState.crumbs, nextClients];
+    if (this.props.clickedClient.length === 0) return;
+    const nextClients = this.props.clickedClient.list;
+    if (!this.isEqual(prevProps.clickedClient.list, nextClients) && nextClients.length.list !== 0) {
+      const crumbs = [...prevState.crumbs, this.props.clickedClient];
       this.setState({ crumbs });
     }
   }
 
   resetHighlight(clients) {
-    clients.forEach(client => client.highlight = true);
+    clients.list.forEach(client => client.highlight = true);
     return clients;
   }
 
