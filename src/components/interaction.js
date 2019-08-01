@@ -105,7 +105,7 @@ export function highLightProjectWithEmployeeId(id, modArray) {
  * @param {array} array array to search
  */
 export function getElementById(id, array) {
-  const element = array.filter(d => d.id === id ? d : null)[0];
+  const element = array.find(d => d.id === id);
   return element;
 }
 
