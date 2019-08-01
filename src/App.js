@@ -15,7 +15,6 @@ import {
   getElementById,
   getSkillsIDsFromProject,
   getSkills,
-  getEmployees,
   typeSelected
 } from './components/interaction';
 import * as d3 from 'd3';
@@ -60,10 +59,10 @@ class App extends React.Component {
       //hightlight projects and get clients from that project
       const ans = hightLightElementWithSkill(id, this.state.projects);
       const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
-      const employeesHighLight = hightLightElementWithSkill(id, this.state.employees.children);
+      const employeesHighLight = hightLightElementWithSkill(id, this.state.filteredEmployees.children);
       const highLightSkills = setHightLightElement(true, [id], this.state.skills.children, true);
 
-      let employees = this.state.employees;
+      let employees = this.state.filtered.employees;
       employees.children = employeesHighLight;
 
       let skills = this.state.skills;
@@ -72,7 +71,7 @@ class App extends React.Component {
         skills: skills,
         projects: ans[1],
         clients: highLightClient,
-        employees: employees
+        filtered: employees
       });
     };
 
@@ -81,13 +80,13 @@ class App extends React.Component {
      */
     this.showProject = (id) => {
       const project = getElementById(id, this.state.projects);
-      const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.employees.children, false);
+      const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.filteredEmployees.children, false);
       const highLightProjects = setHightLightElement(false, [id], this.state.projects, false);
       const highLightClient = setHightLightElement(false, [project.clientId], this.state.clients, false);
       const highLightSkills = getSkills(project.skills, this.state.skills.children);
 
-      let employees = this.state.employees;
-      employees.children = highLightEmployees;
+      let filteredEmployees = this.state.filteredEmployees;
+      filteredEmployees.children = highLightEmployees;
 
       let skills = this.state.filteredSkills;
       skills.children = highLightSkills;
@@ -97,7 +96,7 @@ class App extends React.Component {
         clients: highLightClient,
         filteredSkills: skills,
         projects: highLightProjects,
-        employees: employees,
+        filteredEmployees: filteredEmployees,
         elementOver: typeSelected['PRO']
       });
 
@@ -118,19 +117,19 @@ class App extends React.Component {
      * 
      */
     this.showEmployee = (id) => {
-      const employee = getElementById(id, this.state.employees.children);
-      const highLightEmployees = setHightLightElement(false, [id], this.state.employees.children, false);
+      const employee = getElementById(id, this.state.filteredEmployees.children);
+      const highLightEmployees = setHightLightElement(false, [id], this.state.filteredEmployees.children, false);
       const ans = highLightProjectWithEmployeeId(id, this.state.projects);
       const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
 
-      let employees = this.state.employees;
-      employees.children = highLightEmployees;
+      let filteredEmployees = this.state.filteredEmployees;
+      filteredEmployees.children = highLightEmployees;
 
 
       this.toggleDialogue();
 
       this.setState({
-        employees: employees,
+        filteredEmployees: filteredEmployees,
         projects: ans[1],
         clients: highLightClient,
         elementOver: typeSelected['EMP']
@@ -145,29 +144,26 @@ class App extends React.Component {
 
       this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
     };
-    /**
-     * 
-     */
+
+    
     this.showClient = (id) => {
       this.newMethod(id);
       this.toggleDialogue();
-
       const client = getElementById(id, this.state.clients);
-      const clientEmployees = getEmployees(client.projects, this.state.projects, this.state.employees);
       const highLightClient = setHightLightElement(false, [id], this.state.clients, false);
-      const highLightEmployees = setHightLightElement(false, clientEmployees, this.state.employees.children, false);
+      const highlightEmployees = setHightLightElement(false, client.employees, this.state.filteredEmployees.children, false);
       const highlightProjects = setHightLightElement(false, client.projects, this.state.projects, false);
       const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
       const highLightSkills = getSkills(skillsId, this.state.skills.children);
 
-      let employees = this.state.employees;
-      employees.children = highLightEmployees;
+      let filteredEmployees = this.state.filteredEmployees;
+      filteredEmployees.children = highlightEmployees;
 
       let skills = this.state.filteredSkills;
       skills.children = highLightSkills;
       this.setState({
         // filteredSkills: skills,
-        employees: employees,
+        filteredEmployees: filteredEmployees,
         projects: highlightProjects,
         clients: highLightClient,
         elementOver: typeSelected['CLI']
@@ -188,10 +184,10 @@ class App extends React.Component {
       if (this.state.dialogueIsShown) this.toggleDialogue();
       const unHighlightClients = setHighlight(true, this.state.clients);
       const unHighLightProject = setHighlight(true, this.state.projects);
-      const highLightEmployees = setHighlight(true, this.state.employees.children);
+      const highLightEmployees = setHighlight(true, this.state.filteredEmployees.children);
 
-      let employees = this.state.employees;
-      employees.children = highLightEmployees;
+      let filteredEmployees = this.state.filteredEmployees;
+      filteredEmployees.children = highLightEmployees;
       let skills = this.state.filteredSkills;
       skills.children = [];
 
@@ -199,7 +195,7 @@ class App extends React.Component {
         clients: unHighlightClients,
         filteredSkills: skills,
         projects: unHighLightProject,
-        employees: employees,
+        filteredEmployees: filteredEmployees,
         elementOver: typeSelected['NON']
       });
     };
@@ -284,8 +280,8 @@ class App extends React.Component {
 
   unhightLightElements(name) {
     if (name === 'EMPLOYEES') {
-      const children = setHighlight(false, this.state.employees.children);
-      const employees = this.state.employees;
+      const children = setHighlight(false, this.state.filteredEmployees.children);
+      const employees = this.state.filteredEmployees;
       employees.children = children;
       this.setState({ employees: employees });
     } else if (name === 'CLIENTS') {

@@ -241,10 +241,15 @@ function groupCategories(clients) {
     hours: 0,
     color: '#000',
     highlight: true,
-    projects: []
+    projects: [],
+    employees: []
   });
   
-  for (let i = maxAnnularSectors; i < sorted.length; i++) categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
+  for (let i = maxAnnularSectors; i < sorted.length; i++) {
+    categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
+    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+      !categories[maxAnnularSectors].employees.includes(e)));
+  }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories.sort((a, b) => b.hours - a.hours);
   return categories;
@@ -278,7 +283,6 @@ export function getLargestClients(clients) {
 }
 
 export function getEmployeeObjs(employeeIds, employeeList) {
-  console.log(employeeList);
   return employeeIds.map(id => employeeList[id]);
 }
 

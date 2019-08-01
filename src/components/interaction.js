@@ -142,22 +142,6 @@ export function getSkills(IdArray, skillArray) {
   return skills;
 }
 
-/**
- * return all the employees ids invoved in client's projects
- * @param {array} projectsIDs 
- * @param {array} projectsArray 
- * @param {array} employeesArray 
- */
-export function getEmployees(projectsIDs, projectsArray, employeesArray) {
-  let employeesIds = [];
-  for (let i = 0; i < projectsIDs.length; i++) {
-    const projectId = projectsIDs[i];
-    employeesIds = employeesIds.concat(projectsArray[projectId].employeeId);
-  }
-  return employeesIds;
-
-}
-
 export default {
   setHighlight,
   setHightLightElement,
@@ -167,7 +151,6 @@ export default {
   elementWithSkill,
   getSkillsIDsFromProject,
   getSkills,
-  getEmployees,
   typeSelected
 };
 
