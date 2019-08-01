@@ -84,9 +84,10 @@ async function getData() {
     return clientObj.id;
   }
 
-  function updateClient(clientId, projectId, duration) {
+  function updateClient(clientId, projectId, duration, employeeList) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
+    clientList[clientId].employees.push(...employeeList.filter(e => !clientList[clientId].employees.includes(e)));
   }
 
   function getEmployeeList(employees) {
@@ -151,9 +152,10 @@ async function getData() {
         highlight: true,
         projects: [],
         category: client.category,
-        description: client.description,
+        description: client.description ? client.description : '',
         location: client.location,
-        type: 'client'
+        type: 'client',
+        employees: []
       });
     }
 
@@ -168,7 +170,8 @@ async function getData() {
       category: 'Other',
       description: '',
       location: '',
-      type: 'client'
+      type: 'client',
+      employees: []
     });
 
 
@@ -176,7 +179,8 @@ async function getData() {
       const { startDate, endDate } = getDates(project.startDates, project.endDates);
       const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
       const clientId = getClientId(project.client);
-      updateClient(clientId === -1 ? clients.length : clientId, project.id, duration);
+      const employeeList = getEmployeeList(project.employees);
+      updateClient(clientId === -1 ? clients.length : clientId, project.id, duration, employeeList);
       projectList.push({
         id: project.id,
         name: project.name,
@@ -184,7 +188,7 @@ async function getData() {
         type: project.type ? project.type : '',
         description: project.description,
         clientId: clientId,
-        employeeId: getEmployeeList(project.employees),
+        employeeId: employeeList,
         dateInit: new Date(startDate),
         dateEnd: new Date(endDate),
         skills: getTechList(project.technologies),
@@ -192,9 +196,6 @@ async function getData() {
         hours: duration
       });
     }
-    projects.forEach(async project => {
-
-    });
 
     clientList.sort((a, b) => b.hours - a.hours);
     projectList.sort((a, b) => b.hours - a.hours);
@@ -208,10 +209,13 @@ function groupCategories(clients) {
     if (!(client.category in grouped)) grouped[client.category] = [client];
     else grouped[client.category].push(client);
   }
-  
+
   const sorted = [];
   let counter = 0;
-  for (let category in grouped) 
+  for (let category in grouped) {
+    const employees = [];
+    for (let client of grouped[category]) 
+      employees.push(...client.employees.filter(e => !employees.includes(e)));
     sorted.push({
       id: counter++,
       name: category,
@@ -222,7 +226,10 @@ function groupCategories(clients) {
       color: '#000',
       highlight: true,
       projects: [],
+      employees: employees
     });
+  }
+    
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = sorted.slice(0, maxAnnularSectors);
   categories.push({ 
@@ -244,6 +251,7 @@ function groupCategories(clients) {
 }
 
 export function getLargestClients(clients) {
+  if (!clients) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
   if (clients.length <= maxAnnularSectors) return clientList;
   clientList.push({
@@ -255,16 +263,27 @@ export function getLargestClients(clients) {
     color: '#000',
     hours: 0,
     list: [],
-    projects: []
+    projects: [],
+    employees: []
   });
+
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     clientList[maxAnnularSectors].hours += clients[i].hours;
     clientList[maxAnnularSectors].list.push(clients[i]);
+    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+      !clientList[maxAnnularSectors].employees.includes(e)));
   }
+
   return clientList;
+}
+
+export function getEmployeeObjs(employeeIds, employeeList) {
+  console.log(employeeList);
+  return employeeIds.map(id => employeeList[id]);
 }
 
 export default {
   load,
-  getLargestClients
+  getLargestClients,
+  getEmployeeObjs
 };

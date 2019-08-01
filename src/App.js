@@ -6,7 +6,7 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load, getLargestClients } from './components/general';
+import { load, getLargestClients, getEmployeeObjs } from './components/general';
 import {
   setHighlight,
   setHightLightElement,
@@ -330,7 +330,7 @@ class App extends React.Component {
     const max = d3.max(projectList, d => d.dateEnd);
     const selectedRange = [min, max];
     let totalMonths = d3.timeMonth.count(min, max);
-
+    console.log(employeeList);
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
@@ -348,7 +348,10 @@ class App extends React.Component {
       },
       filteredClients: clientList,
       filteredProjects: [],
-      filteredEmployees: [],
+      filteredEmployees: {
+        name: 'employees',
+        children: employeeList
+      },
       filteredSkills: [],
       range: selectedRange,
       clickedClient: categories
@@ -367,11 +370,28 @@ class App extends React.Component {
   }
 
   clientClick = client => { 
-    if (client.type === 'client') this.setState({ clients: [client], clickedClient: [client] });
+    const employees = getEmployeeObjs(client.employees, this.state.employees.children);
+    if (client.type === 'client') 
+      this.setState({ 
+        clients: [client], 
+        clickedClient: [client],
+        filteredEmployees: {
+          name: 'employees',
+          children: employees
+        } 
+      });
     else {
       const clientList = getLargestClients(client.list);
-      this.setState({ clients: clientList, clickedClient: clientList });
+      this.setState({ 
+        clients: clientList, 
+        clickedClient: clientList,
+        filteredEmployees: {
+          name: 'employees',
+          children: employees
+        } 
+      });
     }
+    console.log(client);
   }
 
   render() {
@@ -405,7 +425,7 @@ class App extends React.Component {
     const legend = <Legend
       clients={this.state.clients}
       projects={this.state.projects}
-      employees={this.state.employees}
+      employees={this.state.filteredEmployees}
       skills={this.state.skills}
       overEvent={this.HighlightElements}
       outEvent={this.unHighlightElements}
@@ -430,7 +450,7 @@ class App extends React.Component {
     />;
     const vizCircle = <VizCircle
       clients={this.state.clients}
-      employees={this.state.employees}
+      employees={this.state.filteredEmployees}
       projects={this.state.projects}
       size={this.state.size}
       skills={this.state.filteredSkills}
