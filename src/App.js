@@ -354,7 +354,12 @@ class App extends React.Component {
     const employees = getEmployeeObjs(clients.employees, this.state.employees.children);
     this.setState({
       clients: clients.list,
-      clickedClient: { list: [] },
+      clickedClient: { 
+        id: '', 
+        name: '',
+        type: '', 
+        list: [] 
+      },
       filteredEmployees: {
         name: 'employees',
         children: employees

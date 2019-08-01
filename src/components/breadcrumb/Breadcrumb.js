@@ -21,17 +21,16 @@ class Breadcrumb extends React.Component {
     this.setState({ crumbs: [this.props.clickedClient] });
   }
 
-  isEqual(previousList, nextList) {
-    if (previousList.length !== nextList.length) return false;
-    const previousIds = previousList.map(client => client.id);
-    const nextIds = nextList.map(client => client.id);
-    return previousIds.filter(x => !nextIds.includes(x)).length === 0;
+  isEqual(p, n) {
+    if (n.id === '' && n.name === '' && n.type === '') return true;
+    return p.id === n.id && p.type === n.type && p.name === n.name;
   }
+
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.clickedClient.length === 0) return;
-    const nextClients = this.props.clickedClient.list;
-    if (!this.isEqual(prevProps.clickedClient.list, nextClients) && nextClients.length.list !== 0) {
+    console.log(prevProps.clickedClient, this.props.clickedClient);
+    if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
       const crumbs = [...prevState.crumbs, this.props.clickedClient];
       this.setState({ crumbs });
     }
