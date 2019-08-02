@@ -6,12 +6,19 @@ import ColorThief from 'color-thief';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
-const maxAnnularSectors = 7; // + 1 sector with the 'other' sector
+const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
-  const data = await getData();
-  const categories = groupCategories(data.clientList);
-  return data;
+  const { projectList, employeeList, technologyList, clientList } = await getData();
+  const categories = groupCategories(clientList);
+  categories.employees = employeeList.map((_, i) => i);
+  return {
+    categories,
+    projectList,
+    employeeList,
+    technologyList,
+    clientList
+  };
 }
 
 async function getData() {
@@ -84,9 +91,10 @@ async function getData() {
     return clientObj.color;
   }
 
-  function updateClient(clientId, projectId, duration) {
+  function updateClient(clientId, projectId, duration, employeeList) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
+    clientList[clientId].employees.push(...employeeList.filter(e => !clientList[clientId].employees.includes(e)));
   }
 
   function getEmployeeList(employees) {
@@ -142,6 +150,7 @@ async function getData() {
         color = '';
         imageSrc = '/img/logos/company_placeholder.png';
       }
+
       clientList.push({
         id: client.id,
         name: client.name,
@@ -150,9 +159,12 @@ async function getData() {
         logo: imageSrc,
         highlight: true,
         projects: [],
-        type: client.category,
-        description: client.description,
-        location: client.location
+        category: client.category,
+        description: client.description ? client.description : '',
+        location: client.location,
+        type: 'client',
+        employees: [],
+        list: []
       });
     }
 
@@ -164,9 +176,11 @@ async function getData() {
       logo: '/img/logos/company_placeholder.png',
       highlight: true,
       projects: [],
-      type: 'Other',
+      category: 'Other',
       description: '',
-      location: ''
+      location: '',
+      type: 'client',
+      employees: []
     });
 
 
@@ -175,7 +189,8 @@ async function getData() {
       const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
       const clientId = getClientId(project.client);
       const clientColor = getClientColor(project.client);
-      updateClient(clientId === -1 ? clients.length : clientId, project.id, duration);
+      const employeeList = getEmployeeList(project.employees);
+      updateClient(clientId === -1 ? clients.length : clientId, project.id, duration, employeeList);
       projectList.push({
         id: project.id,
         name: project.name,
@@ -183,7 +198,7 @@ async function getData() {
         type: project.type ? project.type : '',
         description: project.description,
         clientId: clientId,
-        employeeId: getEmployeeList(project.employees),
+        employeeId: employeeList,
         dateInit: new Date(startDate),
         dateEnd: new Date(endDate),
         skills: getTechList(project.technologies),
@@ -191,9 +206,6 @@ async function getData() {
         hours: duration
       });
     }
-    projects.forEach(async project => {
-
-    });
 
     clientList.sort((a, b) => b.hours - a.hours);
     projectList.sort((a, b) => b.hours - a.hours);
@@ -204,60 +216,100 @@ async function getData() {
 function groupCategories(clients) {
   const grouped = {};
   for (let client of clients) {
-    if (!(client.type in grouped)) grouped[client.type] = [client];
-    else grouped[client.type].push(client);
+    if (!(client.category in grouped)) grouped[client.category] = [client];
+    else grouped[client.category].push(client);
   }
 
   const sorted = [];
   let counter = 0;
-  for (let category in grouped)
+  for (let category in grouped) {
+    const employees = [];
+    for (let client of grouped[category]) 
+      employees.push(...client.employees.filter(e => !employees.includes(e)));
     sorted.push({
       id: counter++,
       name: category,
+      category: '',
+      type: 'category',
       list: grouped[category],
       hours: grouped[category].length,
       color: '#000',
       highlight: true,
       projects: [],
+      employees: employees
     });
+  }
+    
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = sorted.slice(0, maxAnnularSectors);
   categories.push({
     id: counter++,
-    name: 'Other',
+    name: 'Other', 
+    category: '',
+    type: 'category',
     list: [],
     hours: 0,
     color: '#000',
     highlight: true,
-    projects: []
+    projects: [],
+    employees: []
   });
-
-  for (let i = maxAnnularSectors; i < sorted.length; i++) categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
+  
+  for (let i = maxAnnularSectors; i < sorted.length; i++) {
+    categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
+    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+      !categories[maxAnnularSectors].employees.includes(e)));
+  }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories.sort((a, b) => b.hours - a.hours);
-  return categories;
+  
+  return { 
+    id: counter++,
+    name: 'Other', 
+    category: '',
+    type: 'category',
+    list: categories,
+    hours: 0,
+    color: '#000',
+    highlight: true,
+    projects: [],
+    employees: []
+  };
 }
 
-function getLargestClients(clients) {
+export function getLargestClients(clients) {
+  if (!clients) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
   if (clients.length <= maxAnnularSectors) return clientList;
   clientList.push({
     id: -2,
     name: 'Other',
+    category: '',
+    type: 'more',
     highlight: true,
     color: '#000',
     hours: 0,
-    clients: [],
-    projects: []
+    list: [],
+    projects: [],
+    employees: []
   });
+
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     clientList[maxAnnularSectors].hours += clients[i].hours;
-    clientList[maxAnnularSectors].clients.push(clients[i]);
+    clientList[maxAnnularSectors].list.push(clients[i]);
+    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+      !clientList[maxAnnularSectors].employees.includes(e)));
   }
+
   return clientList;
+}
+
+export function getEmployeeObjs(employeeIds, employeeList) {
+  return employeeIds.map(id => employeeList[id]);
 }
 
 export default {
   load,
-  getLargestClients
+  getLargestClients,
+  getEmployeeObjs
 };

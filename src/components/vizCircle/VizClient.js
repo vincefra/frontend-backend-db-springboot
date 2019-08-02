@@ -20,13 +20,12 @@ class VizClient extends React.Component {
     this.setState({ clientSlice, projectSlice, radius });
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { clientSlice, projectSlice } = calculatePieClient(this.props, this.state.radius);
-    this.setState({ clientSlice, projectSlice });
+  componentWillReceiveProps(props) {
+    const { clientSlice, projectSlice } = calculatePieClient(props, this.state.radius);
+    this.setState({ clientSlice, projectSlice});
   }
 
   render() {
-
     const width = this.props.size[0];
     const height = this.props.size[1];
     const clients = <g transform={`translate(${width / 2}, ${height / 2})`}>
@@ -38,7 +37,7 @@ class VizClient extends React.Component {
           opacity={d.highlight ? '1' : '0.2'}
           onMouseOver={() => { this.props.mouseOnClient(d.id); }}
           onMouseOut={() => this.props.mouseOutClient()}
-
+          onClick={() => this.props.clientClick(d.data)}
         />
       ))}
     </g>;
@@ -76,7 +75,6 @@ class VizClient extends React.Component {
         {clients}
         {clientLogos}
         {projects}
-
       </React.Fragment>
     );
   }

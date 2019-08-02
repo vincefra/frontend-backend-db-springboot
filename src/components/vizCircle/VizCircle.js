@@ -7,8 +7,6 @@ import Skills from './Skills';
 //calculate with D3 how to draw the visualization in SVG
 //renders the SVG visaulization
 class VizCircle extends React.Component {
-
-
   render() {
     const vizClients = <VizClient
       clients={this.props.clients}
@@ -18,8 +16,8 @@ class VizCircle extends React.Component {
       mouseOutProject={this.props.unHighlightElements}
       mouseOnClient={this.props.mouseOnClient}
       mouseOutClient={this.props.unHighlightElements}
+      clientClick={this.props.clientClick}
     />;
-
 
     const content =
       <svg className='circle-visualization' width={this.props.size[0]} height={this.props.size[1]}>

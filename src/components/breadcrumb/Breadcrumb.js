@@ -1,45 +1,55 @@
 import React from 'react';
-import Crumb from './Crumb';
 
 class Breadcrumb extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      crumbs: [<Crumb onNavigate={this.onNavigate.bind(this, 0)} clients={[1]} key={0}/>]//this.props.clients
+      crumbs: []
     };
   }
 
-  onNavigate(index, client) {
-    // Return clients of index and remove from index and crumbs.length
+  handleClick(index) {
+    if (index + 1 === this.state.crumbs.length) return;
+    const client = this.state.crumbs[index];
+    this.resetHighlight(client);
+    this.props.breadcrumbClick(client);
+    const crumbs = this.state.crumbs.slice(0, index + 1);
+    this.setState({ crumbs });
   }
 
-
-  componentWillReceiveProps(props) {
-    this.addCrumb(props.clients);
+  componentDidMount() {
+    this.setState({ crumbs: [this.props.clickedClient] });
   }
 
-  addCrumb(clients) {
-    let crumb = (
-      <Crumb 
-        onNavigate={this.onNavigate.bind(this, this.state.crumbs.length)} 
-        clients={clients} 
-        key={this.state.crumbs.length}
-      />
-    );
+  isEqual(p, n) {
+    if (n.id === '' && n.name === '' && n.type === '') return true;
+    return p.id === n.id && p.type === n.type && p.name === n.name;
+  }
 
-    this.setState({
-      crumbs: [...this.state.crumbs, crumb]
-    });
+  
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.clickedClient.length === 0) return;
+    if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
+      const crumbs = [...prevState.crumbs, this.props.clickedClient];
+      this.setState({ crumbs });
+    }
+  }
+
+  resetHighlight(clients) {
+    clients.list.forEach(client => client.highlight = true);
+    return clients;
   }
 
   render() {
+    const crumbs = this.state.crumbs.map((_, i) => (
+      <span className='crumb' onClick={this.handleClick.bind(this, i)} key={i} />
+    ));
     return (
       <div className='breadcrumbs'>
-        {this.state.crumbs}
+        {crumbs}
       </div>
     );
   }
-
 }
 
 export default Breadcrumb;
