@@ -54,7 +54,6 @@ class App extends React.Component {
       }
     };
 
-
     this.showSkill = (id) => {
       //hightlight projects and get clients from that project
       const ans = hightLightElementWithSkill(id, this.state.projects);
@@ -350,10 +349,11 @@ class App extends React.Component {
     this.setState({ isMobileView: window.innerWidth <= 1180 });
   }
 
-  breadcrumbClick = clients => {
-    const employees = getEmployeeObjs(clients.employees, this.state.employees.children);
+  breadcrumbClick = client => {
+    const employees = getEmployeeObjs(client.employees, this.state.employees.children);
+    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
     this.setState({
-      clients: clients.list,
+      clients: clientList,
       clickedClient: { 
         id: '', 
         name: '',
@@ -366,6 +366,7 @@ class App extends React.Component {
       } 
     });
   }
+
 
   clientClick = client => { 
     const employees = getEmployeeObjs(client.employees, this.state.employees.children);

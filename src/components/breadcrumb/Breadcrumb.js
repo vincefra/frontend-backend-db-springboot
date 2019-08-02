@@ -29,7 +29,6 @@ class Breadcrumb extends React.Component {
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.clickedClient.length === 0) return;
-    console.log(prevProps.clickedClient, this.props.clickedClient);
     if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
       const crumbs = [...prevState.crumbs, this.props.clickedClient];
       this.setState({ crumbs });
