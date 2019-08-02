@@ -308,8 +308,14 @@ export function getEmployeeObjs(employeeIds, employeeList) {
   return employeeIds.map(id => employeeList[id]);
 }
 
+export function resetHighlights(list) {
+  list.forEach(client => client.highlight = true);
+}
+
+
 export default {
   load,
   getLargestClients,
-  getEmployeeObjs
+  getEmployeeObjs,
+  resetHighlights
 };

@@ -7,7 +7,7 @@ class Legend extends React.Component {
   }
 
   render() {
-    const totalEmployees = this.props.employees.children.filter(emp => emp.highlight === true).length;
+    const totalEmployees = this.props.employees.filter(emp => emp.highlight === true).length;
     const totalClients = this.props.clients.filter(cli => cli.highlight === true).length;
     const totalProjects = this.props.projects.filter(pro => pro.highlight === true).length;
     const totalSkills = this.props.skills.children.filter(ski => ski.highlight === true).length;

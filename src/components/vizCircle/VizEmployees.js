@@ -12,35 +12,45 @@ class VizEmployees extends React.Component {
     };
   }
 
-  componentDidMount(props) {
-    this.setLayout();
+  componentDidMount({ employees } = this.props) {
+    this.setLayout(employees);
   }
 
   //Set a hierarchy to the data
   //creates a PACK Layout, calculates and sets all the atributes for the layout
   //Set the layout in the state
-  setLayout() {
-    const root = d3.hierarchy(this.props.employees);
+
+  setLayout(employees) {
+    const root = d3.hierarchy({
+      name: 'employees',
+      children: employees
+    });
+
     const height = this.props.size[1];
     const width = height - height * vizHeight;
-
     const packLayout = d3.pack();
     packLayout.size([width, width]);
     packLayout.padding(10);
-
-    root.sum(d => {
-      return 50;
-    });
+    root.sum(_ => 50);
     const flayout = packLayout(root);
-    this.setState({
-      layout: flayout
-    });
-
-    return flayout;
+    this.setState({ layout: flayout });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setLayout();
+
+  // componentWillReceiveProps(nextProps) {
+  //   this.setLayout();
+  // }
+
+  sameEmployees(prevEmpl, nextEmpl) {
+    if (prevEmpl.length !== nextEmpl.length) return false;
+    let pIds = prevEmpl.map(e => e.id);
+    let nIds = prevEmpl.map(e => e.id);
+    return pIds.filter(id => !nIds.includes(id)).length === 0;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!this.sameEmployees(prevProps.employees, this.props.employees))
+      this.setLayout(this.props.employees);
   }
 
   render() {
