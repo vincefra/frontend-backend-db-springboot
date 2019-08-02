@@ -261,8 +261,9 @@ function groupCategories(clients) {
       !categories[maxAnnularSectors].employees.includes(e)));
   }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
+  categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);
-  
+
   return { 
     id: counter++,
     name: 'Other', 
