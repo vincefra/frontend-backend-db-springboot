@@ -43,7 +43,7 @@ export function setHighlight(highLight, modArray) {
    * @param idArray array with number IDs to modify
    * @pram ifIncludes Boolean check if it includes or it does not
    */
-export function setHightLightElement(highlight, idArray, modArray, ifIncludes) {
+export function setHighlightElement(highlight, idArray, modArray, ifIncludes) {
   return modArray.map(d => {
     if (idArray.includes(d.id) === ifIncludes) {
       d.highlight = highlight;
@@ -58,7 +58,7 @@ export function setHightLightElement(highlight, idArray, modArray, ifIncludes) {
  * @param id Number of skill 
  * @param modArray array to modify
  */
-export function hightLightElementWithSkill(id, modArray) {
+export function highlightElementWithSkill(id, modArray) {
   let clients = [];
   const projectsHighLight = modArray.map(d => {
     if (d.skills.includes(id)) {
@@ -144,8 +144,8 @@ export function getSkills(IdArray, skillArray) {
 
 export default {
   setHighlight,
-  setHightLightElement,
-  hightLightElementWithSkill,
+  setHighlightElement,
+  highlightElementWithSkill,
   highLightProjectWithEmployeeId,
   getElementById,
   elementWithSkill,

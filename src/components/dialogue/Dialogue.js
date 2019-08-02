@@ -1,12 +1,81 @@
 import React from 'react';
+import moment from 'moment';
+const format = 'YYYY-MM-DD';
 
 class Dialogue extends React.Component {
+  setText(data, type) {
+    switch (type) {
+      case 'CLIENT':
+        return (
+          <div>
+            <p><span>Location: </span><br></br>{data.location}</p>
+            <p><span>Description: </span><br></br>{data.description}</p>
+          </div>
+        );
+      case 'EMPLOYEE':
+        return (
+          <div>
+            <p><span>Date in: </span><br></br>{data.initDate}</p>
+            <p><span>Date out: </span><br></br>{data.endDate}</p>
+          </div>
+        );
+      case 'PROJECT':
+        return ( 
+          <div>
+            <p><span>Client: </span><br></br>{data.clientName}</p>
+            <p><span>Starting date: </span><br></br>{moment(data.dateInit).format(format)}</p>
+            <p><span>Finishing date: </span><br></br>{moment(data.dateEnd).format(format)}</p>
+            <p><span>Description: </span>{data.description}</p>
+          </div>
+        );
+      default:  
+        return <div/>;
+    }
+  }
 
+  setName(data, type) {
+    switch (type) {
+      case 'CLIENT':
+        return data.name;
+      case 'EMPLOYEE':
+      case 'PROJECT':
+        return data.name;
+      default:
+        return '';
+    }
+  }
 
+  setCategory(data, type) {
+    switch (type) {
+      case 'CLIENT':
+        return data.category;
+      case 'EMPLOYEE':
+      case 'PROJECT':
+        return data.type;
+      default:
+        return '';
+    }
+  }
+
+  setImage(data, type) {
+    switch (type) {
+      case 'CLIENT':
+      case 'PROJECT':
+        return <img src={data.logo} alt={data.name} />;
+      case 'EMPLOYEE':
+        return <img src={data.img} alt={data.name} />;
+      default:
+        return <i className="fas fa-laptop-code"></i>;
+    }
+  }
 
   render() {
-    const { dialogueIsShown, image, name, type, childrenInfo } = this.props;
-    const imageDisplay = image === null ? <i className="fas fa-laptop-code"></i> : <img src={image} alt={name} />;
+    const { dialogueIsShown, dialogueInfo } = this.props;
+    const { data, type } = dialogueInfo;
+    const imageDisplay = data ? this.setImage(data, type) : <i className="fas fa-laptop-code"></i> ;
+    const text = data ? this.setText(data, type) : <div />;
+    const category = data ? this.setCategory(data, type) : '';
+    const name = data ? this.setName(data, type) : '';
     return (
       <div>
         <div className={dialogueIsShown ? 'dialogue' : 'dialogue hidden'}>
@@ -14,10 +83,10 @@ class Dialogue extends React.Component {
             {imageDisplay}
             <div className="spacing x-small"></div>
             <h2>{name}</h2>
-            <p>{type}</p>
+            <p>{category}</p>
           </div>
           <div className='information'>
-            {childrenInfo}
+            {text}
           </div>
         </div>
       </div>

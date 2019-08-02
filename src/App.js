@@ -6,11 +6,11 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load, getLargestClients, getEmployeeObjs } from './components/general';
+import { load, getLargestClients, getEmployeeObjs, resetHighlights } from './components/general';
 import {
   setHighlight,
-  setHightLightElement,
-  hightLightElementWithSkill,
+  setHighlightElement,
+  highlightElementWithSkill,
   highLightProjectWithEmployeeId,
   getElementById,
   getSkillsIDsFromProject,
@@ -42,263 +42,12 @@ class App extends React.Component {
       initialDates: [],
       datesBrushed: [],
       totalProjectsMonths: 0,
-      dialogueInfo: {
-        image: '',
-        name: '',
-        type: '',
-        children: ''
-      },
       elementOver: {
         type: 'none',
         info: null
-      }
+      },
+      dialogueInfo: {}
     };
-
-    this.showSkill = (id) => {
-      //hightlight projects and get clients from that project
-      const ans = hightLightElementWithSkill(id, this.state.projects);
-      const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
-      const employeesHighLight = hightLightElementWithSkill(id, this.state.filteredEmployees.children);
-      const highLightSkills = setHightLightElement(true, [id], this.state.skills.children, true);
-
-      let employees = this.state.filtered.employees;
-      employees.children = employeesHighLight;
-
-      let skills = this.state.skills;
-      skills.children = highLightSkills;
-      this.setState({
-        skills: skills,
-        projects: ans[1],
-        clients: highLightClient,
-        filtered: employees
-      });
-    };
-
-    this.showProject = (id) => {
-      const project = getElementById(id, this.state.projects);
-      const highLightEmployees = setHightLightElement(false, project.employeeId, this.state.filteredEmployees.children, false);
-      const highLightProjects = setHightLightElement(false, [id], this.state.projects, false);
-      const highLightClient = setHightLightElement(false, [project.clientId], this.state.clients, false);
-      const highLightSkills = getSkills(project.skills, this.state.skills.children);
-
-      let filteredEmployees = this.state.filteredEmployees;
-      filteredEmployees.children = highLightEmployees;
-
-      let skills = this.state.filteredSkills;
-      skills.children = highLightSkills;
-
-
-      this.setState({
-        clients: highLightClient,
-        filteredSkills: skills,
-        projects: highLightProjects,
-        filteredEmployees: filteredEmployees,
-        elementOver: typeSelected['PRO']
-      });
-
-
-      const client = getElementById(project.clientId, this.state.clients);
-      const children = <div>
-        <p><span>Client: </span><br></br>{client.name}</p>
-        <p><span>Starting date: </span><br></br>{project.dateInit.getDate() + '-' + (project.dateInit.getMonth() + 1) + '-' + project.dateInit.getFullYear()}</p>
-        <p><span>Finishing date: </span><br></br>{project.dateEnd.getDate() + '-' + (project.dateEnd.getMonth() + 1) + '-' + project.dateEnd.getFullYear()}</p>
-        <p><span>Description: </span>{project.description}</p>
-      </div>;
-
-      this.toggleDialogue();
-      this.modifyDialogueInfo(null, project.name, project.type, children);
-
-    };
-    
-    this.showEmployee = (id) => {
-      const employee = getElementById(id, this.state.filteredEmployees.children);
-      const highLightEmployees = setHightLightElement(false, [id], this.state.filteredEmployees.children, false);
-      const ans = highLightProjectWithEmployeeId(id, this.state.projects);
-      const highLightClient = setHightLightElement(false, ans[0], this.state.clients, false);
-
-      let filteredEmployees = this.state.filteredEmployees;
-      filteredEmployees.children = highLightEmployees;
-
-      this.toggleDialogue();
-
-      this.setState({
-        filteredEmployees: filteredEmployees,
-        projects: ans[1],
-        clients: highLightClient,
-        elementOver: typeSelected['EMP']
-      });
-
-      const children = <div>
-        <p><span>Date in: </span><br></br>{employee.initDate}</p>
-        <p><span>Date out: </span><br></br>{employee.endDate}</p>
-      </div>;
-
-      this.modifyDialogueInfo(employee.img, employee.name, employee.roll, children);
-    };
-
-
-    this.showClient = (id) => {
-      this.newMethod(id);
-      this.toggleDialogue();
-      const client = getElementById(id, this.state.clients);
-      const highLightClient = setHightLightElement(false, [id], this.state.clients, false);
-      const highlightEmployees = setHightLightElement(false, client.employees, this.state.filteredEmployees.children, false);
-      const highlightProjects = setHightLightElement(false, client.projects, this.state.projects, false);
-      const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
-      const highLightSkills = getSkills(skillsId, this.state.skills.children);
-
-      let filteredEmployees = this.state.filteredEmployees;
-      filteredEmployees.children = highlightEmployees;
-
-      let skills = this.state.filteredSkills;
-      skills.children = highLightSkills;
-      this.setState({
-        // filteredSkills: skills,
-        filteredEmployees: filteredEmployees,
-        projects: highlightProjects,
-        clients: highLightClient,
-        elementOver: typeSelected['CLI']
-      });
-
-
-      const children = <div>
-        <p><span>Location: </span><br></br>{client.location}</p>
-        <p><span>Description: </span><br></br>{client.description}</p>
-      </div>;
-
-      this.modifyDialogueInfo(client.logo, client.name, client.type, children);
-    };
-
-
-
-    this.unHighlightElements = () => {
-      if (this.state.dialogueIsShown) this.toggleDialogue();
-      const unHighlightClients = setHighlight(true, this.state.clients);
-      const unHighLightProject = setHighlight(true, this.state.projects);
-      const highLightEmployees = setHighlight(true, this.state.filteredEmployees.children);
-
-      let filteredEmployees = this.state.filteredEmployees;
-      filteredEmployees.children = highLightEmployees;
-      let skills = this.state.filteredSkills;
-      skills.children = [];
-
-      this.setState({
-        clients: unHighlightClients,
-        filteredSkills: skills,
-        projects: unHighLightProject,
-        filteredEmployees: filteredEmployees,
-        elementOver: typeSelected['NON']
-      });
-    };
-
-    this.toggleDialogue = () => {
-      const showDialogue = this.state.dialogueIsShown ? false : true;
-      this.setState({ dialogueIsShown: showDialogue });
-    };
-    /**
-   * Recieves an initial and ending date in number of weeks.  
-   * Returns the range in full date object
-   *
-   * @param initWeek the initial number of the week in the initial full date
-   * @param endWeek the ending number of the week in the end full date 
-   */
-    this.brushDates = (initWeek, endWeek) => {
-      const brushDate = new Date(this.state.initialDates[0]);
-
-      const initalDate = new Date(brushDate.setMonth(brushDate.getMonth() + initWeek));
-      const endingDate = new Date(brushDate.setMonth(brushDate.getMonth() + endWeek));
-      this.setState({
-        datesBrushed: [initalDate, endingDate]
-      });
-
-      const brushedProjects = this.state.projects.map(project => {
-        project.inTimeRange = this.checkInTimeRange(project.dateInit, project.dateEnd, initalDate, endingDate);
-        return project;
-      });
-
-
-      this.setState({
-        datesBrushed: [initalDate, endingDate],
-        projects: brushedProjects
-      });
-    };
-
-    this.HighlightElements = (name) => {
-      switch (name) {
-        case 'EMPLOYEES':
-          this.unhightLightElements('CLIENTS');
-          this.unhightLightElements('PROJECTS');
-          this.unhightLightElements('SKILLS');
-          break;
-        case 'CLIENTS':
-          this.unhightLightElements('EMPLOYEES');
-          this.unhightLightElements('PROJECTS');
-          this.unhightLightElements('SKILLS');
-          break;
-        case 'PROJECTS':
-          this.unhightLightElements('EMPLOYEES');
-          this.unhightLightElements('SKILLS');
-          break;
-        case 'SKILLS':
-          this.unhightLightElements('EMPLOYEES');
-          this.unhightLightElements('CLIENTS');
-          this.unhightLightElements('PROJECTS');
-          break;
-        default:
-          this.unHighlightElements();
-      }
-
-    };
-
-  }
-
-  newMethod(id) {
-    // console.log(id);
-  }
-
-  checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
-    // const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
-    const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
-    // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
-    // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
-
-    // const inRange = (objRange[0].getTime() >= this.state.datesBrushed[0].getTime() && objRange[0].getTime() <= this.state.datesBrushed[1].getTime())
-    //   && (objRange[1].getTime() <= this.state.datesBrushed[1].getTime() && objRange[1].getTime() >= this.state.datesBrushed[0].getTime()) ? true : false;
-    return endRange;
-
-  }
-
-
-  unhightLightElements(name) {
-    if (name === 'EMPLOYEES') {
-      const children = setHighlight(false, this.state.filteredEmployees.children);
-      const employees = this.state.filteredEmployees;
-      employees.children = children;
-      this.setState({ employees: employees });
-    } else if (name === 'CLIENTS') {
-      const clients = setHighlight(false, this.state.clients);
-      this.setState({ clients: clients });
-    } else if (name === 'PROJECTS') {
-      const projects = setHighlight(false, this.state.projects);
-      this.setState({ projects: projects });
-    } else if (name === 'SKILLS') {
-      const children = setHighlight(false, this.state.skills.children);
-      const skills = this.state.skills;
-      skills.children = children;
-      this.setState({ skills: skills });
-    }
-  }
-
-  modifyDialogueInfo(image, name, typeWork, children) {
-    const dialogueInfo = {
-      image: image === null ? null : image,
-      name: name,
-      type: typeWork,
-      children: children
-    };
-
-    this.setState({ dialogueInfo: dialogueInfo });
-
   }
 
   async componentDidMount() {
@@ -325,59 +74,204 @@ class App extends React.Component {
       isLoading: false,
       clients: categories.list,
       projects: projectList,
-      employees: {
-        name: 'employees',
-        children: employeeList
-      },
+      employees: employeeList,
       skills: {
         name: 'Front-End',
         children: technologyList
       },
       filteredClients: clientList,
       filteredProjects: [],
-      filteredEmployees: {
-        name: 'employees',
-        children: employeeList
-      },
+      filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
       clickedClient: categories
     });
   }
 
+
+  showSkill = (id) => {
+    //hightlight projects and get clients from that project
+    const ans = highlightElementWithSkill(id, this.state.projects);
+    const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
+    const highlightedEmployees = highlightElementWithSkill(id, this.state.filteredEmployees);
+    const highLightSkills = setHighlightElement(true, [id], this.state.skills.children, true);
+
+    let skills = this.state.skills;
+    skills.children = highLightSkills;
+    this.setState({
+      skills: skills,
+      projects: ans[1],
+      clients: highlightedClients,
+      filteredEmployees: highlightedEmployees
+    });
+  };
+
+  showProject = (id) => {
+    const project = getElementById(id, this.state.projects);
+    const highlightedEmployees = setHighlightElement(false, project.employeeId, this.state.filteredEmployees, false);
+    const highlightedProjects = setHighlightElement(false, [id], this.state.projects, false);
+    const highlightedClients = setHighlightElement(false, [project.clientId], this.state.clients, false);
+    const highLightSkills = getSkills(project.skills, this.state.skills.children);
+    let skills = this.state.filteredSkills;
+    skills.children = highLightSkills;
+    this.setState({
+      clients: highlightedClients,
+      filteredSkills: skills,
+      projects: highlightedProjects,
+      filteredEmployees: highlightedEmployees,
+      elementOver: typeSelected['PRO']
+    });
+
+    const client = getElementById(project.clientId, this.state.clients);
+    this.toggleDialogue();
+    this.modifyDialogueInfo({ ...project, clientName: client.name, logo: client.logo }, 'PROJECT');
+  };
+  
+  showEmployee = (id) => {
+    const employee = getElementById(id, this.state.filteredEmployees);
+    const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
+    const ans = highLightProjectWithEmployeeId(id, this.state.projects);
+    const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
+
+    this.setState({
+      filteredEmployees: highlightedEmployees,
+      projects: ans[1],
+      clients: highlightedClients,
+      elementOver: typeSelected['EMP']
+    });
+    this.toggleDialogue();
+    this.modifyDialogueInfo(employee, 'EMPLOYEE');
+  };
+
+
+  showClient = (id) => {
+    const client = getElementById(id, this.state.clients);
+    const highlightedClients = setHighlightElement(false, [id], this.state.clients, false);
+    const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
+    const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
+    const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
+    const highLightSkills = getSkills(skillsId, this.state.skills.children);
+    let skills = this.state.filteredSkills;
+    skills.children = highLightSkills;
+    this.setState({
+      // filteredSkills: skills,
+      filteredEmployees: highlightedEmployees,
+      projects: highlightedProjects,
+      clients: highlightedClients,
+      elementOver: typeSelected['CLI']
+    });
+
+    if (client.type === 'client') {
+      this.toggleDialogue();
+      this.modifyDialogueInfo(client, 'CLIENT');
+    }
+  };
+
+  unHighlightElements = () => {
+    if (this.state.dialogueIsShown) this.toggleDialogue();
+    const unhighlightedClients = setHighlight(true, this.state.clients);
+    const unHighLightProject = setHighlight(true, this.state.projects);
+    const highlightedEmployees = setHighlight(true, this.state.filteredEmployees);
+    let skills = this.state.filteredSkills;
+    skills.children = [];
+
+    this.setState({
+      clients: unhighlightedClients,
+      filteredSkills: skills,
+      projects: unHighLightProject,
+      filteredEmployees: highlightedEmployees,
+      elementOver: typeSelected['NON']
+    });
+  };
+
+  toggleDialogue = () => {
+    const showDialogue = this.state.dialogueIsShown ? false : true;
+    this.setState({ dialogueIsShown: showDialogue });
+  };
+  /**
+ * Recieves an initial and ending date in number of weeks.  
+ * Returns the range in full date object
+ *
+ * @param initWeek the initial number of the week in the initial full date
+ * @param endWeek the ending number of the week in the end full date 
+ */
+  brushDates = (initWeek, endWeek) => {
+    const brushDate = new Date(this.state.initialDates[0]);
+    const initalDate = new Date(brushDate.setMonth(brushDate.getMonth() + initWeek));
+    const endingDate = new Date(brushDate.setMonth(brushDate.getMonth() + endWeek));
+    const brushedProjects = this.state.projects.map(project => {
+      project.inTimeRange = this.checkInTimeRange(project.dateInit, project.dateEnd, initalDate, endingDate);
+      return project;
+    });
+
+    this.setState({
+      datesBrushed: [initalDate, endingDate],
+      projects: brushedProjects
+    });
+  };
+
+  HighlightElements = (name) => {
+    switch (name) {
+      case 'EMPLOYEES':
+        this.unhightLightElements('CLIENTS');
+        this.unhightLightElements('PROJECTS');
+        this.unhightLightElements('SKILLS');
+        break;
+      case 'CLIENTS':
+        this.unhightLightElements('EMPLOYEES');
+        this.unhightLightElements('PROJECTS');
+        this.unhightLightElements('SKILLS');
+        break;
+      case 'PROJECTS':
+        this.unhightLightElements('EMPLOYEES');
+        this.unhightLightElements('SKILLS');
+        break;
+      case 'SKILLS':
+        this.unhightLightElements('EMPLOYEES');
+        this.unhightLightElements('CLIENTS');
+        this.unhightLightElements('PROJECTS');
+        break;
+      default:
+        this.unHighlightElements();
+    }
+  };
+
+  checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
+    // const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
+    const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
+    // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
+    // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
+
+    // const inRange = (objRange[0].getTime() >= this.state.datesBrushed[0].getTime() && objRange[0].getTime() <= this.state.datesBrushed[1].getTime())
+    //   && (objRange[1].getTime() <= this.state.datesBrushed[1].getTime() && objRange[1].getTime() >= this.state.datesBrushed[0].getTime()) ? true : false;
+    return endRange;
+
+  }
+
+  modifyDialogueInfo(data, type) {
+    this.setState({ dialogueInfo: { data, type } });
+  }
+
   resize() {
     this.setState({ isMobileView: window.innerWidth <= 1180 });
   }
 
-  breadcrumbClick = client => {
-    const employees = getEmployeeObjs(client.employees, this.state.employees.children);
-    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    this.setState({
-      clients: clientList,
-      clickedClient: { 
-        id: '', 
-        name: '',
-        type: '', 
-        list: [] 
-      },
-      filteredEmployees: {
-        name: 'employees',
-        children: employees
-      } 
-    });
-  }
-
-
-  clientClick = client => { 
-    const employees = getEmployeeObjs(client.employees, this.state.employees.children);
-    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
+  handleClick = (client, resetClickedClient = false) => {
+    let employees = getEmployeeObjs(client.employees, this.state.employees);
+    let clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    let clickedClient = resetClickedClient ?  { 
+      id: '', 
+      name: '',
+      type: '', 
+      list: [] 
+    } : client;
+    
+    resetHighlights(clientList);
+    resetHighlights(employees);
     this.setState({ 
       clients: clientList, 
-      clickedClient: client,
-      filteredEmployees: {
-        name: 'employees',
-        children: employees
-      } 
+      clickedClient: clickedClient,
+      filteredEmployees: employees 
     });
   }
 
@@ -407,7 +301,7 @@ class App extends React.Component {
       showClient={this.showClient}
       unHighlightElements={this.unHighlightElements}
       clickedClient={this.state.clickedClient}
-      breadcrumbClick={this.breadcrumbClick}
+      breadcrumbClick={this.handleClick}
     />;
     const legend = <Legend
       clients={this.state.clients}
@@ -420,10 +314,7 @@ class App extends React.Component {
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}
       toggleDialogue={this.toggleDialogue}
-      image={this.state.dialogueInfo.image}
-      name={this.state.dialogueInfo.name}
-      type={this.state.dialogueInfo.type}
-      childrenInfo={this.state.dialogueInfo.children}
+      dialogueInfo={this.state.dialogueInfo}
     />;
     const timeline = <VizTimeline
       projects={this.state.projects}
@@ -445,7 +336,7 @@ class App extends React.Component {
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
       unHighlightElements={this.unHighlightElements}
-      clientClick={this.clientClick}
+      clientClick={this.handleClick}
     />;
     return (
       <React.Fragment>

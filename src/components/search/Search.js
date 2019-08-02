@@ -6,9 +6,9 @@ class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      list: [
-      ]
+      list: []
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.hightlightElement = (item) => {
       if (item.searchType === 'PROJECT') {
@@ -22,8 +22,8 @@ class Search extends React.Component {
       }
     };
   }
+
   handleChange(e) {
-    console.log('change', e.target.value);
     // Variable to hold the filtered list before putting into state
     let newList = [];
 
@@ -39,7 +39,7 @@ class Search extends React.Component {
         return name.includes(srchWord);
       });
       //search in results
-      const employeesResults = employees.children.filter(employee => {
+      const employeesResults = employees.filter(employee => {
         const name = employee.name.toLowerCase();
         if (name.includes(srchWord)) employee.searchType = 'EMPLOYEE';
         return name.includes(srchWord);
