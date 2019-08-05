@@ -135,7 +135,7 @@ async function getData() {
         name: `${employee.firstName} ${employee.lastName}`,
         highlight: true,
         roll: `${employee.role ? employee.role : ''}`,
-        img: `img/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`,
+        img: `img/employees/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`,
         initDate: moment(`${employee.startYear}-01-01`).format(dateFormat),
         endDate: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
         skills: getTechList(employee.technologies)
