@@ -14,7 +14,9 @@ import {
   highLightProjectWithEmployeeId,
   getElementById,
   getSkillsIDsFromProject,
-  getSkills
+  getSkills,
+  brushProjects,
+  getDateRange
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -60,11 +62,8 @@ class App extends React.Component {
       technologyList,
       clientList
     } = await load();
-    //{TO DO} TAKE THIS CALCULATION AOUTISDE
-    const min = d3.min(projectList, d => d.dateInit);
-    const max = d3.max(projectList, d => d.dateEnd);
-    const selectedRange = [min, max];
-    let totalMonths = d3.timeMonth.count(min, max);
+    const selectedRange = getDateRange(projectList);
+    let totalMonths = d3.timeMonth.count(selectedRange[0], selectedRange[1]);
 
     this.setState({
       initialDates: selectedRange,
@@ -191,17 +190,9 @@ class App extends React.Component {
  * @param endWeek the ending number of the week in the end full date 
  */
   brushDates = (initWeek, endWeek) => {
-    const brushDate = new Date(this.state.initialDates[0]);
-    const initalDate = new Date(brushDate.setMonth(brushDate.getMonth() + initWeek));
-    const endingDate = new Date(brushDate.setMonth(brushDate.getMonth() + endWeek));
-    const brushedProjects = this.state.projects.map(project => {
-      project.inTimeRange = this.checkInTimeRange(project.dateInit, project.dateEnd, initalDate, endingDate);
-      return project;
-    });
-
+    const brushedProjectsf = brushProjects(this.state.projects, this.state.initialDates[0], initWeek, endWeek);
     this.setState({
-      datesBrushed: [initalDate, endingDate],
-      projects: brushedProjects
+      filteredProyects: brushedProjectsf
     });
   };
 
@@ -230,18 +221,6 @@ class App extends React.Component {
         this.unHighlightElements();
     }
   };
-
-  checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
-    // const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
-    const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
-    // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
-    // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
-
-    // const inRange = (objRange[0].getTime() >= this.state.datesBrushed[0].getTime() && objRange[0].getTime() <= this.state.datesBrushed[1].getTime())
-    //   && (objRange[1].getTime() <= this.state.datesBrushed[1].getTime() && objRange[1].getTime() >= this.state.datesBrushed[0].getTime()) ? true : false;
-    return endRange;
-
-  }
 
   modifyDialogueInfo(data, type) {
     this.setState({ dialogueInfo: { data, type } });

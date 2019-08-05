@@ -1,3 +1,4 @@
+import moment from 'moment';
 
 
 /**
@@ -123,6 +124,32 @@ export function getSkills(IdArray, skillArray) {
   return skills;
 }
 
+/**
+ * Filters all the projects within the brInitweek and the brEndWeek and returns an array with the filtered projects
+ * @param {array} projects array with projects to be filtered 
+ * @param {date} initDate inital date 
+ * @param {date} brInitWeek current init brush week within initial and ending dates
+ * @param {date} brEndWeek current end brush week within inital and ending dates
+ */
+export function brushProjects(projects, initDate, brInitWeek, brEndWeek) {
+  const nowInit = moment(initDate).add(brInitWeek, 'M');
+  const nowEnd = moment(initDate).add(brEndWeek, 'M');
+  const brushedProjects = projects.filter(p => moment(p.dateInit).diff(nowInit, 'months') >= 0 && nowEnd.diff(moment(p.dateEnd), 'months') >= 0);
+  return brushedProjects;
+}
+
+/**
+ * checks all the projects and sets the inital and ending date
+ * @param {array} projects array with all the projects
+ */
+export function getDateRange(projects) {
+  const initDates = projects.map(p => moment(p.dateInit));
+  const endDates = projects.map(p => moment(p.dateEnd));
+  const min = moment.min(initDates).toDate();
+  const max = moment.max(endDates).toDate();
+  return [min, max];
+}
+
 export default {
   setHighlight,
   setHighlightElement,
@@ -131,6 +158,8 @@ export default {
   getElementById,
   elementWithSkill,
   getSkillsIDsFromProject,
-  getSkills
+  getSkills,
+  brushProjects,
+  getDateRange
 };
 
