@@ -6,7 +6,7 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load, getLargestClients, getEmployeeObjs, resetHighlights } from './components/general';
+import { load, getLargestClients, getEmployeeObjs, getProjectObjs, resetHighlights } from './components/general';
 import {
   setHighlight,
   setHighlightElement,
@@ -78,7 +78,7 @@ class App extends React.Component {
         children: technologyList
       },
       filteredClients: clientList,
-      filteredProjects: projectList,
+      filteredProjects: [],
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
@@ -236,8 +236,9 @@ class App extends React.Component {
   }
 
   handleClick = (client, resetClickedClient = false) => {
-    let employees = getEmployeeObjs(client.employees, this.state.employees);
-    let clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    const employees = getEmployeeObjs(client.employees, this.state.employees);
+    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    const projectList = getProjectObjs(client.projects, this.state.projects);
     let clickedClient = resetClickedClient ? {
       id: '',
       name: '',
@@ -250,7 +251,8 @@ class App extends React.Component {
     this.setState({
       clients: clientList,
       clickedClient: clickedClient,
-      filteredEmployees: employees
+      filteredEmployees: employees,
+      filteredProjects: projectList
     });
   }
 
@@ -284,7 +286,7 @@ class App extends React.Component {
     />;
     const legend = <Legend
       clients={this.state.clients}
-      projects={this.state.projects}
+      projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
       skills={this.state.skills}
       overEvent={this.HighlightElements}

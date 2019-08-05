@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { getProjectObjs } from 'components/general';
 
 const sliceHeight = 50;
 const projectHeight = 10;
@@ -61,15 +62,18 @@ export function calculatePieClient(props, radius) {
     const logo = {
       centroid: anchor
     };
-    const projects = getClientProjects(d.data.projects, props.projects);
-    const projectSlices = calculatePieProject(
-      d.startAngle + projectPadding,
-      d.endAngle - projectPadding,
-      projects,
-      radius
-    );
 
-    projectSlice = projectSlice.concat(projectSlices);
+    if (d.data.type === 'client') {
+      const projects = getProjectObjs(d.data.projects, props.projects);
+      const projectSlices = calculatePieProject(
+        d.startAngle + projectPadding,
+        d.endAngle - projectPadding,
+        projects,
+        radius
+      );
+  
+      projectSlice = projectSlice.concat(projectSlices);
+    }
     return {
       path,
       fill: d.data.color,
@@ -82,16 +86,6 @@ export function calculatePieClient(props, radius) {
   });
 
   return { clientSlice, projectSlice };
-}
-
-// recieves projects 
-// projectsID : array of ID numbers of the projects 
-// returns array with objects with the projects information
-function getClientProjects(projectsId, proj) {
-  const projects = proj.filter(function (el) {
-    return ~projectsId.indexOf(el.id);
-  });
-  return projects;
 }
 
 //add to the state slices of clients to draw

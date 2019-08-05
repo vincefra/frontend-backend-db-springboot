@@ -208,7 +208,6 @@ async function getData() {
     }
 
     clientList.sort((a, b) => b.hours - a.hours);
-    projectList.sort((a, b) => b.hours - a.hours);
     return { projectList, employeeList, technologyList, clientList };
   }
 }
@@ -224,8 +223,11 @@ function groupCategories(clients) {
   let counter = 0;
   for (let category in grouped) {
     const employees = [];
-    for (let client of grouped[category]) 
+    const projects = [];
+    for (let client of grouped[category])  {
       employees.push(...client.employees.filter(e => !employees.includes(e)));
+      projects.push(...client.projects);
+    }
     sorted.push({
       id: counter++,
       name: category,
@@ -235,7 +237,7 @@ function groupCategories(clients) {
       hours: grouped[category].length,
       color: '#000',
       highlight: true,
-      projects: [],
+      projects: projects,
       employees: employees
     });
   }
@@ -264,7 +266,7 @@ export function getLargestClients(clients) {
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
-  clientList.push({
+  const other = {
     id: '',
     name: 'Other',
     category: '',
@@ -275,14 +277,15 @@ export function getLargestClients(clients) {
     list: [],
     projects: [],
     employees: []
-  });
+  };
 
   for (let i = maxAnnularSectors; i < clients.length; i++) {
-    clientList[maxAnnularSectors].hours += clients[i].hours;
-    clientList[maxAnnularSectors].list.push(clients[i]);
-    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
-      !clientList[maxAnnularSectors].employees.includes(e)));
+    other.hours += clients[i].hours;
+    other.list.push(clients[i]);
+    other.employees.push(...clients[i].employees.filter(e => !other.employees.includes(e)));
+    other.projects.push(...clients[i].projects);
   }
+  clientList.push(other);
 
   return clientList;
 }
@@ -295,10 +298,16 @@ export function resetHighlights(list) {
   list.forEach(client => client.highlight = true);
 }
 
+export function getProjectObjs(projectIds, projectList) {
+  const projects = projectIds.map(id => projectList[id]);
+  return projects.sort((a, b) => b.hours - a.hours);
+}
+
 
 export default {
   load,
   getLargestClients,
   getEmployeeObjs,
-  resetHighlights
+  resetHighlights,
+  getProjectObjs
 };
