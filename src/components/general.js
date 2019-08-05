@@ -261,8 +261,9 @@ function groupCategories(clients) {
       !categories[maxAnnularSectors].employees.includes(e)));
   }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
+  categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);
-  
+
   return { 
     id: counter++,
     name: 'Other', 
@@ -279,10 +280,10 @@ function groupCategories(clients) {
 
 export function getLargestClients(clients) {
   if (!clients) return clients;
+  if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
-  if (clients.length <= maxAnnularSectors) return clientList;
   clientList.push({
-    id: -2,
+    id: '',
     name: 'Other',
     category: '',
     type: 'more',

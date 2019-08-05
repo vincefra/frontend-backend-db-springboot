@@ -244,7 +244,7 @@ class App extends React.Component {
       type: '',
       list: []
     } : client;
-
+    
     resetHighlights(clientList);
     resetHighlights(employees);
     this.setState({
