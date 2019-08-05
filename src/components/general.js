@@ -241,25 +241,7 @@ function groupCategories(clients) {
   }
     
   sorted.sort((a, b) => b.list.length - a.list.length);
-  const categories = sorted.slice(0, maxAnnularSectors);
-  categories.push({
-    id: counter++,
-    name: 'Other', 
-    category: '',
-    type: 'category',
-    list: [],
-    hours: 0,
-    color: '#000',
-    highlight: true,
-    projects: [],
-    employees: []
-  });
-  
-  for (let i = maxAnnularSectors; i < sorted.length; i++) {
-    categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
-    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
-      !categories[maxAnnularSectors].employees.includes(e)));
-  }
+  const categories = getLargestClients(sorted);
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);
