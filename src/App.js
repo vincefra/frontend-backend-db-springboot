@@ -154,8 +154,9 @@ class App extends React.Component {
     const highLightSkills = getSkills(skillsId, this.state.skills.children);
     let skills = this.state.filteredSkills;
     skills.children = highLightSkills;
+    console.log('im in ', client)
     this.setState({
-      // filteredSkills: skills,
+      filteredSkills: skills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
       clients: highlightedClients
