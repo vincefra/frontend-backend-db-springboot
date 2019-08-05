@@ -78,7 +78,7 @@ class App extends React.Component {
         children: technologyList
       },
       filteredClients: clientList,
-      filteredProjects: [],
+      filteredProjects: projectList,
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
@@ -129,11 +129,16 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
+    const employeeSkills = getSkills(employee.skills, this.state.skills.children);
+
+    let skills = this.state.filteredSkills;
+    skills.children = employeeSkills;
 
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
-      clients: highlightedClients
+      clients: highlightedClients,
+      filteredSkills: skills
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -190,9 +195,9 @@ class App extends React.Component {
  * @param endWeek the ending number of the week in the end full date 
  */
   brushDates = (initWeek, endWeek) => {
-    const brushedProjectsf = brushProjects(this.state.projects, this.state.initialDates[0], initWeek, endWeek);
+    const brushedProjects = brushProjects(this.state.projects, this.state.initialDates[0], initWeek, endWeek);
     this.setState({
-      filteredProyects: brushedProjectsf
+      filteredProjects: brushedProjects
     });
   };
 
@@ -291,7 +296,7 @@ class App extends React.Component {
       dialogueInfo={this.state.dialogueInfo}
     />;
     const timeline = <VizTimeline
-      projects={this.state.projects}
+      projects={this.state.filteredProjects}
       size={this.state.size}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
