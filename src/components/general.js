@@ -280,10 +280,10 @@ function groupCategories(clients) {
 
 export function getLargestClients(clients) {
   if (!clients) return clients;
+  if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
-  if (clients.length <= maxAnnularSectors) return clientList;
   clientList.push({
-    id: -2,
+    id: '',
     name: 'Other',
     category: '',
     type: 'more',

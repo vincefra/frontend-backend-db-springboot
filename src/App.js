@@ -257,7 +257,6 @@ class App extends React.Component {
   }
 
   handleClick = (client, resetClickedClient = false) => {
-    console.log(client);
     let employees = getEmployeeObjs(client.employees, this.state.employees);
     let clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
     let clickedClient = resetClickedClient ?  { 
@@ -266,7 +265,6 @@ class App extends React.Component {
       type: '', 
       list: [] 
     } : client;
-    
     resetHighlights(clientList);
     resetHighlights(employees);
     this.setState({ 
