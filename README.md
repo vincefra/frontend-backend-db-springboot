@@ -1,8 +1,10 @@
 # FindOut Infographics
 
-A visualization over FindOut.
+A visualization over FindOut's projects, employees and clients.
 
 ## Setup
+
+How to set up this project.
 
 ### Prerequisite
 
@@ -45,7 +47,7 @@ Images that are used in the visualization
 
 #### Employee Images
 
-Employee images are under the folder `/public/img`. They should be saved as `<FirstName>_<LastName>.jpg`. \
+Employee images are under the folder `/public/img`. The first letter in the employee's first name and last name are capitalized. They should be saved as `<FirstName>_<LastName>.jpg`. \
 Example: `Stacy_Baker.jpg`.
 
 #### Company Images
@@ -57,7 +59,7 @@ Example: `Example_Company.png`
 
 The data used for the visualisation can be found in the company Dropbox folder `/FindOut- Projekt/FindOut/Infographics/Data` and is named `data.xlsx`.
 
-The Excel file contains three sheets.
+The Excel file contains three sheets. They can be edited and will be automatically updated in the visualization.
 
 #### Projects
 
@@ -69,8 +71,8 @@ List of projects that FindOut has worked with.
 | Project Type  | A tag that identify the type of the project using FindOut's guideline. |
 | Start Dates | Starting dates (resumed) of a project, separated with comas. Formatted `YYYY-MM-DD` |
 | End Dates | End dates of a project separated with comas. Ongoing project's end date are left out. Formatted `YYYY-MM-DD`. |
-| Customer | Customer/client's name. Should be an existing one in [customers](#customers) sheet. |
-| Employees | List of employees that has worked in the project, separated with comas. The employee should exist in the [employees](#employees) sheet.|
+| Customer | Customer/client's name. Capitalized as their official name. Should be an existing one in [customers](#customers) sheet. |
+| Employees | List of employees that has worked in the project, separated with comas. The first letter in an employee's first name and last name should be capitalized. The employee should exist in the [employees](#employees) sheet.|
 | Description | A short description of the project. Multiple description in different languages are separated with a backslash `\`, where the Swedish version comes first. |
 | Technologies | List of technologies that are used in the project, separated with comas. |
 
@@ -81,8 +83,8 @@ List of employees that has worked for FindOut.
 | Column | Description |
 | --- | --- |
 | ID | Unique ID that identifies an employee. |
-| Name | First name of an employee |
-| Title | Last name of an employee |
+| Name | First name of an employee. First letter capitalized. |
+| Title | Last name of an employee. First letter capitalized. |
 | Type | Working Field. Management/Admin/Konsult |
 | Birth year | Year of birth. |
 | Year In | The year they started working at FindOut. |
@@ -98,7 +100,7 @@ List of customers/clients FindOut has worked with.
 | Column | Description |
 | --- | --- |
 | ID | Unique ID that identifies a company/customer/client. |
-| Name | The name of the company/customer/client. |
+| Name | The name of the company/customer/client. Capitalized  as their official name.|
 | Category | The category/industry the company's in. |
 | Location | The location the company is located. |
 | Description | A descrption of the company. Multiple description in different languages are separated with a backslash `\`, where the Swedish version comes first. |
