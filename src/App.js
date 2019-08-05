@@ -15,7 +15,8 @@ import {
   getElementById,
   getSkillsIDsFromProject,
   getSkills,
-  typeSelected
+  brushProjects,
+  getDateRange
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -61,11 +62,8 @@ class App extends React.Component {
       technologyList,
       clientList
     } = await load();
-    //{TO DO} TAKE THIS CALCULATION AOUTISDE
-    const min = d3.min(projectList, d => d.dateInit);
-    const max = d3.max(projectList, d => d.dateEnd);
-    const selectedRange = [min, max];
-    let totalMonths = d3.timeMonth.count(min, max);
+    const selectedRange = getDateRange(projectList);
+    let totalMonths = d3.timeMonth.count(selectedRange[0], selectedRange[1]);
 
     this.setState({
       initialDates: selectedRange,
@@ -80,7 +78,7 @@ class App extends React.Component {
         children: technologyList
       },
       filteredClients: clientList,
-      filteredProjects: [],
+      filteredProjects: projectList,
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
@@ -118,26 +116,29 @@ class App extends React.Component {
       clients: highlightedClients,
       filteredSkills: skills,
       projects: highlightedProjects,
-      filteredEmployees: highlightedEmployees,
-      elementOver: typeSelected['PRO']
+      filteredEmployees: highlightedEmployees
     });
 
     const client = getElementById(project.clientId, this.state.clients);
     this.toggleDialogue();
     this.modifyDialogueInfo({ ...project, clientName: client.name, logo: client.logo }, 'PROJECT');
   };
-  
+
   showEmployee = (id) => {
     const employee = getElementById(id, this.state.filteredEmployees);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
+    const employeeSkills = getSkills(employee.skills, this.state.skills.children);
+
+    let skills = this.state.filteredSkills;
+    skills.children = employeeSkills;
 
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
       clients: highlightedClients,
-      elementOver: typeSelected['EMP']
+      filteredSkills: skills
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -157,8 +158,7 @@ class App extends React.Component {
       // filteredSkills: skills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
-      clients: highlightedClients,
-      elementOver: typeSelected['CLI']
+      clients: highlightedClients
     });
 
     if (client.type === 'client') {
@@ -179,8 +179,7 @@ class App extends React.Component {
       clients: unhighlightedClients,
       filteredSkills: skills,
       projects: unHighLightProject,
-      filteredEmployees: highlightedEmployees,
-      elementOver: typeSelected['NON']
+      filteredEmployees: highlightedEmployees
     });
   };
 
@@ -196,17 +195,9 @@ class App extends React.Component {
  * @param endWeek the ending number of the week in the end full date 
  */
   brushDates = (initWeek, endWeek) => {
-    const brushDate = new Date(this.state.initialDates[0]);
-    const initalDate = new Date(brushDate.setMonth(brushDate.getMonth() + initWeek));
-    const endingDate = new Date(brushDate.setMonth(brushDate.getMonth() + endWeek));
-    const brushedProjects = this.state.projects.map(project => {
-      project.inTimeRange = this.checkInTimeRange(project.dateInit, project.dateEnd, initalDate, endingDate);
-      return project;
-    });
-
+    const brushedProjects = brushProjects(this.state.projects, this.state.initialDates[0], initWeek, endWeek);
     this.setState({
-      datesBrushed: [initalDate, endingDate],
-      projects: brushedProjects
+      filteredProjects: brushedProjects
     });
   };
 
@@ -236,18 +227,6 @@ class App extends React.Component {
     }
   };
 
-  checkInTimeRange(prjInitDate, prjEndDate, brushInit, brushEnd) {
-    // const inRange = (prjInitDate.getTime() >= brushInit.getTime() && prjInitDate.getTime() <= brushEnd.getTime()) ? true : false;
-    const endRange = prjEndDate.getTime() <= brushEnd.getTime() ? true : false;
-    // console.log(prjInitDate.getTime(), brushInit.getTime(), prjInitDate.getTime() >= brushInit.getTime());
-    // console.log(prjInitDate.getMonth(), brushInit.getMonth(), prjInitDate.getMonth() >= brushInit.getMonth());
-
-    // const inRange = (objRange[0].getTime() >= this.state.datesBrushed[0].getTime() && objRange[0].getTime() <= this.state.datesBrushed[1].getTime())
-    //   && (objRange[1].getTime() <= this.state.datesBrushed[1].getTime() && objRange[1].getTime() >= this.state.datesBrushed[0].getTime()) ? true : false;
-    return endRange;
-
-  }
-
   modifyDialogueInfo(data, type) {
     this.setState({ dialogueInfo: { data, type } });
   }
@@ -259,19 +238,19 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     let employees = getEmployeeObjs(client.employees, this.state.employees);
     let clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    let clickedClient = resetClickedClient ?  { 
-      id: '', 
+    let clickedClient = resetClickedClient ? {
+      id: '',
       name: '',
-      type: '', 
-      list: [] 
+      type: '',
+      list: []
     } : client;
-    
+
     resetHighlights(clientList);
     resetHighlights(employees);
-    this.setState({ 
-      clients: clientList, 
+    this.setState({
+      clients: clientList,
       clickedClient: clickedClient,
-      filteredEmployees: employees 
+      filteredEmployees: employees
     });
   }
 
@@ -317,7 +296,7 @@ class App extends React.Component {
       dialogueInfo={this.state.dialogueInfo}
     />;
     const timeline = <VizTimeline
-      projects={this.state.projects}
+      projects={this.state.filteredProjects}
       size={this.state.size}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
