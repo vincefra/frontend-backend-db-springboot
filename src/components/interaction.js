@@ -1,24 +1,5 @@
 
 
-export const typeSelected = {
-  'EMP': {
-    type: 'employee',
-    info: null
-  },
-  'PRO': {
-    type: 'project',
-    info: null
-  },
-  'CLI': {
-    type: 'client',
-    info: null
-  },
-  'NON': {
-    type: 'none',
-    info: null
-  }
-};
-
 /**
    * Set the Highlight state either to true or false
    * returns an array with the modified items
@@ -150,7 +131,6 @@ export default {
   getElementById,
   elementWithSkill,
   getSkillsIDsFromProject,
-  getSkills,
-  typeSelected
+  getSkills
 };
 

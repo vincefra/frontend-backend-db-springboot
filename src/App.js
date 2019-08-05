@@ -14,8 +14,7 @@ import {
   highLightProjectWithEmployeeId,
   getElementById,
   getSkillsIDsFromProject,
-  getSkills,
-  typeSelected
+  getSkills
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -118,15 +117,14 @@ class App extends React.Component {
       clients: highlightedClients,
       filteredSkills: skills,
       projects: highlightedProjects,
-      filteredEmployees: highlightedEmployees,
-      elementOver: typeSelected['PRO']
+      filteredEmployees: highlightedEmployees
     });
 
     const client = getElementById(project.clientId, this.state.clients);
     this.toggleDialogue();
     this.modifyDialogueInfo({ ...project, clientName: client.name, logo: client.logo }, 'PROJECT');
   };
-  
+
   showEmployee = (id) => {
     const employee = getElementById(id, this.state.filteredEmployees);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
@@ -136,8 +134,7 @@ class App extends React.Component {
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
-      clients: highlightedClients,
-      elementOver: typeSelected['EMP']
+      clients: highlightedClients
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -157,8 +154,7 @@ class App extends React.Component {
       // filteredSkills: skills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
-      clients: highlightedClients,
-      elementOver: typeSelected['CLI']
+      clients: highlightedClients
     });
 
     if (client.type === 'client') {
@@ -179,8 +175,7 @@ class App extends React.Component {
       clients: unhighlightedClients,
       filteredSkills: skills,
       projects: unHighLightProject,
-      filteredEmployees: highlightedEmployees,
-      elementOver: typeSelected['NON']
+      filteredEmployees: highlightedEmployees
     });
   };
 
@@ -259,19 +254,19 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     let employees = getEmployeeObjs(client.employees, this.state.employees);
     let clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    let clickedClient = resetClickedClient ?  { 
-      id: '', 
+    let clickedClient = resetClickedClient ? {
+      id: '',
       name: '',
-      type: '', 
-      list: [] 
+      type: '',
+      list: []
     } : client;
-    
+
     resetHighlights(clientList);
     resetHighlights(employees);
-    this.setState({ 
-      clients: clientList, 
+    this.setState({
+      clients: clientList,
       clickedClient: clickedClient,
-      filteredEmployees: employees 
+      filteredEmployees: employees
     });
   }
 
