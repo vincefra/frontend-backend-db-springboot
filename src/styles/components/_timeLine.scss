@@ -1,4 +1,10 @@
 .timeLine{
+    transition: 0.3s all cubic-bezier(1, 0, 0, 1);
     position:absolute;
     bottom: 0;
+    &.hidden {
+    opacity: 0;
+    transform: translateY(10%);
+    visibility: hidden;
+  }
 }

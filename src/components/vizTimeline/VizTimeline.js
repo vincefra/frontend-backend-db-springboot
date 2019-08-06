@@ -20,10 +20,6 @@ class VizTimeline extends Component {
   topAxis = d3.axisTop();
 
 
-  handleDateChange = (values) => {
-    // console.log('values changes', values);
-  }
-
   componentDidMount() {
     this.setState({
 
@@ -105,7 +101,7 @@ class VizTimeline extends Component {
     const barHeight = (height - margin.bottom) / (this.state.numLevels + 1);
     // const barHeight = height / level;
     const content =
-      < div className="timeLine" >
+      < div className={this.props.displayTimeline ? 'timeLine' : 'timeLine hidden'} >
         <svg width={this.props.size[0]} height={height}>
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
 

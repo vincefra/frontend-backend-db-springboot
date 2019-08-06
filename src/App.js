@@ -49,7 +49,8 @@ class App extends React.Component {
         type: 'none',
         info: null
       },
-      dialogueInfo: {}
+      dialogueInfo: {},
+      displayTimeline: false
     };
   }
 
@@ -80,7 +81,7 @@ class App extends React.Component {
         children: technologyList
       },
       filteredClients: clientList,
-      filteredProjects: [],
+      filteredProjects: projectList,
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
@@ -248,13 +249,14 @@ class App extends React.Component {
       type: '',
       list: []
     } : client;
-    
+
     resetHighlights(clientList);
     resetHighlights(employees);
     this.setState({
       clients: clientList,
       clickedClient: clickedClient,
-      filteredEmployees: employees
+      filteredEmployees: employees,
+      displayTimeline: !resetClickedClient
     });
   }
 
@@ -307,6 +309,7 @@ class App extends React.Component {
       modifyRange={this.brushDates}
       ranges={this.state.initialDates}
       totalProjectsMonths={this.state.totalProjectsMonths}
+      displayTimeline={this.state.displayTimeline}
 
     />;
     const vizCircle = <VizCircle
