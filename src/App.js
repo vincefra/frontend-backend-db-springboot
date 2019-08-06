@@ -166,7 +166,6 @@ class App extends React.Component {
     clients = clients || this.state.clients;
     projects = projects || this.state.filteredProjects;
     employees = employees || this.state.filteredEmployees;
-    
     if (this.state.dialogueIsShown) this.toggleDialogue();
     let unHighlightedClients = setHighlight(true, clients);
     unHighlightedClients = unHighlightText(unHighlightedClients);
