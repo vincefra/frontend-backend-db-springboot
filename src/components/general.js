@@ -194,7 +194,6 @@ async function getData() {
     }
 
     clientList.sort((a, b) => b.hours - a.hours);
-    projectList.sort((a, b) => b.hours - a.hours);
     return { projectList, employeeList, technologyList, clientList };
   }
 }
@@ -233,9 +232,13 @@ async function groupCategories(clients) {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';
     }
-
-    for (let client of grouped[category])
+    
+    const projects = [];
+    for (let client of grouped[category])  {
       employees.push(...client.employees.filter(e => !employees.includes(e)));
+      projects.push(...client.projects);
+    }
+
     sorted.push({
       id: counter++,
       name: category,
@@ -246,14 +249,14 @@ async function groupCategories(clients) {
       color: color,
       highlight: true,
       textHighlight: false,
-      projects: [],
-      employees: employees,
-      logo: imageSrc
+      logo: imageSrc,
+      projects: projects,
+      employees: employees
     });
   }
 
   sorted.sort((a, b) => b.list.length - a.list.length);
-  const categories = sorted.slice(0, maxAnnularSectors);
+  const categories = getLargestClients(sorted);
   let imageSrc = '/img/categories/Other.png';
   try {
     color = await getColor(imageSrc);
@@ -261,26 +264,7 @@ async function groupCategories(clients) {
     color = '';
     imageSrc = '/img/logos/company_placeholder.png';
   }
-  categories.push({
-    id: counter++,
-    name: 'Other',
-    category: '',
-    type: 'category',
-    list: [],
-    hours: 0,
-    color: color,
-    highlight: true,
-    textHighlight: false,
-    projects: [],
-    employees: [],
-    logo: imageSrc
-  });
-
-  for (let i = maxAnnularSectors; i < sorted.length; i++) {
-    categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
-    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e =>
-      !categories[maxAnnularSectors].employees.includes(e)));
-  }
+  
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);
@@ -303,11 +287,10 @@ async function groupCategories(clients) {
 
 export function getLargestClients(clients) {
   let imageSrc = '/img/categories/Other.png';
-
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
-  clientList.push({
+  const other = {
     id: '',
     name: 'Other',
     category: '',
@@ -319,14 +302,15 @@ export function getLargestClients(clients) {
     projects: [],
     employees: [],
     logo: imageSrc
-  });
+  };
 
   for (let i = maxAnnularSectors; i < clients.length; i++) {
-    clientList[maxAnnularSectors].hours += clients[i].hours;
-    clientList[maxAnnularSectors].list.push(clients[i]);
-    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e =>
-      !clientList[maxAnnularSectors].employees.includes(e)));
+    other.hours += clients[i].hours;
+    other.list.push(clients[i]);
+    other.employees.push(...clients[i].employees.filter(e => !other.employees.includes(e)));
+    other.projects.push(...clients[i].projects);
   }
+  clientList.push(other);
 
   return clientList;
 }
@@ -339,10 +323,16 @@ export function resetHighlights(list) {
   list.forEach(client => client.highlight = true);
 }
 
+export function getProjectObjs(projectIds, projectList) {
+  const projects = projectIds.map(id => projectList[id]);
+  return projects.sort((a, b) => b.hours - a.hours);
+}
+
 
 export default {
   load,
   getLargestClients,
   getEmployeeObjs,
-  resetHighlights
+  resetHighlights,
+  getProjectObjs
 };

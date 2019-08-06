@@ -45,7 +45,7 @@ class Search extends React.Component {
         return name.includes(srchWord);
       });
       //search in skills
-      const skillsResults = skills.children.filter(skill => {
+      const skillsResults = skills.filter(skill => {
         const name = skill.name.toLowerCase();
         if (name.includes(srchWord)) skill.searchType = 'SKILL';
         return name.includes(srchWord);

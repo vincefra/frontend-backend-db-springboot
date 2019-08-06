@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { getProjectObjs } from 'components/general';
 
 const sliceHeight = 50;
 const projectHeight = 10;
@@ -73,15 +74,19 @@ export function calculatePieClient(props, radius) {
     const logo = {
       centroid: anchor
     };
-    const projects = getClientProjects(d.data.projects, props.projects);
-    const projectSlices = calculatePieProject(
-      d.startAngle + projectPadding,
-      d.endAngle - projectPadding,
-      projects,
-      radius
-    );
 
-    projectSlice = projectSlice.concat(projectSlices);
+    if (d.data.type === 'client') {
+      const projects = getProjectObjs(d.data.projects, props.projects);
+      const projectSlices = calculatePieProject(
+        d.startAngle + projectPadding,
+        d.endAngle - projectPadding,
+        projects,
+        radius
+      );
+  
+      projectSlice = projectSlice.concat(projectSlices);
+    }
+
     return {
       path,
       fill: d.data.color,
@@ -96,16 +101,6 @@ export function calculatePieClient(props, radius) {
   });
 
   return { clientSlice, projectSlice };
-}
-
-// recieves projects 
-// projectsID : array of ID numbers of the projects 
-// returns array with objects with the projects information
-function getClientProjects(projectsId, proj) {
-  const projects = proj.filter(function (el) {
-    return ~projectsId.indexOf(el.id);
-  });
-  return projects;
 }
 
 //add to the state slices of clients to draw
@@ -147,36 +142,22 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
   return slices;
 }
 
+//Create a hierarchy and sort it alphabetically
 export function createLinks(skills) {
-  //Create a hierarchy and sort it alphabetically
-  let children = skills.children !== undefined ? skills.children.length > filterChildren ? skills.children.slice(0, filterChildren) : skills.children : [];
-  const remainder = skills.children !== undefined ? skills.children.length > filterChildren ? skills.children.length - filterChildren : skills.children : 0;
-  if (remainder > 0) children.push(
-    {
-      id: -1,
-      name: '+' + remainder + ' technologies',
-      highlight: false
-    }
-  );
+  let children = skills.length > filterChildren ? skills.slice(0, filterChildren) : skills;
   const skillsData = {
     name: 'Front-End',
     children: children
   };
-
   const data = skillsData;
-  // data.children = children;
   const root = d3
     .hierarchy(data)
     .sort((a, b) => a.data.name.localeCompare(b.data.name));
-  //create a tree layout an process the
   const treeLayout = d3.tree();
-
-  //angle scale to calculate the angle they should be based on their X distance
   const angleScale = d3
     .scaleLinear()
     .domain([0, 1])
     .range([0, 360]);
-
   const nodes = treeLayout(root);
 
   for (let i in nodes.children) {
