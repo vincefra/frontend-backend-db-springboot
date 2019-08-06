@@ -22,7 +22,7 @@ class VizClient extends React.Component {
 
   componentWillReceiveProps(props) {
     const { clientSlice, projectSlice } = calculatePieClient(props, this.state.radius);
-    this.setState({ clientSlice, projectSlice});
+    this.setState({ clientSlice, projectSlice });
   }
 
   render() {
@@ -54,21 +54,35 @@ class VizClient extends React.Component {
       ))}
     </g>;
     const clientLogos = <g transform={`translate(${width / 2}, ${height / 2})`}>
-      {this.state.clientSlice.map((d, i) => (
-        < image
-          key={i}
-          width={imageSize}
-          height={imageSize}
-          x={d.logo.centroid[0]}
-          y={d.logo.centroid[1]}
-          xlinkHref={d.img}
-          textAnchor={d.anchor}
-          opacity={d.highlight ? '1' : '0.2'}
+      {this.state.clientSlice.map((d, i) => {
+        const text = d.data.type === 'category' || d.data.type === 'more' ? <text
+          x={d.textPos[0]}
+          y={d.textPos[1]}
+          opacity={d.data.textHighlight ? '1' : '0'}
+          textAnchor={d.textAnchor}
+          fill={d.fill}
           onMouseOver={() => { this.props.mouseOnClient(d.id); }}
           onMouseOut={() => this.props.mouseOutClient()}
-
-        />
-      ))}
+          onClick={() => this.props.clientClick(d.data)}
+        >
+          {d.data.name}
+        </text> : <g></g>;
+        return <g key={i}>
+          < image
+            key={i}
+            width={imageSize}
+            height={imageSize}
+            x={d.logo.centroid[0]}
+            y={d.logo.centroid[1]}
+            xlinkHref={d.img}
+            opacity={d.highlight ? '1' : '0.2'}
+            onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+            onMouseOut={() => this.props.mouseOutClient()}
+            onClick={() => this.props.clientClick(d.data)}
+          />
+          {text}
+        </g>;
+      })}
     </g>;
     return (
       <React.Fragment>

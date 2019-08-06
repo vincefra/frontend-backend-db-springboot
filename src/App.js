@@ -16,7 +16,9 @@ import {
   getSkillsIDsFromProject,
   getSkills,
   brushProjects,
-  getDateRange
+  getDateRange,
+  setHighlightText,
+  unHighlightText
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -78,7 +80,7 @@ class App extends React.Component {
         children: technologyList
       },
       filteredClients: clientList,
-      filteredProjects: projectList,
+      filteredProjects: [],
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
@@ -147,7 +149,8 @@ class App extends React.Component {
 
   showClient = (id) => {
     const client = getElementById(id, this.state.clients);
-    const highlightedClients = setHighlightElement(false, [id], this.state.clients, false);
+    let highlightedClients = setHighlightElement(false, [id], this.state.clients, false);
+    highlightedClients = client.type !== 'client' ? setHighlightText(true, [id], highlightedClients, true) : highlightedClients;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
     const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
@@ -155,7 +158,7 @@ class App extends React.Component {
     let skills = this.state.filteredSkills;
     skills.children = highLightSkills;
     this.setState({
-      // filteredSkills: skills,
+      filteredSkills: skills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
       clients: highlightedClients
@@ -169,7 +172,8 @@ class App extends React.Component {
 
   unHighlightElements = () => {
     if (this.state.dialogueIsShown) this.toggleDialogue();
-    const unhighlightedClients = setHighlight(true, this.state.clients);
+    let unhighlightedClients = setHighlight(true, this.state.clients);
+    unhighlightedClients = unHighlightText(unhighlightedClients);
     const unHighLightProject = setHighlight(true, this.state.projects);
     const highlightedEmployees = setHighlight(true, this.state.filteredEmployees);
     let skills = this.state.filteredSkills;

@@ -10,7 +10,7 @@ const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
   const { projectList, employeeList, technologyList, clientList } = await getData();
-  const categories = groupCategories(clientList);
+  const categories = await groupCategories(clientList);
   categories.employees = employeeList.map((_, i) => i);
   return {
     categories,
@@ -63,21 +63,7 @@ async function getData() {
     });
   }
 
-  function getColor(src) {
-    return new Promise((resolve, reject) => {
-      let img = new Image();
-      img.onload = () => {
-        let dominantColor = colorThief.getColor(img);
-        dominantColor = dominantColor.map(x => {
-          x = parseInt(x).toString(16);
-          return (x.length === 1) ? '0' + x : x;
-        });
-        resolve(`#${dominantColor.join('')}`);
-      };
-      img.onerror = () => reject('');
-      img.src = `${process.env.PUBLIC_URL}${src}`;
-    });
-  }
+
 
   function getClientId(client) {
     if (!client) return -1;
@@ -213,7 +199,23 @@ async function getData() {
   }
 }
 
-function groupCategories(clients) {
+function getColor(src) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => {
+      let dominantColor = colorThief.getColor(img);
+      dominantColor = dominantColor.map(x => {
+        x = parseInt(x).toString(16);
+        return (x.length === 1) ? '0' + x : x;
+      });
+      resolve(`#${dominantColor.join('')}`);
+    };
+    img.onerror = () => reject('');
+    img.src = `${process.env.PUBLIC_URL}${src}`;
+  });
+}
+
+async function groupCategories(clients) {
   const grouped = {};
   for (let client of clients) {
     if (!(client.category in grouped)) grouped[client.category] = [client];
@@ -224,7 +226,15 @@ function groupCategories(clients) {
   let counter = 0;
   for (let category in grouped) {
     const employees = [];
-    for (let client of grouped[category]) 
+    let imageSrc = `/img/categories/${category.trim().replace(/\s/g, '_')}.png`;
+    try {
+      var color = await getColor(imageSrc);
+    } catch (error) {
+      color = '';
+      imageSrc = '/img/logos/company_placeholder.png';
+    }
+
+    for (let client of grouped[category])
       employees.push(...client.employees.filter(e => !employees.includes(e)));
     sorted.push({
       id: counter++,
@@ -233,52 +243,67 @@ function groupCategories(clients) {
       type: 'category',
       list: grouped[category],
       hours: grouped[category].length,
-      color: '#000',
+      color: color,
       highlight: true,
+      textHighlight: false,
       projects: [],
-      employees: employees
+      employees: employees,
+      logo: imageSrc
     });
   }
-    
+
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = sorted.slice(0, maxAnnularSectors);
+  let imageSrc = '/img/categories/Other.png';
+  try {
+    color = await getColor(imageSrc);
+  } catch (error) {
+    color = '';
+    imageSrc = '/img/logos/company_placeholder.png';
+  }
   categories.push({
     id: counter++,
-    name: 'Other', 
+    name: 'Other',
     category: '',
     type: 'category',
     list: [],
     hours: 0,
-    color: '#000',
+    color: color,
     highlight: true,
+    textHighlight: false,
     projects: [],
-    employees: []
+    employees: [],
+    logo: imageSrc
   });
-  
+
   for (let i = maxAnnularSectors; i < sorted.length; i++) {
     categories[maxAnnularSectors].list = categories[maxAnnularSectors].list.concat(sorted[i].list);
-    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+    categories[maxAnnularSectors].employees.push(...clients[i].employees.filter(e =>
       !categories[maxAnnularSectors].employees.includes(e)));
   }
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);
 
-  return { 
+  return {
     id: counter++,
-    name: 'Other', 
+    name: 'Other',
     category: '',
     type: 'category',
     list: categories,
     hours: 0,
-    color: '#000',
+    color: color,
     highlight: true,
+    textHighlight: false,
     projects: [],
-    employees: []
+    employees: [],
+    logo: imageSrc
   };
 }
 
 export function getLargestClients(clients) {
+  let imageSrc = '/img/categories/Other.png';
+
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
@@ -288,17 +313,18 @@ export function getLargestClients(clients) {
     category: '',
     type: 'more',
     highlight: true,
-    color: '#000',
+    color: '#000000',
     hours: 0,
     list: [],
     projects: [],
-    employees: []
+    employees: [],
+    logo: imageSrc
   });
 
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     clientList[maxAnnularSectors].hours += clients[i].hours;
     clientList[maxAnnularSectors].list.push(clients[i]);
-    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e => 
+    clientList[maxAnnularSectors].employees.push(...clients[i].employees.filter(e =>
       !clientList[maxAnnularSectors].employees.includes(e)));
   }
 
