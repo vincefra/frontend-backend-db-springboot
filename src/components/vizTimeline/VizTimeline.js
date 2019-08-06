@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Filter from './Filter';
 import * as d3 from 'd3';
+import {
+  getDateRange
+} from '../interaction';
 
 const margin = { top: 20, right: 50, bottom: 30, left: 50 };
 const height = 100;
@@ -19,13 +22,9 @@ class VizTimeline extends Component {
   monthAxis = d3.axisTop();
   topAxis = d3.axisTop();
 
-
   componentDidMount() {
     this.setState({
-
     });
-
-
   }
 
   //create all the data necessary for the timeline visualization and set it up in the state
@@ -33,8 +32,8 @@ class VizTimeline extends Component {
     const { projects, size, ranges } = nextProps;
     if (!projects) return {};
 
-    const extent = d3.extent([ranges[0], ranges[1]]);
-
+    // const extent = d3.extent([ranges[0], ranges[1]]);
+    const extent = getDateRange(projects);
     const xScale = d3
       .scaleTime()
       .domain(extent)
