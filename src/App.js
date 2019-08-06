@@ -199,30 +199,32 @@ class App extends React.Component {
     });
   };
 
-  HighlightElements = (name) => {
+  highlightElements = (name) => {
+    let clients = this.state.clients;
+    let filteredEmployees = this.state.filteredEmployees;
+    let filteredProjects = this.state.filteredProjects;
     switch (name) {
       case 'EMPLOYEES':
-        this.unhightLightElements('CLIENTS');
-        this.unhightLightElements('PROJECTS');
-        this.unhightLightElements('SKILLS');
+        clients = setHighlight(false, clients);
+        filteredProjects = setHighlight(false, filteredProjects);
         break;
       case 'CLIENTS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('PROJECTS');
-        this.unhightLightElements('SKILLS');
+        filteredEmployees = setHighlight(false, filteredEmployees);
+        filteredProjects = setHighlight(false, filteredProjects);
         break;
       case 'PROJECTS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('SKILLS');
+        clients = setHighlight(false, clients);
+        filteredEmployees = setHighlight(false, filteredEmployees);
         break;
       case 'SKILLS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('CLIENTS');
-        this.unhightLightElements('PROJECTS');
-        break;
       default:
-        this.unHighlightElements();
     }
+
+    this.setState({
+      clients,
+      filteredEmployees,
+      filteredProjects
+    });
   };
 
   modifyDialogueInfo(data, type) {
@@ -285,7 +287,7 @@ class App extends React.Component {
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
       skills={this.state.skills}
-      overEvent={this.HighlightElements}
+      overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
     />;
     const dialogue = <Dialogue
