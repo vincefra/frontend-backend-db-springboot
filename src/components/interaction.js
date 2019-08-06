@@ -33,6 +33,34 @@ export function setHighlightElement(highlight, idArray, modArray, ifIncludes) {
     return d;
   });
 }
+
+
+
+/**
+   * Modify the hightlight atribute of an object if it
+   * matches the id
+   *
+   * @param highhighlightElementLight Boolean to set the state
+   * @param highlightText boolean for the text
+   * @param modArray Array to modify
+   * @param idArray array with number IDs to modify
+   * @pram ifIncludes Boolean check if it includes or it does not
+   */
+export function setHighlightText(highlightText, idArray, modArray, ifIncludes) {
+  return modArray.map(d => {
+    if (idArray.includes(d.id) === ifIncludes) {
+      d.textHighlight = highlightText;
+    }
+    return d;
+  });
+}
+
+export function unHighlightText(modArray) {
+  return modArray.map(d => {
+    d.textHighlight = false;
+    return d;
+  });
+}
 /**
  * Checks if the element skills match the id and modifies the highlight state to true
  * checks if clients from the element do not match 
@@ -160,6 +188,8 @@ export default {
   getSkillsIDsFromProject,
   getSkills,
   brushProjects,
-  getDateRange
+  getDateRange,
+  setHighlightText,
+  unHighlightText
 };
 

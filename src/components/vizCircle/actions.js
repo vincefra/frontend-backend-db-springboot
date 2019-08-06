@@ -33,7 +33,7 @@ export function calculatePieClient(props, radius) {
 
   //arc array with the position and information in the pie
   const arcs = pie(props.clients);
-  
+
   //create an object SLICES in order to update the state
   //contains all the information one slice needs in order to be rendered
   let projectSlice = [];
@@ -48,15 +48,27 @@ export function calculatePieClient(props, radius) {
     const centroid = LogoArcGenerator.centroid(d);
     //calculate the anchor point of the image depending on its position on the center
     let anchor = centroid;
+    let textAnchor = 'start';
+    let textPos = centroid;
+    const textPaddingSides = 10;
+    const textPaddingUp = 5;
+    const halfImage = imageSize / 2;
     if (anchor[0] > 0 && anchor[1] < 0) {
       anchor = [centroid[0], centroid[1] - imageSize];
+      textPos = [centroid[0] + imageSize + textPaddingSides, centroid[1] - halfImage + textPaddingUp];
     } else if (anchor[0] < 0 && anchor[1] < 0) {
       anchor = [centroid[0] - imageSize, centroid[1] - imageSize];
+      textPos = [centroid[0] - imageSize - textPaddingSides, centroid[1] - halfImage + textPaddingUp];
+      textAnchor = 'end';
     } else if (anchor[0] < 0 && anchor[1] > 0) {
       anchor = [centroid[0] - imageSize, centroid[1]];
+      textPos = [centroid[0] - imageSize - textPaddingSides, centroid[1] + halfImage + textPaddingUp];
+      textAnchor = 'end';
     } else if (anchor[0] > 0 && anchor[1] > 0) {
       anchor = [centroid[0], centroid[1]];
+      textPos = [centroid[0] + imageSize + textPaddingSides, centroid[1] + halfImage + textPaddingUp];
     }
+
 
     const logo = {
       centroid: anchor
@@ -74,6 +86,8 @@ export function calculatePieClient(props, radius) {
       path,
       fill: d.data.color,
       logo,
+      textAnchor: textAnchor,
+      textPos: textPos,
       img: d.data.logo,
       id: d.data.id,
       highlight: d.data.highlight,
