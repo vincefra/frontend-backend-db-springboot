@@ -244,19 +244,6 @@ class App extends React.Component {
       list: []
     } : client;
 
-    // clientList = setHighlight(true, clientList);
-    // clientList = unHighlightText(clientList);
-    // projectList = setHighlight(true, projectList);
-    // employees = setHighlight(true, employees);
-
-    // this.setState({
-    //   clients: clientList,
-    //   clickedClient: clickedClient,
-    //   filteredEmployees: employees,
-    //   displayTimeline: !resetClickedClient,
-    //   filteredProjects: projectList
-    // });
-
     this.setState({
       displayTimeline: !resetClickedClient,
       clickedClient
