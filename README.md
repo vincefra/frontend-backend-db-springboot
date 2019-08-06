@@ -47,7 +47,7 @@ Images that are used in the visualization
 
 #### Employee Images
 
-Employee images are under the folder `/public/img`. The first letter in the employee's first name and last name are capitalized. They should be saved as `<FirstName>_<LastName>.jpg`. \
+Employee images are under the folder `/public/img/employees`. The first letter in the employee's first name and last name are capitalized. They should be saved as `<FirstName>_<LastName>.jpg`. \
 Example: `Stacy_Baker.jpg`.
 
 #### Company Images
