@@ -181,6 +181,7 @@ async function getData() {
         id: project.id,
         name: project.name,
         highlight: true,
+        brushedDisplay: false,
         type: project.type ? project.type : '',
         description: project.description,
         clientId: clientId,
@@ -232,9 +233,9 @@ async function groupCategories(clients) {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';
     }
-    
+
     const projects = [];
-    for (let client of grouped[category])  {
+    for (let client of grouped[category]) {
       employees.push(...client.employees.filter(e => !employees.includes(e)));
       projects.push(...client.projects);
     }
@@ -264,7 +265,7 @@ async function groupCategories(clients) {
     color = '';
     imageSrc = '/img/logos/company_placeholder.png';
   }
-  
+
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
   categories.sort((a, b) => b.hours - a.hours);

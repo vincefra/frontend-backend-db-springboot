@@ -50,7 +50,8 @@ class App extends React.Component {
         info: null
       },
       dialogueInfo: {},
-      displayTimeline: false
+      displayTimeline: false,
+      filterPosition: []
     };
   }
 
@@ -82,7 +83,8 @@ class App extends React.Component {
       filteredEmployees: employeeList,
       filteredSkills: [],
       range: selectedRange,
-      clickedClient: categories
+      clickedClient: categories,
+      filterPosition: [0, totalMonths]
     });
   }
 
@@ -166,13 +168,13 @@ class App extends React.Component {
     if (this.state.dialogueIsShown) this.toggleDialogue();
     let unhighlightedClients = setHighlight(true, this.state.clients);
     unhighlightedClients = unHighlightText(unhighlightedClients);
-    const unHighLightProject = setHighlight(true, this.state.projects);
+    const unHighLightProject = setHighlight(true, this.state.filteredProjects);
     const highlightedEmployees = setHighlight(true, this.state.filteredEmployees);
 
     this.setState({
       clients: unhighlightedClients,
       filteredSkills: [],
-      projects: unHighLightProject,
+      filteredProjects: unHighLightProject,
       filteredEmployees: highlightedEmployees
     });
   };
@@ -189,9 +191,10 @@ class App extends React.Component {
  * @param endWeek the ending number of the week in the end full date 
  */
   brushDates = (initWeek, endWeek) => {
-    const brushedProjects = brushProjects(this.state.projects, this.state.initialDates[0], initWeek, endWeek);
+    const brushedProjects = brushProjects(this.state.filteredProjects, this.state.datesBrushed[0], initWeek, endWeek);
     this.setState({
-      filteredProjects: brushedProjects
+      filteredProjects: brushedProjects,
+      filterPosition: [initWeek, endWeek]
     });
   };
 
@@ -233,6 +236,10 @@ class App extends React.Component {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const projectList = getProjectObjs(client.projects, this.state.projects);
+    const rangeBrushed = getDateRange(projectList);
+    const totalMonths = d3.timeMonth.count(rangeBrushed[0], rangeBrushed[1]);
+    const displayTimeline = projectList.length <= 1 ? false : true;
+    const filterPosition = [0, totalMonths];
     let clickedClient = resetClickedClient ? {
       id: '',
       name: '',
@@ -246,8 +253,11 @@ class App extends React.Component {
       clients: clientList,
       clickedClient: clickedClient,
       filteredEmployees: employees,
-      displayTimeline: !resetClickedClient,
-      filteredProjects: projectList
+      displayTimeline: displayTimeline,
+      filteredProjects: projectList,
+      datesBrushed: rangeBrushed,
+      totalProjectsMonths: totalMonths,
+      filterPosition: filterPosition
     });
   }
 
@@ -298,9 +308,9 @@ class App extends React.Component {
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
       modifyRange={this.brushDates}
-      ranges={this.state.initialDates}
       totalProjectsMonths={this.state.totalProjectsMonths}
       displayTimeline={this.state.displayTimeline}
+      filterPosition={this.state.filterPosition}
 
     />;
     const vizCircle = <VizCircle

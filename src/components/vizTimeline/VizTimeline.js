@@ -29,10 +29,9 @@ class VizTimeline extends Component {
 
   //create all the data necessary for the timeline visualization and set it up in the state
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { projects, size, ranges } = nextProps;
+    const { projects, size } = nextProps;
     if (!projects) return {};
 
-    // const extent = d3.extent([ranges[0], ranges[1]]);
     const extent = getDateRange(projects);
     const xScale = d3
       .scaleTime()
@@ -50,7 +49,7 @@ class VizTimeline extends Component {
         fill: !d.highlight ? '#333333' : d.color,
         level: 0,
         id: d.id,
-        opacity: d.highlight ? '1' : '0.2'
+        opacity: d.brushedDisplay ? '0.2' : d.highlight ? '1' : '0.2'
       };
     });
     let numLevels = 0;
@@ -135,6 +134,7 @@ class VizTimeline extends Component {
           defaultValueMax={this.props.totalProjectsMonths}
           step={1}
           afterChangeFunction={this.props.modifyRange}
+          filterPosition={this.props.filterPosition}
         />
       </div>;
 

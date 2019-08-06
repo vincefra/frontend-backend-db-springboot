@@ -7,7 +7,7 @@ class Breadcrumb extends React.Component {
       crumbs: []
     };
   }
-  
+
   componentDidMount() {
     this.setState({ crumbs: [this.props.clickedClient] });
   }
@@ -19,12 +19,12 @@ class Breadcrumb extends React.Component {
     const crumbs = this.state.crumbs.slice(0, index + 1);
     this.setState({ crumbs });
   }
-  
+
   isEqual(p, n) {
     if (n.id === '' && n.name === '' && n.type === '') return true;
     return p.id === n.id && p.type === n.type && p.name === n.name;
   }
-  
+
   componentDidUpdate(prevProps, prevState) {
     if (this.props.clickedClient.length === 0) return;
     if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {

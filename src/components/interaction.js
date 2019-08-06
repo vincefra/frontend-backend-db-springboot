@@ -162,7 +162,10 @@ export function getSkills(IdArray, skillArray) {
 export function brushProjects(projects, initDate, brInitWeek, brEndWeek) {
   const nowInit = moment(initDate).add(brInitWeek, 'M');
   const nowEnd = moment(initDate).add(brEndWeek, 'M');
-  const brushedProjects = projects.filter(p => moment(p.dateInit).diff(nowInit, 'months') >= 0 && nowEnd.diff(moment(p.dateEnd), 'months') >= 0);
+  const brushedProjects = projects.map(p => {
+    p.highlight = moment(p.dateInit).diff(nowInit, 'months') >= 0 && nowEnd.diff(moment(p.dateEnd), 'months') >= 0 ? true : false;
+    return p;
+  });
   return brushedProjects;
 }
 
