@@ -144,7 +144,7 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
     let highlightedSkills = [];
-    if (client.type !== 'category') {
+    if (client.type === 'client') {
       const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
       highlightedSkills = getSkills(skillsId, this.state.skills);
     }
