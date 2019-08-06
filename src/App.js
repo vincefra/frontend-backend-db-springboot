@@ -30,8 +30,8 @@ class App extends React.Component {
     this.state = {
       clients: [],
       projects: [],
-      employees: {},
-      skills: {},
+      employees: [],
+      skills: [],
       filteredClients: [],
       filteredProjects: [],
       filteredEmployees: [],
@@ -73,10 +73,7 @@ class App extends React.Component {
       clients: categories.list,
       projects: projectList,
       employees: employeeList,
-      skills: {
-        name: 'Front-End',
-        children: technologyList
-      },
+      skills: technologyList,
       filteredClients: clientList,
       filteredProjects: [],
       filteredEmployees: employeeList,
@@ -87,34 +84,30 @@ class App extends React.Component {
   }
 
 
-  showSkill = (id) => {
-    //hightlight projects and get clients from that project
+  showSkill = id => {
     const ans = highlightElementWithSkill(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
     const highlightedEmployees = highlightElementWithSkill(id, this.state.filteredEmployees);
-    const highLightSkills = setHighlightElement(true, [id], this.state.skills.children, true);
+    const highlightedSkills = setHighlightElement(true, [id], this.state.skills, true);
 
-    let skills = this.state.skills;
-    skills.children = highLightSkills;
     this.setState({
-      skills: skills,
+      skills: highlightedSkills,
       projects: ans[1],
       clients: highlightedClients,
       filteredEmployees: highlightedEmployees
     });
   };
 
-  showProject = (id) => {
+  showProject = id => {
     const project = getElementById(id, this.state.projects);
     const highlightedEmployees = setHighlightElement(false, project.employeeId, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, [id], this.state.projects, false);
     const highlightedClients = setHighlightElement(false, [project.clientId], this.state.clients, false);
-    const highLightSkills = getSkills(project.skills, this.state.skills.children);
-    let skills = this.state.filteredSkills;
-    skills.children = highLightSkills;
+    const highlightedSkills = getSkills(project.skills, this.state.skills);
+
     this.setState({
       clients: highlightedClients,
-      filteredSkills: skills,
+      filteredSkills: highlightedSkills,
       projects: highlightedProjects,
       filteredEmployees: highlightedEmployees
     });
@@ -129,16 +122,12 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
-    const employeeSkills = getSkills(employee.skills, this.state.skills.children);
-
-    let skills = this.state.filteredSkills;
-    skills.children = employeeSkills;
-
+    const highlightedSkills = getSkills(employee.skills, this.state.skills);
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
       clients: highlightedClients,
-      filteredSkills: skills
+      filteredSkills: highlightedSkills
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -150,12 +139,14 @@ class App extends React.Component {
     const highlightedClients = setHighlightElement(false, [id], this.state.clients, false);
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
-    const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
-    const highLightSkills = getSkills(skillsId, this.state.skills.children);
-    let skills = this.state.filteredSkills;
-    skills.children = highLightSkills;
+    let highlightedSkills = [];
+    if (client.type !== 'category') {
+      const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
+      highlightedSkills = getSkills(skillsId, this.state.skills);
+    }
+
     this.setState({
-      // filteredSkills: skills,
+      filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
       clients: highlightedClients
@@ -172,12 +163,10 @@ class App extends React.Component {
     const unhighlightedClients = setHighlight(true, this.state.clients);
     const unHighLightProject = setHighlight(true, this.state.projects);
     const highlightedEmployees = setHighlight(true, this.state.filteredEmployees);
-    let skills = this.state.filteredSkills;
-    skills.children = [];
 
     this.setState({
       clients: unhighlightedClients,
-      filteredSkills: skills,
+      filteredSkills: [],
       projects: unHighLightProject,
       filteredEmployees: highlightedEmployees
     });

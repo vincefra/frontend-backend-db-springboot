@@ -11,17 +11,17 @@ class Skills extends React.Component {
     };
   }
 
-  componentDidMount(props) {
-    const layOut = createLinks(this.props.skills);
+  componentDidMount() {
+    const nodes = createLinks(this.props.skills);
     this.setState({
-      nodes: layOut
+      nodes
     });
   }
 
   componentWillReceiveProps(props) {
-    const layOut = createLinks(this.props.skills);
+    const nodes = createLinks(props.skills);
     this.setState({
-      nodes: layOut
+      nodes
     });
   }
 
