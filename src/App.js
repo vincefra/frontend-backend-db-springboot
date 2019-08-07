@@ -19,9 +19,9 @@ import {
   getDateRange,
   setHighlightText,
   unHighlightText,
-  getDateFromStep
+  getDateFromStep,
+  getMonthsDifference
 } from './components/interaction';
-import * as d3 from 'd3';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -68,7 +68,7 @@ class App extends React.Component {
       clientList
     } = await load();
     const selectedRange = getDateRange(projectList);
-    let totalMonths = d3.timeMonth.count(selectedRange[0], selectedRange[1]);
+    let totalMonths = getMonthsDifference(selectedRange[0], selectedRange[1]);
 
     this.setState({
       initialDates: selectedRange,
@@ -242,7 +242,7 @@ class App extends React.Component {
     const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const projectList = getProjectObjs(client.projects, this.state.projects);
     const rangeBrushed = getDateRange(projectList);
-    const totalMonths = d3.timeMonth.count(rangeBrushed[0], rangeBrushed[1]);
+    const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
     const displayTimeline = projectList.length <= 1 ? false : true;
     const filterPosition = [0, totalMonths];
     let clickedClient = resetClickedClient ? {

@@ -25,7 +25,6 @@ class Filter extends Component {
           steps={1}
           onChange={(value) => this.props.afterChangeFunction(value[0], value[1])}
           tipFormatter={(value) => this.getFormatedDate(value)}
-
         />
       </div>
     );

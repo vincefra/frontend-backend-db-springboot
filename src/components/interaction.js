@@ -1,4 +1,5 @@
 import moment from 'moment';
+import * as d3 from 'd3';
 
 
 /**
@@ -160,13 +161,22 @@ export function getSkills(IdArray, skillArray) {
  * @param {date} brEndMonth current end brush week within inital and ending dates
  */
 export function brushProjects(projects, initDate, brInitMonth, brEndMonth) {
-  const nowInit = moment(initDate).add(brInitMonth, 'M');
-  const nowEnd = moment(initDate).add(brEndMonth, 'M');
   const brushedProjects = projects.map(p => {
-    p.highlight = moment(p.dateInit).diff(nowInit, 'months') >= 0 && nowEnd.diff(moment(p.dateEnd), 'months') >= 0 ? true : false;
+    const pInit = getMonthsDifference(initDate, p.dateInit);
+    const pEnd = getMonthsDifference(initDate, p.dateEnd);
+    p.highlight = pInit - brInitMonth >= 0 && brEndMonth - pEnd >= 0 ? true : false;
     return p;
   });
   return brushedProjects;
+}
+
+/**
+ * returns the differente between two dates in months
+ * @param {date} IDate initial date 
+ * @param {date} ODate ending date
+ */
+export function getMonthsDifference(IDate, ODate) {
+  return d3.timeMonth.count(IDate, ODate);
 }
 
 /**
@@ -203,6 +213,7 @@ export default {
   getDateRange,
   setHighlightText,
   unHighlightText,
-  getDateFromStep
+  getDateFromStep,
+  getMonthsDifference
 };
 
