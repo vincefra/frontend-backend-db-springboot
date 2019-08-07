@@ -257,17 +257,8 @@ async function groupCategories(clients) {
 
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = getLargestClients(sorted);
-  let imageSrc = '/img/categories/Other.png';
-  try {
-    color = await getColor(imageSrc);
-  } catch (error) {
-    color = '';
-    imageSrc = '/img/logos/company_placeholder.png';
-  }
-  
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
-  categories.sort((a, b) => b.hours - a.hours);
 
   return {
     id: counter++,
@@ -276,12 +267,12 @@ async function groupCategories(clients) {
     type: 'root',
     list: categories,
     hours: 0,
-    color: color,
+    color: '#000',
     highlight: true,
     textHighlight: false,
     projects: [],
     employees: [],
-    logo: imageSrc
+    logo: ''
   };
 }
 
@@ -292,7 +283,7 @@ export function getLargestClients(clients) {
   const clientList = clients.slice(0, maxAnnularSectors);
   const other = {
     id: '',
-    name: 'Other',
+    name: 'More',
     category: '',
     type: 'more',
     highlight: true,
