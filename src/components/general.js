@@ -271,9 +271,9 @@ async function groupCategories(clients) {
 
   return {
     id: counter++,
-    name: 'Other',
+    name: 'Root',
     category: '',
-    type: 'category',
+    type: 'root',
     list: categories,
     hours: 0,
     color: color,

@@ -252,22 +252,14 @@ class App extends React.Component {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const clients = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const projects = getProjectObjs(client.projects, this.state.projects);
-    let clickedClient;
-    let skills;
-    if (resetClickedClient) {
-      clickedClient = { id: '', name: '', type: '', list: [] };
-      skills = this.state.skills;
-    } else {
-      clickedClient = client;
-      const skillsIds = getSkillsIDsFromProject(this.state.projects, client);
-      skills = getSkills(skillsIds, this.state.skills);
-    }
+    const skills = client.type === 'root' ? this.state.skills : 
+      getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
+    const clickedClient = resetClickedClient ? { id: '', name: '', type: '', list: [] } : client;
 
     this.setState({
       displayTimeline: !resetClickedClient,
       clickedClient
     });
-
     this.unHighlightElements(clients, projects, employees, skills);
   }
 
