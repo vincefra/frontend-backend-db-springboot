@@ -47,7 +47,7 @@ class VizClient extends React.Component {
           key={i}
           d={d.d.path}
           fill='#FFFFFF'
-          opacity={d.d.data.highlight ? '1' : '0.1'}
+          opacity={d.d.data.brushedDisplay ? '0.2' : d.d.data.highlight ? '1' : '0.2'}
           onMouseOver={() => this.props.mouseOnProject(d.d.data.id)} //TO DO:organize DATA array 
           onMouseOut={() => this.props.mouseOutProject()}
         />

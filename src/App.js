@@ -20,7 +20,8 @@ import {
   setHighlightText,
   unHighlightText,
   getDateFromStep,
-  getMonthsDifference
+  getMonthsDifference,
+  resetBrushedDisplay
 } from './components/interaction';
 //width and height of the SVG visualization
 const width = window.innerWidth;
@@ -254,6 +255,7 @@ class App extends React.Component {
 
     resetHighlights(clientList);
     resetHighlights(employees);
+    resetBrushedDisplay(projectList);
     this.setState({
       clients: clientList,
       clickedClient: clickedClient,

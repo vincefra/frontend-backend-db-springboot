@@ -164,7 +164,7 @@ export function brushProjects(projects, initDate, brInitMonth, brEndMonth) {
   const brushedProjects = projects.map(p => {
     const pInit = getMonthsDifference(initDate, p.dateInit);
     const pEnd = getMonthsDifference(initDate, p.dateEnd);
-    p.highlight = pInit - brInitMonth >= 0 && brEndMonth - pEnd >= 0 ? true : false;
+    p.brushedDisplay = pInit - brInitMonth >= 0 && brEndMonth - pEnd >= 0 ? false : true;
     return p;
   });
   return brushedProjects;
@@ -186,6 +186,10 @@ export function getMonthsDifference(IDate, ODate) {
  */
 export function getDateFromStep(month, initDate) {
   return moment(initDate).add(month, 'M').format('MMM YYYY');
+}
+
+export function resetBrushedDisplay(ModArray) {
+  return ModArray.map(p => p.brushedDisplay = false);
 }
 
 /**
@@ -214,6 +218,7 @@ export default {
   setHighlightText,
   unHighlightText,
   getDateFromStep,
-  getMonthsDifference
+  getMonthsDifference,
+  resetBrushedDisplay
 };
 
