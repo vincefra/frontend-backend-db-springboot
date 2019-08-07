@@ -251,7 +251,7 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const clients = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const projects = getProjectObjs(client.projects, this.state.projects);
+    const projects = client.type === 'root' ? this.state.projects : getProjectObjs(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
       getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
     const clickedClient = resetClickedClient ? { id: '', name: '', type: '', list: [] } : client;
