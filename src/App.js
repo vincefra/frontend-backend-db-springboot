@@ -18,7 +18,8 @@ import {
   brushProjects,
   getDateRange,
   setHighlightText,
-  unHighlightText
+  unHighlightText,
+  getDateFromStep
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -184,19 +185,23 @@ class App extends React.Component {
     this.setState({ dialogueIsShown: showDialogue });
   };
   /**
- * Recieves an initial and ending date in number of weeks.  
+ * Recieves an initial and ending date in number of months.  
  * Returns the range in full date object
  *
- * @param initWeek the initial number of the week in the initial full date
- * @param endWeek the ending number of the week in the end full date 
+ * @param initMonth the initial number of the month in the initial full date
+ * @param enMonth the ending number of the month in the end full date 
  */
-  brushDates = (initWeek, endWeek) => {
-    const brushedProjects = brushProjects(this.state.filteredProjects, this.state.datesBrushed[0], initWeek, endWeek);
+  brushDates = (initMonth, enMonth) => {
+    const brushedProjects = brushProjects(this.state.filteredProjects, this.state.datesBrushed[0], initMonth, enMonth);
     this.setState({
       filteredProjects: brushedProjects,
-      filterPosition: [initWeek, endWeek]
+      filterPosition: [initMonth, enMonth]
     });
   };
+
+  getDateFormated = (month) => {
+    return getDateFromStep(month, this.state.datesBrushed[0]);
+  }
 
   HighlightElements = (name) => {
     switch (name) {
@@ -311,6 +316,7 @@ class App extends React.Component {
       totalProjectsMonths={this.state.totalProjectsMonths}
       displayTimeline={this.state.displayTimeline}
       filterPosition={this.state.filterPosition}
+      formatDate={this.getDateFormated}
 
     />;
     const vizCircle = <VizCircle
@@ -340,6 +346,5 @@ class App extends React.Component {
     );
   }
 }
-
 
 export default App;

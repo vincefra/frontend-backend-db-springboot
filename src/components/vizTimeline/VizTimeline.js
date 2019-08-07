@@ -135,6 +135,7 @@ class VizTimeline extends Component {
           step={1}
           afterChangeFunction={this.props.modifyRange}
           filterPosition={this.props.filterPosition}
+          formatDate={this.props.formatDate}
         />
       </div>;
 

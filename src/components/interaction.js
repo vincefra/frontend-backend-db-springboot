@@ -153,20 +153,29 @@ export function getSkills(IdArray, skillArray) {
 }
 
 /**
- * Filters all the projects within the brInitweek and the brEndWeek and returns an array with the filtered projects
+ * Filters all the projects within the brInitMonth and the brEndMonth and returns an array with the filtered projects
  * @param {array} projects array with projects to be filtered 
  * @param {date} initDate inital date 
- * @param {date} brInitWeek current init brush week within initial and ending dates
- * @param {date} brEndWeek current end brush week within inital and ending dates
+ * @param {date} brInitMonth current init brush week within initial and ending dates
+ * @param {date} brEndMonth current end brush week within inital and ending dates
  */
-export function brushProjects(projects, initDate, brInitWeek, brEndWeek) {
-  const nowInit = moment(initDate).add(brInitWeek, 'M');
-  const nowEnd = moment(initDate).add(brEndWeek, 'M');
+export function brushProjects(projects, initDate, brInitMonth, brEndMonth) {
+  const nowInit = moment(initDate).add(brInitMonth, 'M');
+  const nowEnd = moment(initDate).add(brEndMonth, 'M');
   const brushedProjects = projects.map(p => {
     p.highlight = moment(p.dateInit).diff(nowInit, 'months') >= 0 && nowEnd.diff(moment(p.dateEnd), 'months') >= 0 ? true : false;
     return p;
   });
   return brushedProjects;
+}
+
+/**
+ * returns adds the number of months to inital date and returns the date 
+ * @param {*} month 
+ * @param {*} initDate 
+ */
+export function getDateFromStep(month, initDate) {
+  return moment(initDate).add(month, 'M').format('MMM YYYY');
 }
 
 /**
@@ -193,6 +202,7 @@ export default {
   brushProjects,
   getDateRange,
   setHighlightText,
-  unHighlightText
+  unHighlightText,
+  getDateFromStep
 };
 

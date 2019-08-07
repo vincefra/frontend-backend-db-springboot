@@ -10,7 +10,8 @@
   box-shadow: $box-shadow;
   &.hidden {
     opacity: 0;
-    transform: translateY(10%);
+    transform: translateX(10%);
+    visibility: hidden;
   }
   img {
     // border-radius: $img-round;
