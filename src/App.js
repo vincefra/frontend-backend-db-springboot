@@ -67,11 +67,10 @@ class App extends React.Component {
     } = await load();
     const selectedRange = getDateRange(projectList);
     let totalMonths = d3.timeMonth.count(selectedRange[0], selectedRange[1]);
-
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
-      totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
+      totalProjectsMonths: totalMonths,
       isLoading: false,
       clients: categories.list,
       projects: projectList,
@@ -126,6 +125,7 @@ class App extends React.Component {
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
     const highlightedSkills = getSkills(employee.skills, this.state.skills);
+
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
@@ -145,7 +145,7 @@ class App extends React.Component {
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
     let highlightedSkills = [];
     if (client.type === 'client') {
-      const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
+      const skillsId = getSkillsIDsFromProject(this.state.projects, client);
       highlightedSkills = getSkills(skillsId, this.state.skills);
     }
 
@@ -184,6 +184,7 @@ class App extends React.Component {
     const showDialogue = this.state.dialogueIsShown ? false : true;
     this.setState({ dialogueIsShown: showDialogue });
   };
+
   /**
  * Recieves an initial and ending date in number of weeks.  
  * Returns the range in full date object
@@ -198,7 +199,7 @@ class App extends React.Component {
     });
   };
 
-  highlightElements = (name) => {
+  highlightElements = name => {
     let clients = this.state.clients;
     let filteredEmployees = this.state.filteredEmployees;
     let filteredProjects = this.state.filteredProjects;
@@ -285,7 +286,7 @@ class App extends React.Component {
       clients={this.state.clients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
-      skills={this.state.skills}
+      skills={this.state.filteredSkills}
       overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
     />;

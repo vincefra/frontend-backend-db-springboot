@@ -1,6 +1,5 @@
 import moment from 'moment';
 
-
 /**
    * Set the Highlight state either to true or false
    * returns an array with the modified items
@@ -125,7 +124,7 @@ export function getElementById(id, array) {
  * @param {*} modArray 
  * @param {*} client 
  */
-export function getSkillsIDsFromProject(id, modArray, client) {
+export function getSkillsIDsFromProject(modArray, client) {
   let employeesId = [];
   let skillsId = [];
   const projects = modArray.filter(prj => {
@@ -140,16 +139,8 @@ export function getSkillsIDsFromProject(id, modArray, client) {
   return skillsId;
 }
 
-/**
- * searches all the skills by id and returns them in an array
- * @param {array} IdArray, array with numbers of the skills ids to return 
- */
-export function getSkills(IdArray, skillArray) {
-  let skills = [];
-  for (let i = 0; i < IdArray.length; i++) {
-    skills.push(skillArray[IdArray[i]]);
-  }
-  return skills;
+export function getSkills(skillIds, skillList) {
+  return skillIds.map(id =>skillList[id]);
 }
 
 /**
