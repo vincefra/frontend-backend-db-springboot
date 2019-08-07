@@ -209,6 +209,7 @@ class App extends React.Component {
     let clients = this.state.clients;
     let filteredEmployees = this.state.filteredEmployees;
     let filteredProjects = this.state.filteredProjects;
+    let filteredSkills = this.state.filteredSkills;
     switch (name) {
       case 'EMPLOYEES':
         clients = setHighlight(false, clients);
@@ -223,13 +224,19 @@ class App extends React.Component {
         filteredEmployees = setHighlight(false, filteredEmployees);
         break;
       case 'SKILLS':
+        clients = setHighlight(false, clients);
+        filteredProjects = setHighlight(false, filteredProjects);
+        filteredEmployees = setHighlight(false, filteredEmployees);
+        filteredSkills = setHighlight(true, filteredSkills);
+        break;
       default:
     }
 
     this.setState({
       clients,
+      filteredProjects,
       filteredEmployees,
-      filteredProjects
+      filteredSkills
     });
   };
 
