@@ -49,7 +49,8 @@ class App extends React.Component {
         info: null
       },
       dialogueInfo: {},
-      displayTimeline: false
+      displayTimeline: false,
+      isHovered: false
     };
   }
 
@@ -110,7 +111,8 @@ class App extends React.Component {
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
       projects: highlightedProjects,
-      filteredEmployees: highlightedEmployees
+      filteredEmployees: highlightedEmployees,
+      isHovered: true
     });
 
     const client = getElementById(project.clientId, this.state.clients);
@@ -123,13 +125,14 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
-    const highlightedSkills = setHighlightElement(true, employee.skills, this.state.skills, true);
+    const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
 
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
       clients: highlightedClients,
-      filteredSkills: highlightedSkills
+      filteredSkills: highlightedSkills,
+      isHovered: true
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -152,7 +155,8 @@ class App extends React.Component {
       filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
-      clients: highlightedClients
+      clients: highlightedClients,
+      isHovered: true
     });
 
     if (client.type === 'client') {
@@ -177,7 +181,8 @@ class App extends React.Component {
       clients: unHighlightedClients,
       filteredSkills: unHighlightedSkills,
       filteredProjects: unHighlightedProjects,
-      filteredEmployees: unHighlightedEmployees
+      filteredEmployees: unHighlightedEmployees,
+      isHovered: false
     });
   };
 
@@ -294,6 +299,7 @@ class App extends React.Component {
       skills={this.state.filteredSkills}
       overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
+      isHovered={this.state.isHovered}
     />;
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}
