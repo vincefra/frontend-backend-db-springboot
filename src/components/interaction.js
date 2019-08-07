@@ -118,16 +118,10 @@ export function getElementById(id, array) {
   return element;
 }
 
-/**
- * 
- * @param {number} id  
- * @param {*} modArray 
- * @param {*} client 
- */
-export function getSkillsIDsFromProject(modArray, client) {
+export function getSkillsIDsFromProject(projectList, client) {
   let employeesId = [];
   let skillsId = [];
-  const projects = modArray.filter(prj => {
+  const projects = projectList.filter(prj => {
     return ~client.projects.indexOf(prj.id);
   });
   //get the employeesId from the project and add it to the array of employeesId of the client

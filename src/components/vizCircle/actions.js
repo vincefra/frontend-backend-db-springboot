@@ -145,9 +145,10 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
 //Create a hierarchy and sort it alphabetically
 export function createLinks(skills) {
   const children = skills.length > maxSkills ? skills.slice(0, maxSkills) : skills;
+  const highlightedSkills = children.filter(skill => skill.highlight === true);
   const skillsData = {
     name: 'Front-End',
-    children: children
+    children: highlightedSkills
   };
 
   const data = skillsData;
