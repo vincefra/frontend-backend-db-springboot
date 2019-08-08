@@ -156,14 +156,14 @@ async function getData() {
 
     clientList.push({
       id: -1,
-      name: '',
+      name: 'Other',
       hours: 0,
       color: '#000000',
       logo: '/img/logos/company_placeholder.png',
       highlight: true,
       projects: [],
       category: 'Other',
-      description: '',
+      description: 'Projects without client.',
       location: '',
       type: 'client',
       employees: []
@@ -184,7 +184,7 @@ async function getData() {
         type: project.type ? project.type : '',
         description: project.description,
         clientId: clientId,
-        employeeId: employeeList,
+        employees: employeeList,
         dateInit: new Date(startDate),
         dateEnd: new Date(endDate),
         skills: getTechList(project.technologies),
@@ -222,7 +222,7 @@ async function groupCategories(clients) {
   }
 
   const sorted = [];
-  let counter = 0;
+  let counter = clients.length;
   for (let category in grouped) {
     const employees = [];
     let imageSrc = `/img/categories/${category.trim().replace(/\s/g, '_')}.png`;
@@ -282,7 +282,7 @@ export function getLargestClients(clients) {
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
   const other = {
-    id: '',
+    id: -1,
     name: 'More',
     category: '',
     type: 'more',

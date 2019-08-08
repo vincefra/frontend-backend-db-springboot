@@ -102,7 +102,7 @@ class App extends React.Component {
 
   showProject = id => {
     const project = getElementById(id, this.state.projects);
-    const highlightedEmployees = setHighlightElement(false, project.employeeId, this.state.filteredEmployees, false);
+    const highlightedEmployees = setHighlightElement(false, project.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, [id], this.state.projects, false);
     const highlightedClients = setHighlightElement(false, [project.clientId], this.state.clients, false);
     const highlightedSkills = setHighlightElement(true, project.skills, this.state.filteredSkills, true);
@@ -120,16 +120,23 @@ class App extends React.Component {
     this.modifyDialogueInfo({ ...project, clientName: client.name, logo: client.logo }, 'PROJECT');
   };
 
-  showEmployee = (id) => {
+
+  getIdsByEmployeeId(id, list) {
+    return list.filter(o => o.employees.includes(id)).map(o => o.id);
+  }
+
+  showEmployee = id => {
     const employee = getElementById(id, this.state.filteredEmployees);
+    const projectIds = this.getIdsByEmployeeId(id, this.state.filteredProjects);
+    const clientIds = this.getIdsByEmployeeId(id, this.state.clients);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
-    const ans = highLightProjectWithEmployeeId(id, this.state.projects);
-    const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
+    const highlightedClients = setHighlightElement(false, clientIds, this.state.clients, false);
+    const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
     const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
 
     this.setState({
       filteredEmployees: highlightedEmployees,
-      projects: ans[1],
+      filteredProjects: highlightedProjects,
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
       isHovered: true
@@ -251,7 +258,8 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const clients = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const projects = client.type === 'root' ? this.state.projects : getProjectObjs(client.projects, this.state.projects);
+    const projects = client.type === 'root' ? this.state.projects : 
+      getProjectObjs(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
       getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
     const clickedClient = resetClickedClient ? { id: '', name: '', type: '', list: [] } : client;
