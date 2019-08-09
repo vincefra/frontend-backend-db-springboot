@@ -33,8 +33,6 @@ export function setHighlightElement(highlight, idArray, modArray, ifIncludes) {
   });
 }
 
-
-
 /**
    * Modify the hightlight atribute of an object if it
    * matches the id

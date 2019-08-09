@@ -1,4 +1,5 @@
 import React from 'react';
+import LegendItem from './LegendItem';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -17,46 +18,34 @@ class Legend extends React.Component {
     return (
       <div className='legend'>
         <ul>
-          <li className='legend-item'>
-            <div
-              role="menuitem"
-              className={'thing'}
-              onMouseEnter={() => this.props.overEvent('EMPLOYEES')}
-              onMouseLeave={() => this.props.outEvent()}
-            >
-              {totalEmployees} Employees
-            </div>
-          </li>
-          <li className='legend-item'>
-            <div
-              role="menuitem"
-              className={'thing'}
-              onMouseEnter={() => this.props.overEvent('CLIENTS')}
-              onMouseLeave={() => this.props.outEvent()}
-            >
-              {totalClients} Clients
-            </div>
-          </li>
-          <li className='legend-item'>
-            <div
-              role="menuitem"
-              className={'thing'}
-              onMouseEnter={() => this.props.overEvent('PROJECTS')}
-              onMouseLeave={() => this.props.outEvent()}
-            >
-              {totalProjects} Projects
-            </div>
-          </li>
-          <li className='legend-item'>
-            <div
-              role="menuitem"
-              className={'thing'}
-              onMouseEnter={() => this.props.overEvent('SKILLS')}
-              onMouseLeave={() => this.props.outEvent()}
-            >
-              {totalSkills} Skills
-            </div>
-          </li>
+          <LegendItem
+            data={totalEmployees}
+            type='EMPLOYEES'
+            label='employee'
+            overEvent={this.props.overEvent}
+            outEvent={this.props.outEvent}
+          />
+          <LegendItem
+            data={totalClients}
+            type='CLIENTS'
+            label='client'
+            overEvent={this.props.overEvent}
+            outEvent={this.props.outEvent}
+          />
+          <LegendItem
+            data={totalProjects}
+            type='PROJECTS'
+            label='project'
+            overEvent={this.props.overEvent}
+            outEvent={this.props.outEvent}
+          />
+          <LegendItem
+            data={totalSkills}
+            type='SKILLS'
+            label='skill'
+            overEvent={this.props.overEvent}
+            outEvent={this.props.outEvent}
+          />
         </ul>
       </div>
     );

@@ -5,19 +5,25 @@ import Dialogue from './components/dialogue/Dialogue';
 import VizTimeline from './components/vizTimeline/VizTimeline';
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load, getLargestClients, getEmployeeObjs, getProjectObjs } from './components/general';
+import { 
+  load, 
+  getLargestClients, 
+  getEmployeeObjs, 
+  getProjectObjs, 
+  getNumberOfClients 
+} from './components/general';
 import {
   setHighlight,
   setHighlightElement,
   highlightElementWithSkill,
-  highLightProjectWithEmployeeId,
   getElementById,
   getSkillsIDsFromProject,
   getSkills,
   brushProjects,
   getDateRange,
   setHighlightText,
-  unHighlightText
+  unHighlightText,
+  getIdsByEmployeeId
 } from './components/interaction';
 import * as d3 from 'd3';
 //width and height of the SVG visualization
@@ -50,7 +56,8 @@ class App extends React.Component {
       },
       dialogueInfo: {},
       displayTimeline: false,
-      isHovered: false
+      isHovered: false,
+      numberOfClients: 0
     };
   }
 
@@ -120,15 +127,11 @@ class App extends React.Component {
     this.modifyDialogueInfo({ ...project, clientName: client.name, logo: client.logo }, 'PROJECT');
   };
 
-
-  getIdsByEmployeeId(id, list) {
-    return list.filter(o => o.employees.includes(id)).map(o => o.id);
-  }
-
   showEmployee = id => {
     const employee = getElementById(id, this.state.filteredEmployees);
-    const projectIds = this.getIdsByEmployeeId(id, this.state.filteredProjects);
-    const clientIds = this.getIdsByEmployeeId(id, this.state.clients);
+    const projectIds = getIdsByEmployeeId(id, this.state.filteredProjects);
+    const clientIds = getIdsByEmployeeId(id, this.state.clients);
+    const numberOfClients = getNumberOfClients(id, this.state.clients);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const highlightedClients = setHighlightElement(false, clientIds, this.state.clients, false);
     const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
@@ -139,7 +142,8 @@ class App extends React.Component {
       filteredProjects: highlightedProjects,
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
-      isHovered: true
+      isHovered: true,
+      numberOfClients
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -189,7 +193,8 @@ class App extends React.Component {
       filteredSkills: unHighlightedSkills,
       filteredProjects: unHighlightedProjects,
       filteredEmployees: unHighlightedEmployees,
-      isHovered: false
+      isHovered: false,
+      numberOfClients: unHighlightedClients.length
     });
   };
 
@@ -301,6 +306,7 @@ class App extends React.Component {
     />;
     const legend = <Legend
       clients={this.state.clients}
+      numberOfClients={this.state.numberOfClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
       skills={this.state.filteredSkills}
