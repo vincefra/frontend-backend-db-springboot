@@ -56,9 +56,9 @@ class App extends React.Component {
       },
       dialogueInfo: {},
       displayTimeline: false,
-      highlightedClientId: null,
-      highlightedProjectId: null,
-      highlightedEmployeeId: null
+      highlightedClient: null,
+      highlightedProject: null,
+      highlightedEmployee: null
     };
   }
 
@@ -120,7 +120,7 @@ class App extends React.Component {
       filteredSkills: highlightedSkills,
       projects: highlightedProjects,
       filteredEmployees: highlightedEmployees,
-      highlightedProjectId: id
+      highlightedProject: project
     });
 
     const client = getElementById(project.clientId, this.state.clients);
@@ -142,7 +142,7 @@ class App extends React.Component {
       filteredProjects: highlightedProjects,
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
-      highlightedEmployeeId: id
+      highlightedEmployee: employee
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -166,7 +166,7 @@ class App extends React.Component {
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
       clients: highlightedClients,
-      highlightedClientId: id
+      highlightedClient: client
     });
 
     if (client.type === 'client') {
@@ -192,9 +192,9 @@ class App extends React.Component {
       filteredSkills: unHighlightedSkills,
       filteredProjects: unHighlightedProjects,
       filteredEmployees: unHighlightedEmployees,
-      highlightedClientId: null,
-      highlightedProjectId: null,
-      highlightedEmployeeId: null
+      highlightedClient: null,
+      highlightedProject: null,
+      highlightedEmployee: null
     });
   };
 
@@ -309,9 +309,9 @@ class App extends React.Component {
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
       skills={this.state.filteredSkills}
-      clientId={this.state.highlightedClientId}
-      projectId={this.state.highlightedProjectId}
-      employeeId={this.state.highlightedEmployeeId}
+      client={this.state.highlightedClient}
+      project={this.state.highlightedProject}
+      employee={this.state.highlightedEmployee}
       overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
     />;

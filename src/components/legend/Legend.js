@@ -13,18 +13,17 @@ class Legend extends React.Component {
   }
 
   calculateData(props) {
-    let { clientId, projectId, employeeId } = props;
-    if (clientId) 
+    let { client, project, employee } = props;
+    if (client) 
       this.calculateClient(props);
-    if (projectId) 
+    if (project) 
       this.calculateProject(props);
-    if (employeeId) 
+    if (employee) 
       this.calculateEmployee(props);
 
   }
 
-  calculateClient({ clientId, clients, projects, employees, skills }) {
-    const client = clients.find(client => client.id === clientId);
+  calculateClient({ client, projects }) {
     const totalProjects = client.projects.length;
     const totalEmployees = client.employees.length;
     const totalSkills = this.getSkillsFromProjects(client.projects, projects).length;
@@ -37,10 +36,9 @@ class Legend extends React.Component {
     });
   }
 
-  calculateEmployee({ employeeId, clients, projects, employees, skills }) {
-    const employee = employees.find(employee => employee.id === employeeId);
-    const totalClients = this.getNumberOfClients(employeeId, clients);
-    const totalProjects = projects.filter(project => project.employees.includes(employeeId)).length;
+  calculateEmployee({ employee, clients, projects, skills }) {
+    const totalClients = this.getNumberOfClients(employee.id, clients);
+    const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
     const totalSkills = skills
       .map(skill => skill.id)
       .filter(skillId => employee.skills.includes(skillId))
@@ -53,8 +51,7 @@ class Legend extends React.Component {
     });
   }
 
-  calculateProject({ projectId, projects }) {
-    const project = projects.find(project => project.id === projectId);
+  calculateProject({ project }) {
     this.setState({
       totalClients: 1,
       totalProjects: 1,
@@ -93,15 +90,22 @@ class Legend extends React.Component {
     });
   }
 
+  equal(prev, current) {
+    if (prev === null && current !== null) return false;
+    if (prev !== null && current === null) return false;
+    if (!prev && !current) return true;
+    if (prev.id !== current.id) return false;
+    return true;
+  }
   componentDidUpdate(prevProps) {
-    // console.log(prevProps.clientId, this.props.clientId);
-    // console.log(prevProps.projectId, this.props.projectId);
-    // console.log(prevProps.employeeId, this.props.employeeId);
-
-    if (prevProps.clientId !== this.props.clientId || prevProps.projectId !== this.props.projectId || 
-      prevProps.employeeId !== this.props.employeeId)
-      if (this.props.clientId || this.props.projectId || this.props.employeeId) this.calculateData(this.props); 
-      else this.resetLegends(this.props);
+    if (!this.equal(prevProps.client, this.props.client) || 
+    !this.equal(prevProps.project, this.props.project) ||
+    !this.equal(prevProps.employee, this.props.employee))
+      if (this.props.client || this.props.project || this.props.employee)
+        this.calculateData(this.props);
+      else 
+        this.resetLegends(this.props);
+    
   }
 
   render() {
