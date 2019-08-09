@@ -6,7 +6,6 @@ class LegendItem extends React.Component {
     this.state = {
       data: 0,
       text: '',
-      isHovered: false,
       label: ''
     };
   }
@@ -18,13 +17,6 @@ class LegendItem extends React.Component {
     });
   }
 
-  handleHover() {
-    this.setState({
-      isHovered: true
-    });
-    this.props.overEvent(this.props.type);
-  }
-
   setText(data, label) {
     let text = `${data} ${label}`;
     if (data !== 1) 
@@ -32,13 +24,6 @@ class LegendItem extends React.Component {
       else text += 's'; 
     return text;
   } 
-
-  handleUnHover() {
-    this.setState({
-      isHovered: false
-    });
-    this.props.outEvent();
-  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.data !== this.props.data) 
@@ -53,8 +38,8 @@ class LegendItem extends React.Component {
         <div
           role="menuitem"
           className={'thing'}
-          onMouseEnter={() => this.handleHover()}
-          onMouseLeave={() => this.handleUnHover()}
+          onMouseEnter={() => this.props.overEvent(this.props.type)}
+          onMouseLeave={() => this.props.outEvent()}
         >
           {this.state.text}
         </div>

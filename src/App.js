@@ -56,8 +56,9 @@ class App extends React.Component {
       },
       dialogueInfo: {},
       displayTimeline: false,
-      isHovered: false,
-      numberOfClients: 0
+      highlightedClientId: null,
+      highlightedProjectId: null,
+      highlightedEmployeeId: null
     };
   }
 
@@ -119,7 +120,7 @@ class App extends React.Component {
       filteredSkills: highlightedSkills,
       projects: highlightedProjects,
       filteredEmployees: highlightedEmployees,
-      isHovered: true
+      highlightedProjectId: id
     });
 
     const client = getElementById(project.clientId, this.state.clients);
@@ -131,7 +132,6 @@ class App extends React.Component {
     const employee = getElementById(id, this.state.filteredEmployees);
     const projectIds = getIdsByEmployeeId(id, this.state.filteredProjects);
     const clientIds = getIdsByEmployeeId(id, this.state.clients);
-    const numberOfClients = getNumberOfClients(id, this.state.clients);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const highlightedClients = setHighlightElement(false, clientIds, this.state.clients, false);
     const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
@@ -142,8 +142,7 @@ class App extends React.Component {
       filteredProjects: highlightedProjects,
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
-      isHovered: true,
-      numberOfClients
+      highlightedEmployeeId: id
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -167,7 +166,7 @@ class App extends React.Component {
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
       clients: highlightedClients,
-      isHovered: true
+      highlightedClientId: id
     });
 
     if (client.type === 'client') {
@@ -193,8 +192,9 @@ class App extends React.Component {
       filteredSkills: unHighlightedSkills,
       filteredProjects: unHighlightedProjects,
       filteredEmployees: unHighlightedEmployees,
-      isHovered: false,
-      numberOfClients: unHighlightedClients.length
+      highlightedClientId: null,
+      highlightedProjectId: null,
+      highlightedEmployeeId: null
     });
   };
 
@@ -306,13 +306,14 @@ class App extends React.Component {
     />;
     const legend = <Legend
       clients={this.state.clients}
-      numberOfClients={this.state.numberOfClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
       skills={this.state.filteredSkills}
+      clientId={this.state.highlightedClientId}
+      projectId={this.state.highlightedProjectId}
+      employeeId={this.state.highlightedEmployeeId}
       overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
-      isHovered={this.state.isHovered}
     />;
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}
