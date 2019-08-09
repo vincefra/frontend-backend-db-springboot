@@ -1,7 +1,5 @@
 import React from 'react';
 import LegendItem from './LegendItem';
-import { getNumberOfClients } from 'components/general';
-import { getSkillsIDsFromProject } from 'components/interaction';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -55,8 +53,14 @@ class Legend extends React.Component {
     });
   }
 
-  calculateProject({ projectId, clinets, projects, employees, skills }) {
-
+  calculateProject({ projectId, projects }) {
+    const project = projects.find(project => project.id === projectId);
+    this.setState({
+      totalClients: 1,
+      totalProjects: 1,
+      totalEmployees: project.employees.length,
+      totalSkills: project.skills.length
+    });
   }
 
   getSkillsFromProjects(projectIds, projects) {
@@ -72,7 +76,7 @@ class Legend extends React.Component {
     let numOfclients = 0;
     for (let client of clients) {
       if (client.type === 'more' || client.type === 'category') 
-        numOfclients += getNumberOfClients(id, client.list);
+        numOfclients += this.getNumberOfClients(id, client.list);
       else if (client.employees.includes(id))
         numOfclients++;
     }
@@ -90,9 +94,9 @@ class Legend extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps.clientId, this.props.clientId);
-    console.log(prevProps.projectId, this.props.projectId);
-    console.log(prevProps.employeeId, this.props.employeeId);
+    // console.log(prevProps.clientId, this.props.clientId);
+    // console.log(prevProps.projectId, this.props.projectId);
+    // console.log(prevProps.employeeId, this.props.employeeId);
 
     if (prevProps.clientId !== this.props.clientId || prevProps.projectId !== this.props.projectId || 
       prevProps.employeeId !== this.props.employeeId)
