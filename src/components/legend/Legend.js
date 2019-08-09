@@ -1,6 +1,7 @@
 import React from 'react';
 import LegendItem from './LegendItem';
 import { getNumberOfClients } from 'components/general';
+import { getSkillsIDsFromProject } from 'components/interaction';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -13,35 +14,35 @@ class Legend extends React.Component {
     };
   }
 
-  calculateData({ 
-    clientId, 
-    projectId, 
-    employeeId,
-    clients,
-    projects,
-    employees,
-    skills
-  }) {
-    console.log(employeeId);
+  calculateData(props) {
+    let { clientId, projectId, employeeId } = props;
     if (clientId) 
-      this.calculateClient(clientId, clients, projects, employees, skills);
+      this.calculateClient(props);
     if (projectId) 
-      this.calculateProject(projectId, clients, projects, employees, skills);
+      this.calculateProject(props);
     if (employeeId) 
-      this.calculateEmployee(employeeId, clients, projects, employees, skills);
+      this.calculateEmployee(props);
 
   }
 
-  calculateClient(id, clients, projects, employees, skills) {
-    console.log(clients);
+  calculateClient({ clientId, clients, projects, employees, skills }) {
+    const client = clients.find(client => client.id === clientId);
+    const totalProjects = client.projects.length;
+    const totalEmployees = client.employees.length;
+    const totalSkills = this.getSkillsFromProjects(client.projects, projects).length;
+
+    this.setState({
+      totalClients: 1,
+      totalProjects,
+      totalEmployees,
+      totalSkills
+    });
   }
 
-  calculateEmployee(id, clients, projects, employees, skills) {
-    const employee = employees.find(employee => employee.id === id);
-    const totalClients = this.getNumberOfClients(id, clients);
-    const totalProjects = projects.filter(project => 
-      project.employees.includes(id)
-    ).length;
+  calculateEmployee({ employeeId, clients, projects, employees, skills }) {
+    const employee = employees.find(employee => employee.id === employeeId);
+    const totalClients = this.getNumberOfClients(employeeId, clients);
+    const totalProjects = projects.filter(project => project.employees.includes(employeeId)).length;
     const totalSkills = skills
       .map(skill => skill.id)
       .filter(skillId => employee.skills.includes(skillId))
@@ -54,8 +55,17 @@ class Legend extends React.Component {
     });
   }
 
-  calculateProject(id, clinets, projects, employees, skills) {
+  calculateProject({ projectId, clinets, projects, employees, skills }) {
 
+  }
+
+  getSkillsFromProjects(projectIds, projects) {
+    let projectObjs = projectIds.map(id => projects.find(project => project.id === id));
+    let skills = [];
+    for (let project of projectObjs) {
+      skills.push(...project.skills.filter(skillId => !skills.includes(skillId)));
+    }
+    return skills;
   }
 
   getNumberOfClients(id, clients) {  
@@ -68,6 +78,7 @@ class Legend extends React.Component {
     }
     return numOfclients;
   }
+
 
   resetLegends({clients, projects, employees, skills}) {
     this.setState({
