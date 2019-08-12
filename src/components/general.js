@@ -156,14 +156,14 @@ async function getData() {
 
     clientList.push({
       id: -1,
-      name: '',
+      name: 'Other',
       hours: 0,
       color: '#000000',
       logo: '/img/logos/company_placeholder.png',
       highlight: true,
       projects: [],
       category: 'Other',
-      description: '',
+      description: 'Projects without client.',
       location: '',
       type: 'client',
       employees: []
@@ -185,7 +185,7 @@ async function getData() {
         type: project.type ? project.type : '',
         description: project.description,
         clientId: clientId,
-        employeeId: employeeList,
+        employees: employeeList,
         dateInit: new Date(startDate),
         dateEnd: new Date(endDate),
         skills: getTechList(project.technologies),
@@ -223,7 +223,7 @@ async function groupCategories(clients) {
   }
 
   const sorted = [];
-  let counter = 0;
+  let counter = clients.length;
   for (let category in grouped) {
     const employees = [];
     let imageSrc = `/img/categories/${category.trim().replace(/\s/g, '_')}.png`;
@@ -268,7 +268,6 @@ async function groupCategories(clients) {
 
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
-  categories.sort((a, b) => b.hours - a.hours);
 
   return {
     id: counter++,
@@ -277,12 +276,12 @@ async function groupCategories(clients) {
     type: 'root',
     list: categories,
     hours: 0,
-    color: color,
+    color: '#000',
     highlight: true,
     textHighlight: false,
     projects: [],
     employees: [],
-    logo: imageSrc
+    logo: ''
   };
 }
 
@@ -292,8 +291,8 @@ export function getLargestClients(clients) {
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
   const other = {
-    id: '',
-    name: 'Other',
+    id: -1,
+    name: 'More',
     category: '',
     type: 'more',
     highlight: true,
@@ -325,10 +324,21 @@ export function getProjectObjs(projectIds, projectList) {
   return projects.sort((a, b) => b.hours - a.hours);
 }
 
+export function getNumberOfClients(employeeId, clients) {
+  let numOfclients = 0;
+  for (let client of clients) {
+    if (client.type === 'more' || client.type === 'category') 
+      numOfclients += getNumberOfClients(employeeId, client.list);
+    else if (client.employees.includes(employeeId))
+      numOfclients++;
+  }
+  return numOfclients;
+}
 
 export default {
   load,
   getLargestClients,
   getEmployeeObjs,
-  getProjectObjs
+  getProjectObjs,
+  getNumberOfClients
 };

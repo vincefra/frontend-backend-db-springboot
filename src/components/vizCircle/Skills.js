@@ -17,7 +17,7 @@ class Skills extends React.Component {
       nodes
     });
   }
-
+  
   componentWillReceiveProps(props) {
     const nodes = createLinks(props.skills);
     this.setState({

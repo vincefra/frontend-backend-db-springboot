@@ -34,8 +34,6 @@ export function setHighlightElement(highlight, idArray, modArray, ifIncludes) {
   });
 }
 
-
-
 /**
    * Modify the hightlight atribute of an object if it
    * matches the id
@@ -93,21 +91,17 @@ export function elementWithSkill(id, mdArray) {
     return d;
   });
 }
+
+
 /**
- * 
- * @param {number} id of the employee to search in projects
- * @param {array} modArray projects array
+ * Returns a array of ids of list if employee id is included
+ * @param {number} id of the employee to search in list
+ * @param {array} list array of a list
  */
-export function highLightProjectWithEmployeeId(id, modArray) {
-  let clients = [];
-  const projects = modArray.map(d => {
-    (!d.employeeId.includes(id)) ? d.highlight = false : clients.push(d.clientId);
-    return d;
-  });
-  const uniqueClientsSet = new Set(clients);
-  clients = [...uniqueClientsSet];
-  return [clients, projects];
+export function getIdsByEmployeeId(id, list) {
+  return list.filter(o => o.employees.includes(id)).map(o => o.id);
 }
+
 
 /**
  * search for an element with the id and return it
@@ -128,7 +122,7 @@ export function getSkillsIDsFromProject(projectList, client) {
   //get the employeesId from the project and add it to the array of employeesId of the client
   for (let i in projects) {
     skillsId = skillsId.concat(projects[i].skills);
-    employeesId = employeesId.concat(projects[i].employeeId);
+    employeesId = employeesId.concat(projects[i].employees);
   }
   skillsId = [...new Set(skillsId)];
   return skillsId;
@@ -193,7 +187,6 @@ export default {
   setHighlight,
   setHighlightElement,
   highlightElementWithSkill,
-  highLightProjectWithEmployeeId,
   getElementById,
   elementWithSkill,
   getSkillsIDsFromProject,
@@ -204,6 +197,7 @@ export default {
   unHighlightText,
   getDateFromStep,
   getMonthsDifference,
-  resetBrushedDisplay
+  resetBrushedDisplay,
+  getIdsByEmployeeId
 };
 
