@@ -38,7 +38,7 @@ class Legend extends React.Component {
   }
 
   calculateEmployee({ employee, clients, projects, skills }) {
-    const totalClients = this.getNumberOfClients(employee.id, clients);
+    const totalClients = this.getNumberOfClients(clients, employee.id);
     const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
     const totalSkills = skills
       .map(skill => skill.id)
@@ -70,21 +70,24 @@ class Legend extends React.Component {
     return skills;
   }
 
-  getNumberOfClients(id, clients) {  
+  /*
+  * Counts the number of clients which a certain employee has worked with. 
+  * If the employeeId is left out, count the total number of clients
+  */
+  getNumberOfClients(clients, employeeId) { 
     let numOfclients = 0;
     for (let client of clients) {
       if (client.type === 'more' || client.type === 'category') 
-        numOfclients += this.getNumberOfClients(id, client.list);
-      else if (client.employees.includes(id))
+        numOfclients += this.getNumberOfClients(client.list, employeeId);
+      else if (client.employees.includes(employeeId) || !employeeId)
         numOfclients++;
     }
     return numOfclients;
   }
 
-
   resetLegends({clients, projects, employees, skills}) {
     this.setState({
-      totalClients: clients.length,
+      totalClients: this.getNumberOfClients(clients),
       totalProjects: projects.length,
       totalEmployees: employees.length,
       totalSkills: skills.length
