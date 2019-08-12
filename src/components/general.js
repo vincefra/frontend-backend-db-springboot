@@ -324,21 +324,9 @@ export function getProjectObjs(projectIds, projectList) {
   return projects.sort((a, b) => b.hours - a.hours);
 }
 
-export function getNumberOfClients(employeeId, clients) {
-  let numOfclients = 0;
-  for (let client of clients) {
-    if (client.type === 'more' || client.type === 'category') 
-      numOfclients += getNumberOfClients(employeeId, client.list);
-    else if (client.employees.includes(employeeId))
-      numOfclients++;
-  }
-  return numOfclients;
-}
-
 export default {
   load,
   getLargestClients,
   getEmployeeObjs,
   getProjectObjs,
-  getNumberOfClients
 };
