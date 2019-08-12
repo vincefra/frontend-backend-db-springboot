@@ -58,7 +58,8 @@ class App extends React.Component {
       displayTimeline: false,
       highlightedClient: null,
       highlightedProject: null,
-      highlightedEmployee: null
+      highlightedEmployee: null,
+      refreshLegends: false
     };
   }
 
@@ -271,7 +272,8 @@ class App extends React.Component {
 
     this.setState({
       displayTimeline: !resetClickedClient,
-      clickedClient
+      clickedClient,
+      refreshLegends: resetClickedClient ? !this.state.refreshLegends : this.state.refreshLegends
     });
     this.unHighlightElements(clients, projects, employees, skills);
   }
@@ -314,6 +316,7 @@ class App extends React.Component {
       employee={this.state.highlightedEmployee}
       overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
+      refreshLegends={this.state.refreshLegends}
     />;
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}

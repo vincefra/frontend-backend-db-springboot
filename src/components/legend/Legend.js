@@ -8,7 +8,8 @@ class Legend extends React.Component {
       totalClients: 0,
       totalProjects: 0,
       totalEmployees: 0,
-      totalSkills: 0
+      totalSkills: 0,
+      refresh: false
     };
   }
 
@@ -91,21 +92,26 @@ class Legend extends React.Component {
   }
 
   equal(prev, current) {
-    if (prev === null && current !== null) return false;
-    if (prev !== null && current === null) return false;
-    if (!prev && !current) return true;
-    if (prev.id !== current.id) return false;
+    if (prev !== current) return false;
+    if (prev === current) return true;
+    if (prev.id !== current.id && prev.type !== current.type) return false;
     return true;
   }
+
+  componentDidMount() {
+    this.resetLegends(this.props);
+  }
+
   componentDidUpdate(prevProps) {
+    if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
     if (!this.equal(prevProps.client, this.props.client) || 
     !this.equal(prevProps.project, this.props.project) ||
-    !this.equal(prevProps.employee, this.props.employee))
+    !this.equal(prevProps.employee, this.props.employee)) {
       if (this.props.client || this.props.project || this.props.employee)
         this.calculateData(this.props);
       else 
         this.resetLegends(this.props);
-    
+    }
   }
 
   render() {
