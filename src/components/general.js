@@ -272,9 +272,9 @@ async function groupCategories(clients) {
 
   return {
     id: counter++,
-    name: 'Other',
+    name: 'Root',
     category: '',
-    type: 'category',
+    type: 'root',
     list: categories,
     hours: 0,
     color: color,
@@ -320,10 +320,6 @@ export function getEmployeeObjs(employeeIds, employeeList) {
   return employeeIds.map(id => employeeList[id]);
 }
 
-export function resetHighlights(list) {
-  list.forEach(client => client.highlight = true);
-}
-
 export function getProjectObjs(projectIds, projectList) {
   const projects = projectIds.map(id => projectList[id]);
   return projects.sort((a, b) => b.hours - a.hours);
@@ -334,6 +330,5 @@ export default {
   load,
   getLargestClients,
   getEmployeeObjs,
-  resetHighlights,
   getProjectObjs
 };

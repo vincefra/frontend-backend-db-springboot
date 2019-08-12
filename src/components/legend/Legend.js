@@ -9,13 +9,14 @@ class Legend extends React.Component {
   render() {
     const totalEmployees = this.props.employees.filter(emp => emp.highlight === true).length;
     const totalClients = this.props.clients.filter(cli => cli.highlight === true).length;
-    const totalProjects = this.props.projects.filter(pro => pro.highlight === true).length;
-    const totalSkills = this.props.skills.filter(ski => ski.highlight === true).length;
+    const totalProjects = this.props.isHovered ? 
+      this.props.projects.filter(pro => pro.highlight === true).length : this.props.projects.length;
+    const totalSkills = this.props.isHovered ? 
+      this.props.skills.filter(skill => skill.highlight === true).length : this.props.skills.length;
 
     return (
       <div className='legend'>
         <ul>
-
           <li className='legend-item'>
             <div
               role="menuitem"

@@ -6,9 +6,9 @@ const projectHeight = 10;
 const projectRadius = sliceHeight / 2;
 const imageSize = 50;
 const imageDistance = 10;
-const filterChildren = 40;
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
+const maxSkills = 40;
 
 //Create a pie chart with the clients total time in a project
 export function calculatePieClient(props, radius) {
@@ -144,11 +144,13 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
 
 //Create a hierarchy and sort it alphabetically
 export function createLinks(skills) {
-  let children = skills.length > filterChildren ? skills.slice(0, filterChildren) : skills;
+  const children = skills.length > maxSkills ? skills.slice(0, maxSkills) : skills;
+  const highlightedSkills = children.filter(skill => skill.highlight === true);
   const skillsData = {
     name: 'Front-End',
-    children: children
+    children: highlightedSkills
   };
+
   const data = skillsData;
   const root = d3
     .hierarchy(data)

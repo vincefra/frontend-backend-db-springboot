@@ -3,10 +3,9 @@ import VizCircle from './components/vizCircle/VizCircle';
 import Legend from './components/legend/Legend';
 import Dialogue from './components/dialogue/Dialogue';
 import VizTimeline from './components/vizTimeline/VizTimeline';
-
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
-import { load, getLargestClients, getEmployeeObjs, getProjectObjs, resetHighlights } from './components/general';
+import { load, getLargestClients, getEmployeeObjs, getProjectObjs } from './components/general';
 import {
   setHighlight,
   setHighlightElement,
@@ -53,7 +52,8 @@ class App extends React.Component {
       },
       dialogueInfo: {},
       displayTimeline: false,
-      filterPosition: []
+      filterPosition: [],
+      isHovered: false
     };
   }
 
@@ -74,16 +74,16 @@ class App extends React.Component {
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
-      totalProjectsMonths: totalMonths, //SET UP INITIAL DATA FILTER
+      totalProjectsMonths: totalMonths,
       isLoading: false,
       clients: categories.list,
       projects: projectList,
       employees: employeeList,
       skills: technologyList,
       filteredClients: clientList,
-      filteredProjects: [],
+      filteredProjects: projectList,
       filteredEmployees: employeeList,
-      filteredSkills: [],
+      filteredSkills: technologyList,
       range: selectedRange,
       clickedClient: categories,
       filterPosition: [0, totalMonths]
@@ -110,13 +110,14 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, project.employeeId, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, [id], this.state.projects, false);
     const highlightedClients = setHighlightElement(false, [project.clientId], this.state.clients, false);
-    const highlightedSkills = getSkills(project.skills, this.state.skills);
+    const highlightedSkills = setHighlightElement(true, project.skills, this.state.filteredSkills, true);
 
     this.setState({
       clients: highlightedClients,
       filteredSkills: highlightedSkills,
       projects: highlightedProjects,
-      filteredEmployees: highlightedEmployees
+      filteredEmployees: highlightedEmployees,
+      isHovered: true
     });
 
     const client = getElementById(project.clientId, this.state.clients);
@@ -129,12 +130,14 @@ class App extends React.Component {
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const ans = highLightProjectWithEmployeeId(id, this.state.projects);
     const highlightedClients = setHighlightElement(false, ans[0], this.state.clients, false);
-    const highlightedSkills = getSkills(employee.skills, this.state.skills);
+    const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
+
     this.setState({
       filteredEmployees: highlightedEmployees,
       projects: ans[1],
       clients: highlightedClients,
-      filteredSkills: highlightedSkills
+      filteredSkills: highlightedSkills,
+      isHovered: true
     });
     this.toggleDialogue();
     this.modifyDialogueInfo(employee, 'EMPLOYEE');
@@ -147,17 +150,18 @@ class App extends React.Component {
     highlightedClients = client.type !== 'client' ? setHighlightText(true, [id], highlightedClients, true) : highlightedClients;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
-    let highlightedSkills = [];
+    let highlightedSkills = this.state.filteredSkills;
     if (client.type === 'client') {
-      const skillsId = getSkillsIDsFromProject(id, this.state.projects, client);
-      highlightedSkills = getSkills(skillsId, this.state.skills);
+      const skillsIds = getSkillsIDsFromProject(this.state.projects, client);
+      highlightedSkills = setHighlightElement(true, skillsIds, this.state.filteredSkills, true);
     }
 
     this.setState({
       filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
-      clients: highlightedClients
+      clients: highlightedClients,
+      isHovered: true
     });
 
     if (client.type === 'client') {
@@ -166,18 +170,24 @@ class App extends React.Component {
     }
   };
 
-  unHighlightElements = () => {
+  unHighlightElements = (clients, projects, employees, skills) => {
+    clients = clients || this.state.clients;
+    projects = projects || this.state.filteredProjects;
+    employees = employees || this.state.filteredEmployees;
+    skills = skills || this.state.filteredSkills;
     if (this.state.dialogueIsShown) this.toggleDialogue();
-    let unhighlightedClients = setHighlight(true, this.state.clients);
-    unhighlightedClients = unHighlightText(unhighlightedClients);
-    const unHighLightProject = setHighlight(true, this.state.filteredProjects);
-    const highlightedEmployees = setHighlight(true, this.state.filteredEmployees);
+    let unHighlightedClients = setHighlight(true, clients);
+    unHighlightedClients = unHighlightText(unHighlightedClients);
+    const unHighlightedProjects = setHighlight(true, projects);
+    const unHighlightedEmployees = setHighlight(true, employees);
+    const unHighlightedSkills = setHighlight(false, skills);
 
     this.setState({
-      clients: unhighlightedClients,
-      filteredSkills: [],
-      filteredProjects: unHighLightProject,
-      filteredEmployees: highlightedEmployees
+      clients: unHighlightedClients,
+      filteredSkills: unHighlightedSkills,
+      filteredProjects: unHighlightedProjects,
+      filteredEmployees: unHighlightedEmployees,
+      isHovered: false
     });
   };
 
@@ -185,6 +195,7 @@ class App extends React.Component {
     const showDialogue = this.state.dialogueIsShown ? false : true;
     this.setState({ dialogueIsShown: showDialogue });
   };
+
   /**
  * Recieves an initial and ending date in number of months.  
  * Returns the range in full date object
@@ -204,30 +215,39 @@ class App extends React.Component {
     return getDateFromStep(month, this.state.datesBrushed[0]);
   }
 
-  HighlightElements = (name) => {
+  highlightElements = name => {
+    let clients = this.state.clients;
+    let filteredEmployees = this.state.filteredEmployees;
+    let filteredProjects = this.state.filteredProjects;
+    let filteredSkills = this.state.filteredSkills;
     switch (name) {
       case 'EMPLOYEES':
-        this.unhightLightElements('CLIENTS');
-        this.unhightLightElements('PROJECTS');
-        this.unhightLightElements('SKILLS');
+        clients = setHighlight(false, clients);
+        filteredProjects = setHighlight(false, filteredProjects);
         break;
       case 'CLIENTS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('PROJECTS');
-        this.unhightLightElements('SKILLS');
+        filteredEmployees = setHighlight(false, filteredEmployees);
+        filteredProjects = setHighlight(false, filteredProjects);
         break;
       case 'PROJECTS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('SKILLS');
+        clients = setHighlight(false, clients);
+        filteredEmployees = setHighlight(false, filteredEmployees);
         break;
       case 'SKILLS':
-        this.unhightLightElements('EMPLOYEES');
-        this.unhightLightElements('CLIENTS');
-        this.unhightLightElements('PROJECTS');
+        clients = setHighlight(false, clients);
+        filteredProjects = setHighlight(false, filteredProjects);
+        filteredEmployees = setHighlight(false, filteredEmployees);
+        filteredSkills = setHighlight(true, filteredSkills);
         break;
       default:
-        this.unHighlightElements();
     }
+
+    this.setState({
+      clients,
+      filteredProjects,
+      filteredEmployees,
+      filteredSkills
+    });
   };
 
   modifyDialogueInfo(data, type) {
@@ -240,32 +260,24 @@ class App extends React.Component {
 
   handleClick = (client, resetClickedClient = false) => {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
-    const clientList = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const projectList = getProjectObjs(client.projects, this.state.projects);
-    const rangeBrushed = getDateRange(projectList);
+    const clients = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    const projects = getProjectObjs(client.projects, this.state.projects);
+    const skills = client.type === 'root' ? this.state.skills : 
+      getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
+    const clickedClient = resetClickedClient ? { id: '', name: '', type: '', list: [] } : client;
+    const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
-    const displayTimeline = projectList.length <= 1 ? false : true;
+    const displayTimeline = projects.length <= 1 ? false : true;
     const filterPosition = [0, totalMonths];
-    let clickedClient = resetClickedClient ? {
-      id: '',
-      name: '',
-      type: '',
-      list: []
-    } : client;
-
-    resetHighlights(clientList);
-    resetHighlights(employees);
-    resetBrushedDisplay(projectList);
+    resetBrushedDisplay(projects);
     this.setState({
-      clients: clientList,
-      clickedClient: clickedClient,
-      filteredEmployees: employees,
+      clickedClient,
       displayTimeline: displayTimeline,
-      filteredProjects: projectList,
       datesBrushed: rangeBrushed,
       totalProjectsMonths: totalMonths,
       filterPosition: filterPosition
     });
+    this.unHighlightElements(clients, projects, employees, skills);
   }
 
   render() {
@@ -300,9 +312,10 @@ class App extends React.Component {
       clients={this.state.clients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
-      skills={this.state.skills}
-      overEvent={this.HighlightElements}
+      skills={this.state.filteredSkills}
+      overEvent={this.highlightElements}
       outEvent={this.unHighlightElements}
+      isHovered={this.state.isHovered}
     />;
     const dialogue = <Dialogue
       dialogueIsShown={this.state.dialogueIsShown}
