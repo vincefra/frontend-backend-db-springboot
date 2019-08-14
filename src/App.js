@@ -9,8 +9,7 @@ import {
   load, 
   getLargestClients, 
   getEmployeeObjs, 
-  getProjectObjs, 
-  getNumberOfClients 
+  getProjectObjs
 } from './components/general';
 import {
   setHighlight,
@@ -38,6 +37,7 @@ class App extends React.Component {
 
     this.state = {
       clients: [],
+      clickedClient: [],
       projects: [],
       employees: [],
       skills: [],
@@ -271,6 +271,19 @@ class App extends React.Component {
     this.setState({ isMobileView: window.innerWidth <= 1180 });
   }
 
+  setClickedClient(client, resetClickedClient) {
+    if (resetClickedClient) return { id: '', name: '', type: '', list: [] };
+    else if ((client.type === 'category' || client.type === 'more') && client.list.length === 1) 
+      return client.list[0];
+    else return client;
+  }
+
+  containsCategory(client) {
+    if (client.type === 'client') return false;
+    if (client.type === 'root') return true;
+    if (client.list[0].type === 'category') return true;
+  }
+
   handleClick = (client, resetClickedClient = false) => {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const clients = client.list.length === 0 ? [client] : getLargestClients(client.list);
@@ -278,10 +291,10 @@ class App extends React.Component {
       getProjectObjs(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
       getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
-    const clickedClient = resetClickedClient ? { id: '', name: '', type: '', list: [] } : client;
+    const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
-    const displayTimeline = projects.length <= 1 ? false : true;
+    const displayTimeline = this.containsCategory(client) ? false : projects.length <= 1 ? false : true;
     const filterPosition = [0, totalMonths];
     resetBrushedDisplay(projects);
     this.setState({
@@ -342,6 +355,7 @@ class App extends React.Component {
     />;
     const timeline = <VizTimeline
       projects={this.state.filteredProjects}
+      clients={this.state.clients}
       size={this.state.size}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
@@ -350,7 +364,6 @@ class App extends React.Component {
       displayTimeline={this.state.displayTimeline}
       filterPosition={this.state.filterPosition}
       formatDate={this.getDateFormated}
-
     />;
     const vizCircle = <VizCircle
       clients={this.state.clients}
