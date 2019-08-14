@@ -20,9 +20,17 @@ class Breadcrumb extends React.Component {
     this.setState({ crumbs });
   }
 
-  isEqual(p, n) {
-    if (n.id === '' && n.name === '' && n.type === '') return true;
-    return p.id === n.id && p.type === n.type && p.name === n.name;
+  isEqual(a, b) {
+    if (b.id === '' && b.name === '' && b.type === '') return true;
+    if (a.id === b.id && a.type === b.type && a.name === b.name) {
+      if (a.type === 'category' || a.type === 'more') {
+        if (a.list.length !== b.list.length) return false;
+        for (let index in a.list) 
+          if (!this.isEqual(a.list[index], b.list[index])) return false;
+      } 
+      return true;
+    } 
+    return false;
   }
 
   componentDidUpdate(prevProps, prevState) {

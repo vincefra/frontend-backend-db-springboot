@@ -29,7 +29,7 @@ class VizTimeline extends Component {
 
   //create all the data necessary for the timeline visualization and set it up in the state
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { projects, size } = nextProps;
+    let { projects, size, clients } = nextProps;
     if (!projects) return {};
 
     const extent = getDateRange(projects);
@@ -40,6 +40,9 @@ class VizTimeline extends Component {
 
 
     //calculate all the bars 
+    const moreProjects = clients.find(client => client.type === 'more');
+    if (moreProjects) 
+      projects = projects.filter(project => !moreProjects.projects.includes(project.id));
     const bars = projects.map(d => {
       return {
         x: margin.left + xScale(new Date(d.dateInit)),
@@ -115,7 +118,7 @@ class VizTimeline extends Component {
               fill={d.fill}
               fillOpacity={d.opacity}
               onMouseOver={() => { this.props.selectProject(d.id); }}
-              onMouseOut={this.props.mouseOutProject}
+              onMouseOut={() => this.props.mouseOutProject()}
             />
           ))}
 
