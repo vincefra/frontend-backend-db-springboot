@@ -24,10 +24,10 @@ class Legend extends React.Component {
 
   }
 
-  calculateClient({ client, projects }) {
+  calculateClient({ client }) {
     const totalProjects = client.projects.length;
     const totalEmployees = client.employees.length;
-    const totalSkills = this.getSkillsFromProjects(client.projects, projects).length;
+    const totalSkills = client.skills.length;
 
     this.setState({
       totalClients: 1,
@@ -37,13 +37,10 @@ class Legend extends React.Component {
     });
   }
 
-  calculateEmployee({ employee, clients, projects, skills }) {
-    const totalClients = this.getNumberOfClients(clients, employee.id);
+  calculateEmployee({ employee, clients, projects }) {
+    const totalClients = clients.filter(client => client.employees.includes(employee.id)).length;
     const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
-    const totalSkills = skills
-      .map(skill => skill.id)
-      .filter(skillId => employee.skills.includes(skillId))
-      .length;
+    const totalSkills = employee.skills.length;
     this.setState({
       totalClients,
       totalProjects,
@@ -61,33 +58,9 @@ class Legend extends React.Component {
     });
   }
 
-  getSkillsFromProjects(projectIds, projects) {
-    let projectObjs = projectIds.map(id => projects.find(project => project.id === id));
-    let skills = [];
-    for (let project of projectObjs) {
-      skills.push(...project.skills.filter(skillId => !skills.includes(skillId)));
-    }
-    return skills;
-  }
-
-  /*
-  * Counts the number of clients which a certain employee has worked with. 
-  * If the employeeId is left out, count the total number of clients
-  */
-  getNumberOfClients(clients, employeeId) { 
-    let numOfclients = 0;
-    for (let client of clients) {
-      if (client.type === 'more' || client.type === 'category') 
-        numOfclients += this.getNumberOfClients(client.list, employeeId);
-      else if (client.employees.includes(employeeId) || !employeeId)
-        numOfclients++;
-    }
-    return numOfclients;
-  }
-
   resetLegends({clients, projects, employees, skills}) {
     this.setState({
-      totalClients: this.getNumberOfClients(clients),
+      totalClients: clients.length === 0 ? 1 : clients.length,
       totalProjects: projects.length,
       totalEmployees: employees.length,
       totalSkills: skills.length
