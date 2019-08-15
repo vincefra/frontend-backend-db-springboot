@@ -9,6 +9,7 @@ import Skills from './Skills';
 class VizCircle extends React.Component {
   render() {
     const vizClients = <VizClient
+      annularSectors={this.props.annularSectors}
       clients={this.props.clients}
       projects={this.props.projects}
       size={this.props.size}
