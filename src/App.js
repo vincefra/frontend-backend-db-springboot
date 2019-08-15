@@ -102,7 +102,7 @@ class App extends React.Component {
       clickedClient: categories,
       filterPosition: [0, totalMonths],
       annularSectors: categories.list,
-      currentView: 'Root'
+      currentView: categories.name
     });
   }
 
