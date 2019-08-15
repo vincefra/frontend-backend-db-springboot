@@ -66,6 +66,7 @@ class VizEmployees extends React.Component {
           return (
             <Employee
               key={i}
+              name={d.data.name}
               img={d.data.img}
               radius={d.r}
               pX={d.x}
