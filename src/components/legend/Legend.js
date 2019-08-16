@@ -95,11 +95,12 @@ class Legend extends React.Component {
       totalEmployees,
       totalClients,
       totalProjects,
-      totalSkills
+      totalSkills,
     } = this.state;
 
     return (
       <div className='legend'>
+        {this.props.currentView}
         <ul>
           <LegendItem
             data={totalClients}

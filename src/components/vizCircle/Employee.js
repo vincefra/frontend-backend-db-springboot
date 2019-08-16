@@ -15,11 +15,32 @@ class Employee extends React.Component {
     this.setState({ circle: calculateEmployee() });
   }
 
+  getInitials(name) {
+    const splitted = name.split(' ');
+    return `${splitted[0].charAt(0)}.${splitted[splitted.length - 1].charAt(0)}`;
+  }
+
   render() {
     const circle = this.state.circle !== undefined ? this.state.circle : null;
     //create a unique id for each image mask
     const maskName = 'mask' + this.props.id;
     const fillMask = 'url(#mask' + this.props.id + ')';
+    const image = !this.props.img ? 
+      <text 
+        textAnchor='middle'
+        x={this.props.pX}
+        y={this.props.pY + 1}
+        dominantBaseline='middle'
+        fontSize={this.props.radius}
+      > 
+        {this.getInitials(this.props.name)}
+      </text> :
+      <circle
+        r={this.props.radius}
+        cy={this.props.pY}
+        cx={this.props.pX}
+        fill={fillMask}
+      />;
 
     return (
       <g>
@@ -46,12 +67,7 @@ class Employee extends React.Component {
                   />
                 </pattern>
               </defs>
-              <circle
-                r={this.props.radius}
-                cy={this.props.pY}
-                cx={this.props.pX}
-                fill={fillMask}
-              />
+              {image}
             </g>
           </g>
         ) : (

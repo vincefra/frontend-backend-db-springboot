@@ -66,7 +66,8 @@ class App extends React.Component {
       highlightedClient: null,
       highlightedProject: null,
       highlightedEmployee: null,
-      refreshLegends: false
+      refreshLegends: false,
+      currentView: ''
     };
   }
 
@@ -100,7 +101,8 @@ class App extends React.Component {
       range: selectedRange,
       clickedClient: categories,
       filterPosition: [0, totalMonths],
-      annularSectors: categories.list
+      annularSectors: categories.list,
+      currentView: 'Root'
     });
   }
 
@@ -304,6 +306,7 @@ class App extends React.Component {
     const filterPosition = [0, totalMonths];
     resetBrushedDisplay(projects);
     this.setState({
+      currentView: client.type === 'more' ? this.state.currentView : client.name,
       clickedClient,
       filteredClients,
       displayTimeline: displayTimeline,
@@ -344,6 +347,7 @@ class App extends React.Component {
       breadcrumbClick={this.handleClick}
     />;
     const legend = <Legend
+      currentView={this.state.currentView}
       clients={this.state.filteredClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
