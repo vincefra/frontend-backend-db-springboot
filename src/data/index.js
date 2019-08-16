@@ -72,13 +72,21 @@ async function getData() {
     return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
 
-  // TODO
   function getDates(startDates, endDates) {
     const startDateList = startDates.split(',').map(date => date.trim());
-    const endDateList = endDates ? endDates.split(',').map(date => date.trim()) : [moment().format(dateFormat)];
+    const endDateList = endDates ? endDates.split(',').map(date => date.trim()) : [];
     const startDate = startDateList[0];
-    const endDateSplitted = endDateList[0].split('-');
-    const endDate = moment(`${endDateSplitted[0]}-${endDateSplitted[1]}`).endOf('month').format(dateFormat);
+    let endDate;
+    if (startDateList.length === endDateList.length) {
+      // Number of days doesn't always correspond to the month
+      const endDateSplitted = endDateList[endDateList.length - 1].split('-');
+      const year = endDateSplitted[0];
+      const month = endDateSplitted[1];
+      endDate = moment(`${year}-${month}`).endOf('month').format(dateFormat);
+    } else  // Ongoing project
+      endDate = moment().format(dateFormat);
+    
+    
     return { startDate, endDate };
   }
 
@@ -306,7 +314,7 @@ async function groupCategories(clients) {
 
   return {
     id: counter++,
-    name: 'Root',
+    name: 'Categories',
     category: '',
     type: 'root',
     list: categories,
