@@ -22,16 +22,26 @@ export async function load() {
 }
 
 async function getData() {
-  function getTechList(technologies) {
-    if (!technologies || typeof (technologies) != 'string') return [];
+  function getTechList(technologies, clientId, projectId, employeeId) {
+    if (!technologies) return [];
     let techList = technologies.split(',').map(technology => technology.trim());
     return techList = techList.map(technology => {
       let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase());
-      if (!techObj) {
+      if (techObj) {
+        if (clientId && !techObj.clients.includes(clientId)) 
+          techObj.clients.push(clientId);
+        if (projectId && !techObj.projects.includes(projectId)) 
+          techObj.projects.push(projectId);
+        if (employeeId && !techObj.employees.includes(employeeId)) 
+          techObj.employees.push(employeeId);
+      } else {
         techObj = {
           id: technologyIdCounter++,
           name: technology,
-          highlight: false
+          highlight: false,
+          clients: clientId ? [clientId] : [],
+          projects: projectId ? [projectId] : [],
+          employees: employeeId ? [employeeId] : []
         };
         technologyList.push(techObj);
       }
@@ -85,8 +95,6 @@ async function getData() {
       endDate = moment(`${year}-${month}`).endOf('month').format(dateFormat);
     } else  // Ongoing project
       endDate = moment().format(dateFormat);
-    
-    
     return { startDate, endDate };
   }
 
@@ -152,7 +160,7 @@ async function getData() {
       img,
       initDate: moment(`${employee.startYear}-01-01`).format(dateFormat),
       endDate: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
-      skills: getTechList(employee.technologies),
+      skills: getTechList(employee.technologies, undefined, undefined, employee.id),
       projects: [],
       clients: []
     });
@@ -206,12 +214,13 @@ async function getData() {
   for (const project of projects) {
     const { startDate, endDate } = getDates(project.startDates, project.endDates);
     const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
-    const clientId = getClientId(project.client);
+    let clientId = getClientId(project.client);
+    clientId = clientId === -1 ? clients.length : clientId;
     const color = getClientColor(project.client);
     const employees = getEmployeeList(project.employees);
-    const skills = getTechList(project.technologies);
-    updateClient(clientId === -1 ? clients.length : clientId, project.id, duration, employees, skills);
-    updateEmployee(clientId === -1 ? clients.length : clientId, project.id, employees);
+    const skills = getTechList(project.technologies, clientId, project.id);
+    updateClient(clientId, project.id, duration, employees, skills);
+    updateEmployee(clientId, project.id, employees);
     projectList.push({
       id: project.id,
       name: project.name,
