@@ -164,8 +164,9 @@ class App extends React.Component {
 
   showClient = (id) => {
     const client = getElementById(id, this.state.annularSectors);
-    let highlightedClients = setHighlightElement(false, [id], this.state.annularSectors, false);
-    highlightedClients = client.type !== 'client' ? setHighlightText(true, [id], highlightedClients, true) : highlightedClients;
+    let highlightedSectors = setHighlightElement(false, [id], this.state.annularSectors, false);
+    highlightedSectors = client.type !== 'client' ? 
+      setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
     let highlightedSkills = this.state.filteredSkills;
@@ -178,7 +179,7 @@ class App extends React.Component {
       filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
       projects: highlightedProjects,
-      clients: highlightedClients,
+      annularSectors: highlightedSectors,
       highlightedClient: client
     });
 
