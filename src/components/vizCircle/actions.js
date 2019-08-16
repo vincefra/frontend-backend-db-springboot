@@ -183,4 +183,14 @@ export function calculateEmployee() {
   return { circle };
 }
 
-export default { calculatePieClient, createLinks, calculateEmployee };
+export function getInitials(name) {
+  const splitted = name.split(' ');
+  return `${splitted[0].charAt(0)}.${splitted[splitted.length - 1].charAt(0)}`;
+}
+
+export default { 
+  calculatePieClient, 
+  createLinks, 
+  calculateEmployee,
+  getInitials
+};

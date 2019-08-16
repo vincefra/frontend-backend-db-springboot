@@ -15,25 +15,17 @@ class Legend extends React.Component {
 
   calculateData(props) {
     let { client, project, employee } = props;
-    if (client) 
-      this.calculateClient(props);
-    if (project) 
-      this.calculateProject(props);
-    if (employee) 
-      this.calculateEmployee(props);
-
+    if (client) this.calculateClient(props);
+    if (project) this.calculateProject(props);
+    if (employee) this.calculateEmployee(props);
   }
 
   calculateClient({ client }) {
-    const totalProjects = client.projects.length;
-    const totalEmployees = client.employees.length;
-    const totalSkills = client.skills.length;
-
     this.setState({
       totalClients: 1,
-      totalProjects,
-      totalEmployees,
-      totalSkills
+      totalProjects: client.projects.length,
+      totalEmployees: client.employees.length,
+      totalSkills: client.skills.length
     });
   }
 

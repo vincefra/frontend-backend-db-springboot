@@ -16,10 +16,21 @@ class VizEmployees extends React.Component {
     this.setLayout(employees);
   }
 
-  //Set a hierarchy to the data
-  //creates a PACK Layout, calculates and sets all the atributes for the layout
-  //Set the layout in the state
+  componentDidUpdate(prevProps) {
+    if (!this.sameEmployees(prevProps.employees, this.props.employees))
+      this.setLayout(this.props.employees);
+  }
 
+  sameEmployees(prevEmpl, nextEmpl) {
+    if (prevEmpl.length !== nextEmpl.length) return false;
+    let pIds = prevEmpl.map(e => e.id);
+    let nIds = prevEmpl.map(e => e.id);
+    return pIds.filter(id => !nIds.includes(id)).length === 0;
+  }
+
+  //Set a hierarchy to the data
+  //creates a PACK Layout, calculates and sets all the attributes for the layout
+  //Set the layout in the state
   setLayout(employees) {
     const root = d3.hierarchy({
       name: 'employees',
@@ -34,23 +45,6 @@ class VizEmployees extends React.Component {
     root.sum(_ => 50);
     const flayout = packLayout(root);
     this.setState({ layout: flayout });
-  }
-
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.setLayout();
-  // }
-
-  sameEmployees(prevEmpl, nextEmpl) {
-    if (prevEmpl.length !== nextEmpl.length) return false;
-    let pIds = prevEmpl.map(e => e.id);
-    let nIds = prevEmpl.map(e => e.id);
-    return pIds.filter(id => !nIds.includes(id)).length === 0;
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!this.sameEmployees(prevProps.employees, this.props.employees))
-      this.setLayout(this.props.employees);
   }
 
   render() {
