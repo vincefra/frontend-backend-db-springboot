@@ -31,6 +31,7 @@ import {
   resetBrushedDisplay,
   getIdsByEmployeeId
 } from './components/interaction';
+import Title from 'components/title/Title';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -346,6 +347,9 @@ class App extends React.Component {
       clickedClient={this.state.clickedClient}
       breadcrumbClick={this.handleClick}
     />;
+    const title = <Title
+      title={this.state.currentView}
+    />;
     const legend = <Legend
       currentView={this.state.currentView}
       clients={this.state.filteredClients}
@@ -394,6 +398,7 @@ class App extends React.Component {
         {this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> :
           <React.Fragment>
             {header}
+            {title}
             {legend}
             {dialogue}
             {timeline}
