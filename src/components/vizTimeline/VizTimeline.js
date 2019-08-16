@@ -102,7 +102,7 @@ class VizTimeline extends Component {
     const barHeight = (height - margin.bottom) / (this.state.numLevels + 1);
     // const barHeight = height / level;
     const content =
-      < div className={this.props.displayTimeline ? 'timeLine' : 'timeLine hidden'} >
+      < div className={'timeline'}>
         <svg width={this.props.size[0]} height={height}>
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
 

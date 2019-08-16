@@ -67,8 +67,7 @@ class App extends React.Component {
       highlightedClient: null,
       highlightedProject: null,
       highlightedEmployee: null,
-      refreshLegends: false,
-      currentView: ''
+      refreshLegends: false
     };
   }
 
@@ -351,7 +350,6 @@ class App extends React.Component {
       title={this.state.currentView}
     />;
     const legend = <Legend
-      currentView={this.state.currentView}
       clients={this.state.filteredClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
@@ -401,8 +399,8 @@ class App extends React.Component {
             {title}
             {legend}
             {dialogue}
-            {timeline}
             {vizCircle}
+            {timeline}
           </React.Fragment>
         }
       </React.Fragment>
