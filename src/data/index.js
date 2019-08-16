@@ -126,21 +126,29 @@ async function getData() {
   let clientList = [];
   let technologyList = [];
   let projectList = [];
+  let employeeList = [];
   let technologyIdCounter = 0;
-  let employeeList = employees.map(employee => {
-    return {
+  for (let employee of employees) {
+    let img;
+    try {
+      img = `img/employees/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`;
+      await imageExists(img);
+    } catch {
+      img = null;
+    }
+    employeeList.push({
       id: employee.id,
       name: `${employee.firstName} ${employee.lastName}`,
       highlight: true,
       roll: `${employee.role ? employee.role : ''}`,
-      img: `img/employees/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`,
+      img,
       initDate: moment(`${employee.startYear}-01-01`).format(dateFormat),
       endDate: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
       skills: getTechList(employee.technologies),
       projects: [],
       clients: []
-    };
-  });
+    });
+  }
 
   for (const client of clients) {
     let imageSrc = `/img/logos/${client.name.trim().replace(/\s/g, '_')}.png`;
@@ -230,6 +238,15 @@ function getColor(src) {
       resolve(`#${dominantColor.join('')}`);
     };
     img.onerror = () => reject('');
+    img.src = `${process.env.PUBLIC_URL}${src}`;
+  });
+}
+
+function imageExists(src) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve();
+    img.onerror = () => reject();
     img.src = `${process.env.PUBLIC_URL}${src}`;
   });
 }

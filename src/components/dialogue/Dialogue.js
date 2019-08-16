@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 const format = 'YYYY-MM-DD';
+const placeholder = `${process.env.PUBLIC_URL}/img/employees/employee_placeholder.jpg`;
 
 class Dialogue extends React.Component {
   setText(data, type) {
@@ -63,7 +64,7 @@ class Dialogue extends React.Component {
       case 'PROJECT':
         return <img src={data.logo} alt={data.name} />;
       case 'EMPLOYEE':
-        return <img src={data.img} alt={data.name} />;
+        return <img src={data.img ? data.img : placeholder} alt={data.name} />;
       default:
         return <i className="fas fa-laptop-code"></i>;
     }
