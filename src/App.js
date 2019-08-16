@@ -62,7 +62,6 @@ class App extends React.Component {
         info: null
       },
       dialogueInfo: {},
-      displayTimeline: false,
       filterPosition: [],
       highlightedClient: null,
       highlightedProject: null,
@@ -302,14 +301,12 @@ class App extends React.Component {
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
-    const displayTimeline = this.containsCategory(client) ? false : projects.length <= 1 ? false : true;
     const filterPosition = [0, totalMonths];
     resetBrushedDisplay(projects);
     this.setState({
       currentView: client.type === 'more' ? this.state.currentView : client.name,
       clickedClient,
       filteredClients,
-      displayTimeline: displayTimeline,
       datesBrushed: rangeBrushed,
       totalProjectsMonths: totalMonths,
       filterPosition: filterPosition,
@@ -374,7 +371,6 @@ class App extends React.Component {
       mouseOutProject={this.unHighlightElements}
       modifyRange={this.brushDates}
       totalProjectsMonths={this.state.totalProjectsMonths}
-      displayTimeline={this.state.displayTimeline}
       filterPosition={this.state.filterPosition}
       formatDate={this.getDateFormated}
     />;
