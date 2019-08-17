@@ -341,6 +341,11 @@ class App extends React.Component {
     />;
     const title = <Title
       title={this.state.currentView}
+      isHighlighted={
+        this.state.highlightedClient || 
+        this.state.highlightedProject || 
+        this.state.highlightedEmployee
+      }
     />;
     const legend = <Legend
       clients={this.state.filteredClients}
