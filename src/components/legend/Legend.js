@@ -50,7 +50,7 @@ class Legend extends React.Component {
     const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
     const totalSkills = employee.skills.length;
     this.setState({
-      totalClients,
+      totalClients: totalClients === 0 ? 1 : totalClients, 
       totalProjects,
       totalEmployees: 1,
       totalSkills

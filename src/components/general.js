@@ -7,6 +7,10 @@ export function getProjectObjs(projectIds, projectList) {
   return projects.sort((a, b) => b.hours - a.hours);
 }
 
+export function getObjects(ids, list) {
+  return ids.map(id => list[id]);
+}
+
 export function getClients(clients) {
   let clientList = [];
   for (let client of clients) {
@@ -20,4 +24,5 @@ export default {
   getClients,
   getEmployeeObjs,
   getProjectObjs,
+  getObjects
 };
