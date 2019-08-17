@@ -12,14 +12,6 @@ class Breadcrumb extends React.Component {
     this.setState({ crumbs: [this.props.clickedClient] });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.clickedClient.length === 0) return;
-    if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
-      const crumbs = [...prevState.crumbs, this.props.clickedClient];
-      this.setState({ crumbs });
-    }
-  }
-  
   handleClick(index) {
     if (index + 1 === this.state.crumbs.length) return;
     const client = this.state.crumbs[index];
@@ -39,6 +31,14 @@ class Breadcrumb extends React.Component {
       return true;
     } 
     return false;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.clickedClient.length === 0) return;
+    if (!this.isEqual(prevProps.clickedClient, this.props.clickedClient)) {
+      const crumbs = [...prevState.crumbs, this.props.clickedClient];
+      this.setState({ crumbs });
+    }
   }
 
   render() {

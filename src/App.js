@@ -148,7 +148,7 @@ class App extends React.Component {
     const highlightedSectors = setHighlightElement(false, clientIds, this.state.annularSectors, false);
     const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
     const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
-    console.log('Highlighted Employee');
+
     this.setState({
       filteredEmployees: highlightedEmployees,
       filteredProjects: highlightedProjects,
@@ -379,8 +379,8 @@ class App extends React.Component {
       clients={this.state.filteredClients}
       employees={this.state.filteredEmployees}
       projects={this.state.projects}
-      skills={this.state.filteredSkills}
       size={this.state.size}
+      skills={this.state.filteredSkills}
       mouseOnClient={this.showClient}
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
