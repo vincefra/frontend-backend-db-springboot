@@ -13,6 +13,22 @@ class Legend extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.resetLegends(this.props);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
+    if (!this.equal(prevProps.client, this.props.client) || 
+    !this.equal(prevProps.project, this.props.project) ||
+    !this.equal(prevProps.employee, this.props.employee)) {
+      if (this.props.client || this.props.project || this.props.employee)
+        this.calculateData(this.props);
+      else 
+        this.resetLegends(this.props);
+    }
+  }
+
   calculateData(props) {
     let { client, project, employee } = props;
     if (client) this.calculateClient(props);
@@ -64,22 +80,6 @@ class Legend extends React.Component {
     if (prev === current) return true;
     if (prev.id !== current.id && prev.type !== current.type) return false;
     return true;
-  }
-
-  componentDidMount() {
-    this.resetLegends(this.props);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
-    if (!this.equal(prevProps.client, this.props.client) || 
-    !this.equal(prevProps.project, this.props.project) ||
-    !this.equal(prevProps.employee, this.props.employee)) {
-      if (this.props.client || this.props.project || this.props.employee)
-        this.calculateData(this.props);
-      else 
-        this.resetLegends(this.props);
-    }
   }
 
   render() {
