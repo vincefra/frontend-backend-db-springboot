@@ -5,15 +5,14 @@ import * as d3 from 'd3';
    * Set the Highlight state either to true or false
    * returns an array with the modified items
    *
-   * @param highLight Boolean to set the state
+   * @param highlight Boolean to set the state
    * @param modArray Array to modify
    */
-export function setHighlight(highLight, modArray) {
-  const nArray = modArray.map(d => {
-    d.highlight = highLight;
+export function setHighlight(highlight, modArray) {
+  return modArray.map(d => {
+    d.highlight = highlight;
     return d;
   });
-  return nArray;
 }
 
 /**
@@ -109,8 +108,7 @@ export function getIdsByEmployeeId(id, list) {
  * @param {array} array array to search
  */
 export function getElementById(id, array) {
-  const element = array.find(d => d.id === id);
-  return element;
+  return array.find(d => d.id === id);
 }
 
 /**

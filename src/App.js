@@ -159,7 +159,6 @@ class App extends React.Component {
     let highlightedSkills = client.type === 'client' ? 
       setHighlightElement(true, client.skills, this.state.filteredSkills, true) :
       this.state.filteredSkills;
-    
 
     this.setState({
       filteredSkills: highlightedSkills,

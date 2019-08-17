@@ -3,6 +3,7 @@ import config from '../config.json';
 import XLSX from 'xlsx';
 import moment from 'moment';
 import ColorThief from 'color-thief';
+import { union } from 'components/general';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
@@ -67,8 +68,8 @@ async function getData() {
   function updateClient(clientId, projectId, duration, employees, skills) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
-    clientList[clientId].employees.push(...employees.filter(e => !clientList[clientId].employees.includes(e)));
-    clientList[clientId].skills.push(...skills.filter(s => !clientList[clientId].skills.includes(s)));
+    clientList[clientId].employees = union(clientList[clientId].employees, employees);
+    clientList[clientId].skills = union(clientList[clientId].skills, skills);
   }
 
   function updateEmployee(clientId, projectId, employees) {
@@ -80,7 +81,6 @@ async function getData() {
   }
 
   function getEmployeeList(employees) {
-    if (!employees || typeof (employees) != 'string') return;
     let empList = employees.split(',').map(employee => employee.trim());
     return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
@@ -289,14 +289,14 @@ async function groupCategories(clients) {
       imageSrc = '/img/logos/company_placeholder.png';
     }
   
-    const employees = [];
-    const projects = [];
-    const skills = [];
-    const clients = [];
+    let employees = [];
+    let projects = [];
+    let skills = [];
+    let clients = [];
     for (let client of grouped[category]) {
-      employees.push(...client.employees.filter(e => !employees.includes(e)));
-      projects.push(...client.projects);
-      skills.push(...client.skills.filter(s => !skills.includes(s)));
+      employees = union(employees, client.employees);
+      projects = union(projects, client.projects);
+      skills = union(skills, client.skills);
       clients.push(client.id);
     }
 
@@ -366,10 +366,10 @@ export function getLargestClients(clients) {
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     other.hours += clients[i].hours;
     other.list.push(clients[i]);
-    other.employees.push(...clients[i].employees.filter(e => !other.employees.includes(e)));
+    other.employees = union(other.employees, clients[i].employees);
     other.projects.push(...clients[i].projects);
     other.clients.push(clients[i].id);
-    other.skills.push(...clients[i].skills.filter(s => !other.skills.includes(s)));
+    other.skills = union(other.skills, clients[i].skills);
   }
   clientList.push(other);
 
