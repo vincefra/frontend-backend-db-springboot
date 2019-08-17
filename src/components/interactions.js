@@ -113,25 +113,6 @@ export function getElementById(id, array) {
   return element;
 }
 
-export function getSkillsIDsFromProject(projectList, client) {
-  let employeesId = [];
-  let skillsId = [];
-  const projects = projectList.filter(prj => {
-    return ~client.projects.indexOf(prj.id);
-  });
-  //get the employeesId from the project and add it to the array of employeesId of the client
-  for (let i in projects) {
-    skillsId = skillsId.concat(projects[i].skills);
-    employeesId = employeesId.concat(projects[i].employees);
-  }
-  skillsId = [...new Set(skillsId)];
-  return skillsId;
-}
-
-export function getSkills(skillIds, skillList) {
-  return skillIds.map(id =>skillList[id]);
-}
-
 /**
  * Filters all the projects within the brInitMonth and the brEndMonth and returns an array with the filtered projects
  * @param {array} projects array with projects to be filtered 
@@ -189,8 +170,6 @@ export default {
   highlightElementWithSkill,
   getElementById,
   elementWithSkill,
-  getSkillsIDsFromProject,
-  getSkills,
   brushProjects,
   getDateRange,
   setHighlightText,
@@ -200,4 +179,3 @@ export default {
   resetBrushedDisplay,
   getIdsByEmployeeId
 };
-

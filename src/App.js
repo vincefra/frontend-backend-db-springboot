@@ -1,25 +1,18 @@
 import React from 'react';
-import VizCircle from './components/vizCircle/VizCircle';
-import Legend from './components/legend/Legend';
-import Dialogue from './components/dialogue/Dialogue';
-import VizTimeline from './components/vizTimeline/VizTimeline';
-import Header from './components/header/Header';
-import Loader from './components/loader/Loader';
-import {
-  getObjects
-} from './components/general';
-
-import {
-  load, 
-  getLargestClients, 
-} from './data';
+import VizCircle from 'components/vizCircle/VizCircle';
+import Legend from 'components/legend/Legend';
+import Dialogue from 'components/dialogue/Dialogue';
+import VizTimeline from 'components/vizTimeline/VizTimeline';
+import Header from 'components/header/Header';
+import Loader from 'components/loader/Loader';
+import Title from 'components/title/Title';
+import { load, getLargestClients } from './data';
+import { getObjects } from 'components/general';
 import {
   setHighlight,
   setHighlightElement,
   highlightElementWithSkill,
   getElementById,
-  getSkillsIDsFromProject,
-  getSkills,
   brushProjects,
   getDateRange,
   setHighlightText,
@@ -28,8 +21,7 @@ import {
   getMonthsDifference,
   resetBrushedDisplay,
   getIdsByEmployeeId
-} from './components/interaction';
-import Title from 'components/title/Title';
+} from 'components/interactions';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -121,14 +113,14 @@ class App extends React.Component {
   showProject = id => {
     const project = getElementById(id, this.state.projects);
     const highlightedEmployees = setHighlightElement(false, project.employees, this.state.filteredEmployees, false);
-    const highlightedProjects = setHighlightElement(false, [id], this.state.projects, false);
+    const highlightedProjects = setHighlightElement(false, [id], this.state.filteredProjects, false);
     const highligtedSectors = setHighlightElement(false, [project.clientId], this.state.annularSectors, false);
     const highlightedSkills = setHighlightElement(true, project.skills, this.state.filteredSkills, true);
 
     this.setState({
       annularSectors: highligtedSectors,
       filteredSkills: highlightedSkills,
-      projects: highlightedProjects,
+      filteredProjects: highlightedProjects,
       filteredEmployees: highlightedEmployees,
       highlightedProject: project
     });
@@ -163,7 +155,7 @@ class App extends React.Component {
     let highlightedClients = setHighlightElement(false, [id], this.state.annularSectors, false);
     highlightedClients = client.type !== 'client' ? setHighlightText(true, [id], highlightedClients, true) : highlightedClients;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
-    const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
+    const highlightedProjects = setHighlightElement(false, client.projects, this.state.filteredProjects, false);
     let highlightedSkills = client.type === 'client' ? 
       setHighlightElement(true, client.skills, this.state.filteredSkills, true) :
       this.state.filteredSkills;
@@ -293,7 +285,8 @@ class App extends React.Component {
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
-      getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
+      getObjects(client.skills, this.state.skills);
+      // getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
