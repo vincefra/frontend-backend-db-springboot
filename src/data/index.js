@@ -11,7 +11,10 @@ const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 export async function load() {
   const { projectList, employeeList, technologyList, clientList } = await getData();
   const categories = await groupCategories(clientList);
+  categories.clients = clientList.map((_, i) => i);
+  categories.projects = projectList.map((_, i) => i); 
   categories.employees = employeeList.map((_, i) => i);
+  categories.skills = technologyList.map((_, i) => i);
   return {
     categories,
     projectList,
@@ -333,6 +336,8 @@ async function groupCategories(clients) {
     textHighlight: false,
     projects: [],
     employees: [],
+    clients: [],
+    skills: [],
     logo: ''
   };
 }

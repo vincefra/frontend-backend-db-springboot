@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import { getProjectObjs } from 'components/general';
 
 const sliceHeight = 50;
 const projectHeight = 10;
@@ -76,7 +75,8 @@ export function calculatePieClient(props, radius) {
     };
 
     if (d.data.type === 'client') {
-      const projects = getProjectObjs(d.data.projects, props.projects);
+      const projects = props.projects.filter(project => d.data.projects.includes(project.id));
+      // const projects = getObjects(d.data.projects, props.projects);
       const projectSlices = calculatePieProject(
         d.startAngle + projectPadding,
         d.endAngle - projectPadding,

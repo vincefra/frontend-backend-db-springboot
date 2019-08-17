@@ -6,7 +6,6 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
 import {
-  getClients,
   getObjects
 } from './components/general';
 
@@ -143,16 +142,15 @@ class App extends React.Component {
     const employee = getElementById(id, this.state.filteredEmployees);
     const projectIds = getIdsByEmployeeId(id, this.state.filteredProjects);
     const clientIds = getIdsByEmployeeId(id, this.state.annularSectors);
-    console.log(clientIds);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const highlightedSectors = setHighlightElement(false, clientIds, this.state.annularSectors, false);
     const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
     const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
 
     this.setState({
-      filteredEmployees: highlightedEmployees,
-      filteredProjects: highlightedProjects,
       annularSectors: highlightedSectors,
+      filteredProjects: highlightedProjects,
+      filteredEmployees: highlightedEmployees,
       filteredSkills: highlightedSkills,
       highlightedEmployee: employee
     });
@@ -174,8 +172,8 @@ class App extends React.Component {
     this.setState({
       filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
-      projects: highlightedProjects,
-      clients: highlightedClients,
+      filteredProjects: highlightedProjects,
+      filteredClients: highlightedClients,
       highlightedClient: client
     });
 
@@ -291,7 +289,7 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const filteredClients = client.list.length === 0 ? [] : getClients(client.list);
+    const filteredClients = client.list.length === 0 ? [] : getObjects(client.clients, this.state.clients);
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
@@ -376,9 +374,9 @@ class App extends React.Component {
       annularSectors={this.state.annularSectors}
       clients={this.state.filteredClients}
       employees={this.state.filteredEmployees}
-      projects={this.state.projects}
-      size={this.state.size}
+      projects={this.state.filteredProjects}
       skills={this.state.filteredSkills}
+      size={this.state.size}
       mouseOnClient={this.showClient}
       mouseOnEmployee={this.showEmployee}
       mouseOnProject={this.showProject}
