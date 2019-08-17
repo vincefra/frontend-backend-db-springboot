@@ -13,16 +13,12 @@ class Skills extends React.Component {
 
   componentDidMount() {
     const nodes = createLinks(this.props.skills);
-    this.setState({
-      nodes
-    });
+    this.setState({ nodes });
   }
-  
+
   componentWillReceiveProps(props) {
     const nodes = createLinks(props.skills);
-    this.setState({
-      nodes
-    });
+    this.setState({ nodes });
   }
 
   render() {

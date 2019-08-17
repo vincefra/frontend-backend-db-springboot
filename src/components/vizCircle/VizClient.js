@@ -20,9 +20,14 @@ class VizClient extends React.Component {
     this.setState({ clientSlice, projectSlice, radius });
   }
 
-  componentWillReceiveProps(props) {
-    const { clientSlice, projectSlice } = calculatePieClient(props, this.state.radius);
-    this.setState({ clientSlice, projectSlice });
+  componentDidUpdate(prevProps) {
+    const prevClientIds = prevProps.clients.map(p => p.id);
+    const clientIds = this.props.clients.map(p => p.id);
+    const isSame = prevClientIds.filter(id => !clientIds.includes(id)).length === 0;
+    if (prevClientIds.length !== clientIds.length || !isSame) {
+      const { clientSlice, projectSlice } = calculatePieClient(this.props, this.state.radius);
+      this.setState({ clientSlice, projectSlice });
+    }
   }
 
   render() {
