@@ -83,7 +83,7 @@ export function calculatePieClient(props, radius) {
         projects,
         radius
       );
-  
+
       projectSlice = projectSlice.concat(projectSlices);
     }
 
@@ -167,6 +167,7 @@ export function createLinks(skills) {
     node.angle = angleScale(node.x); //set angle in radians
     node.textRotation = -node.angle;
     node.anchorText = node.angle < 90 || node.angle > 270 ? 'start' : 'end';
+
   }
 
   return nodes;

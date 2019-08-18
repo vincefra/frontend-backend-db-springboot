@@ -1,15 +1,35 @@
+.search-input{
+    position: relative;
+
+    .fa-times-circle{
+        position: absolute;
+        right: 22px;
+        top: 12px;
+    }
+}
 .searchForm{
     position: relative;
 }
 
 .results{
     ul{
-        padding: 0 15px;
+        padding: 0;
+        // max-height: 500px;
+        // overflow: auto;
         li{
             list-style: none;
+            position: relative;
+            min-height: 1.7em;
+            padding: 6px 30px 6px 20px;
+            background: gray;
+            border-bottom: solid white 1px;
+            cursor:pointer;
+        }
+        li:hover{
+            background: $color-light-gray;
         }
     }
     position: absolute;
-    top: 50px;
+    top: 37px;
     width: 208px;
 }

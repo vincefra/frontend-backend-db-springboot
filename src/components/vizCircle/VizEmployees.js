@@ -69,6 +69,7 @@ class VizEmployees extends React.Component {
               name={d.data.name}
               img={d.data.img}
               radius={d.r}
+              selected={d.data.selected}
               pX={d.x}
               pY={d.y}
               id={d.data.id}
@@ -79,8 +80,8 @@ class VizEmployees extends React.Component {
           );
         })
       ) : (
-        <div />
-      );
+          <div />
+        );
 
     //return all the things to render
     return (

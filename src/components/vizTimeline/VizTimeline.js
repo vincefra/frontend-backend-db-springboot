@@ -41,7 +41,7 @@ class VizTimeline extends Component {
 
     //calculate all the bars 
     const moreProjects = clients.find(client => client.type === 'more');
-    if (moreProjects) 
+    if (moreProjects)
       projects = projects.filter(project => !moreProjects.projects.includes(project.id));
     const bars = projects.map(d => {
       return {
@@ -52,7 +52,8 @@ class VizTimeline extends Component {
         fill: !d.highlight ? '#333333' : d.color,
         level: 0,
         id: d.id,
-        opacity: d.brushedDisplay ? '0.2' : d.highlight ? '1' : '0.2'
+        opacity: d.brushedDisplay ? '0.2' : d.highlight ? '1' : '0.2',
+        selected: d.selected
       };
     });
     let numLevels = 0;
@@ -100,26 +101,40 @@ class VizTimeline extends Component {
 
   render() {
     const barHeight = (height - margin.bottom) / (this.state.numLevels + 1);
-    // const barHeight = height / level;
     const content =
       < div className={this.props.displayTimeline ? 'timeLine' : 'timeLine hidden'} >
         <svg width={this.props.size[0]} height={height}>
           <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
 
           {this.state.bars.map((d) => (
-            <rect
-              key={d.id}
-              x={d.x}
-              y={d.y - barHeight - (barHeight * d.level)}
-              rx="5"
-              ry="5"
-              width={d.width}
-              height={barHeight}
-              fill={d.fill}
-              fillOpacity={d.opacity}
+            <g key={d.id}
+              opacity={d.opacity}
               onMouseOver={() => { this.props.selectProject(d.id); }}
               onMouseOut={() => this.props.mouseOutProject()}
-            />
+            >
+
+              <rect
+                x={d.x}
+                y={d.y - barHeight - (barHeight * d.level)}
+                rx="5"
+                ry="5"
+                width={d.width}
+                height={barHeight}
+                fill={d.fill}
+              />
+              <rect
+                x={d.x + 1}
+                y={d.y - barHeight - (barHeight * d.level) + 1}
+                rx="5"
+                ry="5"
+                width={d.width - 1}
+                height={barHeight - 1}
+                stroke='#dc3545'
+                fillOpacity='0'
+                strokeWidth="3"
+                opacity={d.selected ? 1 : 0}
+              />
+            </g>
           ))}
 
           <g ref="xAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />

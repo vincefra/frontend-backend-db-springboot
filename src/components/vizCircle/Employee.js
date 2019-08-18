@@ -25,14 +25,14 @@ class Employee extends React.Component {
     //create a unique id for each image mask
     const maskName = 'mask' + this.props.id;
     const fillMask = 'url(#mask' + this.props.id + ')';
-    const image = !this.props.img ? 
-      <text 
+    const image = !this.props.img ?
+      <text
         textAnchor='middle'
         x={this.props.pX}
         y={this.props.pY + 1}
         dominantBaseline='middle'
         fontSize={this.props.radius}
-      > 
+      >
         {this.getInitials(this.props.name)}
       </text> :
       <circle
@@ -42,38 +42,51 @@ class Employee extends React.Component {
         fill={fillMask}
       />;
 
-    return (
-      <g>
-        {circle ? (
-          <g
-            onMouseOver={() => this.props.mouseOnEmployee(this.props.id)}
-            onMouseOut={() => this.props.mouseOutEmployee()}
-            opacity={this.props.opacity}
-          >
-            <circle
-              cx={this.props.pX}
-              cy={this.props.pY}
-              r={this.props.radius}
-              fill={circle.circle.fill}
-            />
+    const selected = this.props.selected ? <circle
+      cx={this.props.pX}
+      cy={this.props.pY}
+      r={this.props.radius}
+      stroke='#dc3545'
+      fillOpacity='0'
+      strokeWidth="3"
+    /> : '';
 
-            <g>
-              <defs id='imgdefs'>
-                <pattern id={maskName} height='1' width='1' x='0' y='0'>
-                  <image
-                    height={this.props.radius * 2}
-                    width={this.props.radius * 2}
-                    xlinkHref={this.props.img}
-                  />
-                </pattern>
-              </defs>
-              {image}
+    return (
+      < g >
+        {
+          circle ? (
+            <g
+              onMouseOver={() => this.props.mouseOnEmployee(this.props.id)}
+              onMouseOut={() => this.props.mouseOutEmployee()}
+              opacity={this.props.opacity}
+            >
+
+              <circle
+                cx={this.props.pX}
+                cy={this.props.pY}
+                r={this.props.radius}
+                fill={circle.circle.fill}
+              />
+
+              <g>
+                <defs id='imgdefs'>
+                  <pattern id={maskName} height='1' width='1' x='0' y='0'>
+                    <image
+                      height={this.props.radius * 2}
+                      width={this.props.radius * 2}
+                      xlinkHref={this.props.img}
+                    />
+                  </pattern>
+                </defs>
+                {image}
+                {selected}
+              </g>
             </g>
-          </g>
-        ) : (
-          <h4>No image</h4>
-        )}
-      </g>
+
+          ) : (
+              <h4>No image</h4>
+            )}
+      </g >
     );
   }
 }

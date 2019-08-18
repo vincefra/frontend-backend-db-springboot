@@ -39,8 +39,8 @@ class Skills extends React.Component {
                 key={i}
                 transform={`rotate(${d.angle}) translate(${radius})`}
               >
-
                 <text
+                  className={d.data.selected ? 'text-selected' : ''}
                   key={i}
                   cx={d.txtPosX}
                   dy=".31em"
@@ -53,8 +53,8 @@ class Skills extends React.Component {
             );
           })
         ) : (
-          <g />
-        )}
+            <g />
+          )}
       </g>
     );
   }

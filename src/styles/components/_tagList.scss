@@ -1,0 +1,28 @@
+.tag-list{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    height: 100%;
+
+    .tag{
+        height: 1em;
+        margin: 0 0.3em;
+        position: relative;
+        background: gray;
+        height: 100%;
+        width: 100%;
+        padding: 10px 20px 0 10px;
+        border-radius: 10%;
+        cursor: default;
+        h3{
+            font-size: 0.875em;
+        }
+        .fas{
+            position: absolute;
+            top: 12px;
+            right: 5px;
+            font-size: 0.875em;
+            cursor: pointer;
+        }
+    }
+}

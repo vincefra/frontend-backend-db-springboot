@@ -6,14 +6,14 @@ import VizTimeline from './components/vizTimeline/VizTimeline';
 import Header from './components/header/Header';
 import Loader from './components/loader/Loader';
 import {
-  getEmployeeObjs, 
+  getEmployeeObjs,
   getProjectObjs,
   getClients
 } from './components/general';
 
 import {
-  load, 
-  getLargestClients, 
+  load,
+  getLargestClients,
 } from './data';
 import {
   setHighlight,
@@ -29,6 +29,9 @@ import {
   getDateFromStep,
   getMonthsDifference,
   resetBrushedDisplay,
+  addSelected,
+  setSelectedState,
+  removeSelected,
   getIdsByEmployeeId
 } from './components/interaction';
 //width and height of the SVG visualization
@@ -63,6 +66,14 @@ class App extends React.Component {
       dialogueInfo: {},
       displayTimeline: false,
       filterPosition: [],
+      selectedObjects: [],
+      selected: {
+        employees: [],
+        clients: [],
+        projects: [],
+        skills: [],
+        annularSector: []
+      },
       highlightedClient: null,
       highlightedProject: null,
       highlightedEmployee: null,
@@ -165,7 +176,7 @@ class App extends React.Component {
   showClient = (id) => {
     const client = getElementById(id, this.state.annularSectors);
     let highlightedSectors = setHighlightElement(false, [id], this.state.annularSectors, false);
-    highlightedSectors = client.type !== 'client' ? 
+    highlightedSectors = client.type !== 'client' ?
       setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.projects, false);
@@ -194,7 +205,7 @@ class App extends React.Component {
     projects = projects || this.state.filteredProjects;
     employees = employees || this.state.filteredEmployees;
     skills = skills || this.state.filteredSkills;
-    if (this.state.dialogueIsShown) this.toggleDialogue();
+    if (this.state.dialogueIsShown) this.toggleDialogue(false);
     let unhighligtedSectors = setHighlight(true, annularSectors);
     unhighligtedSectors = unHighlightText(unhighligtedSectors);
     const unhighlightedProjects = setHighlight(true, projects);
@@ -212,18 +223,79 @@ class App extends React.Component {
     });
   };
 
-  toggleDialogue = () => {
-    const showDialogue = this.state.dialogueIsShown ? false : true;
-    this.setState({ dialogueIsShown: showDialogue });
+  toggleDialogue = (toggle = true) => {
+    this.setState({ dialogueIsShown: toggle });
   };
 
+  getProjectLogo = (id) => {
+    return this.state.clients.find(p => p.projects.includes(id)).logo;
+  }
+
+  addSelectedObject = (object) => {
+    const allObjects = {
+      clients: this.state.clients,
+      projects: this.state.projects,
+      employees: this.state.employees,
+      skills: this.state.skills,
+    };
+    const filteredObjects = {
+      clients: this.state.filteredClients,
+      projects: this.state.filteredProjects,
+      employees: this.state.filteredEmployees,
+      skills: this.state.filteredSkills,
+    };
+    const selected = addSelected(this.state.selected, object, allObjects);
+    const selectedState = setSelectedState(selected, allObjects);
+    const filteredSelectedObjects = setSelectedState(selected, filteredObjects);
+    const newSelectedObject = {
+      id: object.id,
+      name: object.name,
+      searchType: object.searchType
+    };
+    //add object to selectedList
+    this.setState({
+      selected: selected,
+      selectedObjects: [...this.state.selectedObjects, newSelectedObject],
+      clients: selectedState.clients,
+      employees: selectedState.employees,
+      projects: selectedState.projects,
+      skills: selectedState.skills,
+      filteredClients: filteredSelectedObjects.clients,
+      filteredEmployees: filteredSelectedObjects.employees,
+      filteredProjects: filteredSelectedObjects.projects,
+      filteredSkills: filteredSelectedObjects.skills,
+    });
+  }
+
+  removeSelectedObject = (object) => {
+    //change state item, and all items related to it
+    const allObjects = {
+      clients: this.state.clients,
+      projects: this.state.projects,
+      employees: this.state.employees,
+      skills: this.state.skills,
+    };
+    const selectedObjects = this.state.selectedObjects.filter(o => o.id === object.id && o.type === object.type ? false : true);
+    const selected = removeSelected(this.state.selected, object, allObjects, selectedObjects);
+    const selectedState = setSelectedState(selected, allObjects);
+
+    this.setState({
+      selectedObjects: selectedObjects,
+      selected: selected,
+      clients: selectedState.clients,
+      employees: selectedState.employees,
+      projects: selectedState.projects,
+      skills: selectedState.skills
+    });
+  }
+
   /**
- * Recieves an initial and ending date in number of months.  
- * Returns the range in full date object
- *
- * @param initMonth the initial number of the month in the initial full date
- * @param enMonth the ending number of the month in the end full date 
- */
+  * Recieves an initial and ending date in number of months.  
+  * Returns the range in full date object
+  *
+  * @param initMonth the initial number of the month in the initial full date
+  * @param enMonth the ending number of the month in the end full date 
+  */
   brushDates = (initMonth, enMonth) => {
     const brushedProjects = brushProjects(this.state.filteredProjects, this.state.datesBrushed[0], initMonth, enMonth);
     this.setState({
@@ -271,7 +343,8 @@ class App extends React.Component {
     });
   };
 
-  modifyDialogueInfo(data, type) {
+
+  modifyDialogueInfo = (data, type) => {
     this.setState({ dialogueInfo: { data, type } });
   }
 
@@ -281,7 +354,7 @@ class App extends React.Component {
 
   setClickedClient(client, resetClickedClient) {
     if (resetClickedClient) return { id: '', name: '', type: '', list: [] };
-    else if ((client.type === 'category' || client.type === 'more') && client.list.length === 1) 
+    else if ((client.type === 'category' || client.type === 'more') && client.list.length === 1)
       return client.list[0];
     else return client;
   }
@@ -296,9 +369,9 @@ class App extends React.Component {
     const employees = getEmployeeObjs(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const filteredClients = client.list.length === 0 ? [] : getClients(client.list);
-    const projects = client.type === 'root' ? this.state.projects : 
+    const projects = client.type === 'root' ? this.state.projects :
       getProjectObjs(client.projects, this.state.projects);
-    const skills = client.type === 'root' ? this.state.skills : 
+    const skills = client.type === 'root' ? this.state.skills :
       getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
@@ -339,13 +412,15 @@ class App extends React.Component {
       projects={this.state.projects}
       employees={this.state.employees}
       skills={this.state.skills}
-      showProject={this.showProject}
-      showEmployee={this.showEmployee}
-      showSkill={this.showSkill}
-      showClient={this.showClient}
-      unHighlightElements={this.unHighlightElements}
       clickedClient={this.state.clickedClient}
       breadcrumbClick={this.handleClick}
+      showObjectInformation={this.modifyDialogueInfo}
+      toggleDialogue={this.toggleDialogue}
+      addSelectedObject={this.addSelectedObject}
+      selectedObjects={this.state.selectedObjects}
+      removeSelectedObject={this.removeSelectedObject}
+      getProjectLogo={this.getProjectLogo}
+
     />;
     const legend = <Legend
       currentView={this.state.currentView}

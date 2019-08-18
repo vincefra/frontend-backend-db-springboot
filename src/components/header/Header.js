@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Form, Button } from 'react-bootstrap';
 import Search from 'components/search/Search';
 import Breadcrumb from 'components/breadcrumb/Breadcrumb';
+import TagList from 'components/tagList/tagList';
 
 class Header extends Component {
   constructor(props) {
@@ -22,16 +23,21 @@ class Header extends Component {
             projects={this.props.projects}
             employees={this.props.employees}
             skills={this.props.skills}
-            showProject={this.props.showProject}
-            showEmployee={this.props.showEmployee}
-            showSkill={this.props.showSkill}
-            showClient={this.props.showClient}
-            unHighlightElements={this.props.unHighlightElements}
+            showObjectInformation={this.props.showObjectInformation}
+            toggleDialogue={this.props.toggleDialogue}
+            addSelectedObject={this.props.addSelectedObject}
+            removeSelectedObject={this.props.removeSelectedObject}
+            selectedObjects={this.props.selectedObjects}
+            getProjectLogo={this.props.getProjectLogo}
           />
-          {/* <FormControl type="text" placeholder="Search" className="mr-sm-2" /> */}
         </Form>
+
+        <TagList
+          selectedObjects={this.props.selectedObjects}
+          removeSelectedObject={this.props.removeSelectedObject}
+        />
         <div className='right'>
-          <Breadcrumb  
+          <Breadcrumb
             clickedClient={this.props.clickedClient}
             breadcrumbClick={this.props.breadcrumbClick}
           />

@@ -30,27 +30,47 @@ class VizClient extends React.Component {
     const height = this.props.size[1];
     const clients = <g transform={`translate(${width / 2}, ${height / 2})`}>
       {this.state.clientSlice.map((d, i) => (
-        <path
-          key={i}
-          d={d.path}
-          fill={d.fill}
+        <g key={i}
           opacity={d.highlight ? '1' : '0.2'}
-          onMouseOver={() => { this.props.mouseOnClient(d.id); }}
-          onMouseOut={() => this.props.mouseOutClient()}
-          onClick={() => this.props.clientClick(d.data)}
-        />
+        >
+          <path
+            d={d.path}
+            stroke='#dc3545'
+            fillOpacity='0'
+            strokeWidth="6"
+            opacity={d.data.selected ? 1 : 0}
+          />
+          <path
+            d={d.path}
+            fill={d.fill}
+
+            onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+            onMouseOut={() => this.props.mouseOutClient()}
+            onClick={() => this.props.clientClick(d.data)}
+          />
+        </g>
       ))}
     </g>;
     const projects = <g transform={`translate(${width / 2}, ${height / 2})`}>
       {this.state.projectSlice.map((d, i) => (
-        <path
-          key={i}
-          d={d.d.path}
-          fill='#FFFFFF'
+        <g key={i}
           opacity={d.d.data.brushedDisplay ? '0.2' : d.d.data.highlight ? '1' : '0.2'}
-          onMouseOver={() => this.props.mouseOnProject(d.d.data.id)} //TO DO:organize DATA array 
-          onMouseOut={() => this.props.mouseOutProject()}
-        />
+        >
+          <path
+            d={d.d.path}
+            stroke='#dc3545'
+            fillOpacity='0'
+            strokeWidth="6"
+            opacity={d.d.data.selected ? 1 : 0}
+          />
+          <path
+            d={d.d.path}
+            fill='#FFFFFF'
+
+            onMouseOver={() => this.props.mouseOnProject(d.d.data.id)} //TO DO:organize DATA array 
+            onMouseOut={() => this.props.mouseOutProject()}
+          />
+        </g>
       ))}
     </g>;
     const clientLogos = <g transform={`translate(${width / 2}, ${height / 2})`}>
