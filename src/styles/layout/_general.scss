@@ -61,3 +61,11 @@ code {
     width: 60px;
   }
 }
+
+.stroke-highlight{
+  stroke: red;
+  stroke-width: 3;
+  stroke-linecap: butt;
+  stroke-dasharray: 0;
+}
+
