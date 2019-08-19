@@ -7,9 +7,7 @@ export function getObjects(ids, list) {
 * Resulting array consists of unique elements from input arrays. 
 */
 export function union(a, b) { 
-  const result = [...a];
-  result.push(...b.filter(e => !a.includes(e)));
-  return result;
+  a.push(...b.filter(e => !a.includes(e)));
 }
 
 export default {

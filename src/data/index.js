@@ -69,8 +69,8 @@ async function getData() {
   function updateClient(clientId, projectId, duration, employees, skills) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
-    clientList[clientId].employees = union(clientList[clientId].employees, employees);
-    clientList[clientId].skills = union(clientList[clientId].skills, skills);
+    union(clientList[clientId].employees, employees);
+    union(clientList[clientId].skills, skills);
   }
 
   function updateEmployee(clientId, projectId, employees) {
@@ -296,9 +296,9 @@ async function groupCategories(clients) {
     let skills = [];
     let clients = [];
     for (let client of grouped[category]) {
-      employees = union(employees, client.employees);
-      projects = union(projects, client.projects);
-      skills = union(skills, client.skills);
+      union(employees, client.employees);
+      union(projects, client.projects);
+      union(skills, client.skills);
       clients.push(client.id);
     }
 
@@ -368,13 +368,13 @@ export function getLargestClients(clients) {
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     other.hours += clients[i].hours;
     other.list.push(clients[i]);
-    other.employees = union(other.employees, clients[i].employees);
+    union(other.employees, clients[i].employees);
     other.projects.push(...clients[i].projects);
     if (clients[i].type === 'category') 
       other.clients.push(...getClients(clients[i].list));
     else
       other.clients.push(clients[i].id);
-    other.skills = union(other.skills, clients[i].skills);
+    union(other.skills, clients[i].skills);
   }
   clientList.push(other);
 

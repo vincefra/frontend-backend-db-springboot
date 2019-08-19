@@ -288,10 +288,11 @@ class App extends React.Component {
       getObjects(client.clients, this.state.unsortedClients);
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);
-    let employeeSkills = [];
-    employees.forEach(employee => employeeSkills = union(employeeSkills, employee.skills));
+    const skillList = [];
+    employees.forEach(employee => union(skillList, employee.skills));
+    union(skillList, client.skills);
     const skills = client.type === 'root' ? this.state.skills : 
-      getObjects(union(client.skills, employeeSkills), this.state.skills);
+      getObjects(skillList, this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
