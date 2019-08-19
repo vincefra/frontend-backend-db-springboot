@@ -8,6 +8,8 @@
   right: 2.5%;
   top: 10%;
   box-shadow: $box-shadow;
+  color: $color-black;
+  
   &.hidden {
     opacity: 0;
     transform: translateX(10%);
