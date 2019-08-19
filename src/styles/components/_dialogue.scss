@@ -6,9 +6,12 @@
   background-color: $color-gray;
   padding: 20px;
   right: 2.5%;
-  top: 10%;
   box-shadow: $box-shadow;
   color: $color-black;
+
+  .bold {
+    font-weight: bold;
+  }
   
   &.hidden {
     opacity: 0;
@@ -60,7 +63,5 @@
     align-items: flex-start;
     flex-direction: column;
     flex-wrap: wrap;
-    max-height: 400px;
-    overflow: hidden;
   }
 }
