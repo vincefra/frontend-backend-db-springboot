@@ -1,5 +1,5 @@
 import React from 'react';
-import { calculateEmployee } from './actions';
+import { calculateEmployee, getInitials } from './actions';
 
 class Employee extends React.Component {
   constructor(props) {
@@ -11,17 +11,8 @@ class Employee extends React.Component {
     this.setState({ circle: calculateEmployee() });
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ circle: calculateEmployee() });
-  }
-
-  getInitials(name) {
-    const splitted = name.split(' ');
-    return `${splitted[0].charAt(0)}.${splitted[splitted.length - 1].charAt(0)}`;
-  }
-
   render() {
-    const circle = this.state.circle !== undefined ? this.state.circle : null;
+    const circle = this.state.circle ? this.state.circle : null;
     //create a unique id for each image mask
     const maskName = 'mask' + this.props.id;
     const fillMask = 'url(#mask' + this.props.id + ')';
@@ -32,8 +23,8 @@ class Employee extends React.Component {
         y={this.props.pY + 1}
         dominantBaseline='middle'
         fontSize={this.props.radius}
-      >
-        {this.getInitials(this.props.name)}
+      > 
+        {getInitials(this.props.name)}
       </text> :
       <circle
         r={this.props.radius}
@@ -84,8 +75,8 @@ class Employee extends React.Component {
             </g>
 
           ) : (
-              <h4>No image</h4>
-            )}
+            <h4>No image</h4>
+          )}
       </g >
     );
   }

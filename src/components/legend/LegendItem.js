@@ -5,8 +5,7 @@ class LegendItem extends React.Component {
     super(props);
     this.state = {
       data: 0,
-      text: '',
-      label: ''
+      text: ''
     };
   }
 
@@ -17,6 +16,13 @@ class LegendItem extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.data !== this.props.data) 
+      this.setState({
+        text: this.setText(this.props.data, this.props.label)
+      });
+  }
+
   setText(data, label) {
     let text = `${data} ${label}`;
     if (data !== 1) 
@@ -25,12 +31,6 @@ class LegendItem extends React.Component {
     return text;
   } 
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.data !== this.props.data) 
-      this.setState({
-        text: this.setText(this.props.data, this.props.label)
-      });
-  }
 
   render() {
     return (

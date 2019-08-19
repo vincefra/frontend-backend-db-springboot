@@ -3,7 +3,7 @@ import Filter from './Filter';
 import * as d3 from 'd3';
 import {
   getDateRange
-} from '../interaction';
+} from '../interactions';
 
 const margin = { top: 20, right: 50, bottom: 30, left: 50 };
 const height = 100;

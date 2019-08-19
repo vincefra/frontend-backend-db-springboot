@@ -3,21 +3,26 @@ import config from '../config.json';
 import XLSX from 'xlsx';
 import moment from 'moment';
 import ColorThief from 'color-thief';
+import { union } from 'components/general';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
 const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
-  const { projectList, employeeList, technologyList, clientList } = await getData();
+  const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
   const categories = await groupCategories(clientList);
+  categories.clients = clientList.map((_, i) => i);
+  categories.projects = projectList.map((_, i) => i); 
   categories.employees = employeeList.map((_, i) => i);
+  categories.skills = technologyList.map((_, i) => i);
   return {
     categories,
     projectList,
     employeeList,
     technologyList,
-    clientList
+    clientList,
+    unsortedClients
   };
 }
 
@@ -64,8 +69,8 @@ async function getData() {
   function updateClient(clientId, projectId, duration, employees, skills) {
     if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
-    clientList[clientId].employees.push(...employees.filter(e => !clientList[clientId].employees.includes(e)));
-    clientList[clientId].skills.push(...skills.filter(s => !clientList[clientId].skills.includes(s)));
+    union(clientList[clientId].employees, employees);
+    union(clientList[clientId].skills, skills);
   }
 
   function updateEmployee(clientId, projectId, employees) {
@@ -77,7 +82,6 @@ async function getData() {
   }
 
   function getEmployeeList(employees) {
-    if (!employees || typeof (employees) != 'string') return;
     let empList = employees.split(',').map(employee => employee.trim());
     return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
@@ -194,7 +198,7 @@ async function getData() {
   }
 
   clientList.push({
-    id: -1,
+    id: clientList.length,
     name: 'Other',
     hours: 0,
     color: '#000000',
@@ -238,8 +242,9 @@ async function getData() {
     });
   }
 
+  const unsortedClients = [...clientList];
   clientList.sort((a, b) => b.hours - a.hours);
-  return { projectList, employeeList, technologyList, clientList };
+  return { projectList, employeeList, technologyList, clientList, unsortedClients };
 }
 
 
@@ -286,14 +291,14 @@ async function groupCategories(clients) {
       imageSrc = '/img/logos/company_placeholder.png';
     }
   
-    const employees = [];
-    const projects = [];
-    const skills = [];
-    const clients = [];
+    let employees = [];
+    let projects = [];
+    let skills = [];
+    let clients = [];
     for (let client of grouped[category]) {
-      employees.push(...client.employees.filter(e => !employees.includes(e)));
-      projects.push(...client.projects);
-      skills.push(...client.skills.filter(s => !skills.includes(s)));
+      union(employees, client.employees);
+      union(projects, client.projects);
+      union(skills, client.skills);
       clients.push(client.id);
     }
 
@@ -333,6 +338,8 @@ async function groupCategories(clients) {
     textHighlight: false,
     projects: [],
     employees: [],
+    clients: [],
+    skills: [],
     logo: ''
   };
 }
@@ -361,14 +368,26 @@ export function getLargestClients(clients) {
   for (let i = maxAnnularSectors; i < clients.length; i++) {
     other.hours += clients[i].hours;
     other.list.push(clients[i]);
-    other.employees.push(...clients[i].employees.filter(e => !other.employees.includes(e)));
+    union(other.employees, clients[i].employees);
     other.projects.push(...clients[i].projects);
-    other.clients.push(clients[i].id);
-    other.skills.push(...clients[i].skills.filter(s => !other.skills.includes(s)));
+    if (clients[i].type === 'category') 
+      other.clients.push(...getClients(clients[i].list));
+    else
+      other.clients.push(clients[i].id);
+    union(other.skills, clients[i].skills);
   }
   clientList.push(other);
 
   return clientList;
+}
+
+function getClients(clients) { 
+  const list = [];
+  for (let client of clients) {
+    if (client.type === 'category') list.push(...getClients(clients));
+    else list.push(client.id);
+  }
+  return list;
 }
 
 export default {

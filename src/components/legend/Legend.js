@@ -13,36 +13,45 @@ class Legend extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.resetLegends(this.props);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
+    if (!this.equal(prevProps.client, this.props.client) || 
+    !this.equal(prevProps.project, this.props.project) ||
+    !this.equal(prevProps.employee, this.props.employee)) {
+      if (this.props.client || this.props.project || this.props.employee)
+        this.calculateData(this.props);
+      else 
+        this.resetLegends(this.props);
+    }
+  }
+
   calculateData(props) {
     let { client, project, employee } = props;
-    if (client) 
-      this.calculateClient(props);
-    if (project) 
-      this.calculateProject(props);
-    if (employee) 
-      this.calculateEmployee(props);
-
+    if (client) this.calculateClient(props);
+    if (project) this.calculateProject(props);
+    if (employee) this.calculateEmployee(props);
   }
 
   calculateClient({ client }) {
-    const totalProjects = client.projects.length;
-    const totalEmployees = client.employees.length;
-    const totalSkills = client.skills.length;
-
     this.setState({
       totalClients: 1,
-      totalProjects,
-      totalEmployees,
-      totalSkills
+      totalProjects: client.projects.length,
+      totalEmployees: client.employees.length,
+      totalSkills: client.skills.length
     });
   }
 
   calculateEmployee({ employee, clients, projects }) {
-    const totalClients = clients.filter(client => client.employees.includes(employee.id)).length;
+    const totalClients = clients ? 
+      clients.filter(client => client.employees.includes(employee.id)).length : 1;
     const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
     const totalSkills = employee.skills.length;
     this.setState({
-      totalClients,
+      totalClients, 
       totalProjects,
       totalEmployees: 1,
       totalSkills
@@ -60,7 +69,7 @@ class Legend extends React.Component {
 
   resetLegends({clients, projects, employees, skills}) {
     this.setState({
-      totalClients: clients.length === 0 ? 1 : clients.length,
+      totalClients: clients ? clients.length : 1,
       totalProjects: projects.length,
       totalEmployees: employees.length,
       totalSkills: skills.length
@@ -72,22 +81,6 @@ class Legend extends React.Component {
     if (prev === current) return true;
     if (prev.id !== current.id && prev.type !== current.type) return false;
     return true;
-  }
-
-  componentDidMount() {
-    this.resetLegends(this.props);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
-    if (!this.equal(prevProps.client, this.props.client) || 
-    !this.equal(prevProps.project, this.props.project) ||
-    !this.equal(prevProps.employee, this.props.employee)) {
-      if (this.props.client || this.props.project || this.props.employee)
-        this.calculateData(this.props);
-      else 
-        this.resetLegends(this.props);
-    }
   }
 
   render() {
