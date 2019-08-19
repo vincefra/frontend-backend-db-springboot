@@ -10,7 +10,7 @@ const dateFormat = 'YYYY-MM-DD';
 const maxAnnularSectors = 7; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
-  const { projectList, employeeList, technologyList, clientList } = await getData();
+  const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
   const categories = await groupCategories(clientList);
   categories.clients = clientList.map((_, i) => i);
   categories.projects = projectList.map((_, i) => i); 
@@ -21,7 +21,8 @@ export async function load() {
     projectList,
     employeeList,
     technologyList,
-    clientList
+    clientList,
+    unsortedClients
   };
 }
 
@@ -197,7 +198,7 @@ async function getData() {
   }
 
   clientList.push({
-    id: -1,
+    id: clientList.length,
     name: 'Other',
     hours: 0,
     color: '#000000',
@@ -241,8 +242,9 @@ async function getData() {
     });
   }
 
+  const unsortedClients = [...clientList];
   clientList.sort((a, b) => b.hours - a.hours);
-  return { projectList, employeeList, technologyList, clientList };
+  return { projectList, employeeList, technologyList, clientList, unsortedClients };
 }
 
 
@@ -368,12 +370,24 @@ export function getLargestClients(clients) {
     other.list.push(clients[i]);
     other.employees = union(other.employees, clients[i].employees);
     other.projects.push(...clients[i].projects);
-    other.clients.push(clients[i].id);
+    if (clients[i].type === 'category') 
+      other.clients.push(...getClients(clients[i].list));
+    else
+      other.clients.push(clients[i].id);
     other.skills = union(other.skills, clients[i].skills);
   }
   clientList.push(other);
 
   return clientList;
+}
+
+function getClients(clients) { 
+  const list = [];
+  for (let client of clients) {
+    if (client.type === 'category') list.push(...getClients(clients));
+    else list.push(client.id);
+  }
+  return list;
 }
 
 export default {

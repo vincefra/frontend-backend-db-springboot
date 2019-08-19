@@ -32,6 +32,7 @@ class App extends React.Component {
 
     this.state = {
       clients: [],
+      unsortedClients: [],
       clickedClient: [],
       projects: [],
       employees: [],
@@ -69,7 +70,8 @@ class App extends React.Component {
       projectList,
       employeeList,
       technologyList,
-      clientList
+      clientList,
+      unsortedClients
     } = await load();
     const selectedRange = getDateRange(projectList);
     let totalMonths = getMonthsDifference(selectedRange[0], selectedRange[1]);
@@ -80,6 +82,7 @@ class App extends React.Component {
       totalProjectsMonths: totalMonths,
       isLoading: false,
       clients: clientList,
+      unsortedClients,
       projects: projectList,
       employees: employeeList,
       skills: technologyList,
@@ -152,8 +155,9 @@ class App extends React.Component {
 
   showClient = (id) => {
     const client = getElementById(id, this.state.annularSectors);
-    let highlightedClients = setHighlightElement(false, [id], this.state.annularSectors, false);
-    highlightedClients = client.type !== 'client' ? setHighlightText(true, [id], highlightedClients, true) : highlightedClients;
+    let highlightedSectors = setHighlightElement(false, [id], this.state.annularSectors, false);
+    highlightedSectors = client.type !== 'client' ? 
+      setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.filteredProjects, false);
     let highlightedSkills = client.type === 'client' ? 
@@ -161,10 +165,10 @@ class App extends React.Component {
       this.state.filteredSkills;
 
     this.setState({
+      annularSectors: highlightedSectors,
       filteredSkills: highlightedSkills,
       filteredEmployees: highlightedEmployees,
       filteredProjects: highlightedProjects,
-      filteredClients: highlightedClients,
       highlightedClient: client
     });
 
@@ -280,25 +284,27 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const filteredClients = client.list.length === 0 ? [] : getObjects(client.clients, this.state.clients);
+    const filteredClients = client.list.length === 0 ? [] : 
+      getObjects(client.clients, this.state.unsortedClients);
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);
     const skills = client.type === 'root' ? this.state.skills : 
       getObjects(client.skills, this.state.skills);
-      // getSkills(getSkillsIDsFromProject(this.state.projects, client), this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
     const filterPosition = [0, totalMonths];
+    const currentView = client.type === 'more' ? this.state.currentView :
+      clickedClient.id === '' ? client.name : clickedClient.name;
     resetBrushedDisplay(projects);
     this.setState({
-      currentView: client.type === 'more' ? this.state.currentView : client.name,
+      currentView,
       clickedClient,
       filteredClients,
       datesBrushed: rangeBrushed,
       totalProjectsMonths: totalMonths,
       filterPosition: filterPosition,
-      refreshLegends: resetClickedClient ? !this.state.refreshLegends : this.state.refreshLegends
+      refreshLegends: !this.state.refreshLegends
     });
     this.unHighlightElements(annularSectors, projects, employees, skills);
   }
