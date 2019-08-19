@@ -284,7 +284,7 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const filteredClients = client.list.length === 0 ? [] : 
+    const filteredClients = client.list.length === 0 ? null : 
       getObjects(client.clients, this.state.unsortedClients);
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);

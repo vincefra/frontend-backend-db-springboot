@@ -46,11 +46,12 @@ class Legend extends React.Component {
   }
 
   calculateEmployee({ employee, clients, projects }) {
-    const totalClients = clients.filter(client => client.employees.includes(employee.id)).length;
+    const totalClients = clients ? 
+      clients.filter(client => client.employees.includes(employee.id)).length : 1;
     const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
     const totalSkills = employee.skills.length;
     this.setState({
-      totalClients: totalClients === 0 ? 1 : totalClients, 
+      totalClients, 
       totalProjects,
       totalEmployees: 1,
       totalSkills
@@ -68,7 +69,7 @@ class Legend extends React.Component {
 
   resetLegends({clients, projects, employees, skills}) {
     this.setState({
-      totalClients: clients.length === 0 ? 1 : clients.length,
+      totalClients: clients ? clients.length : 1,
       totalProjects: projects.length,
       totalEmployees: employees.length,
       totalSkills: skills.length
