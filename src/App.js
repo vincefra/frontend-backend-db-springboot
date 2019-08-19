@@ -34,6 +34,7 @@ import {
   removeSelected,
   getIdsByEmployeeId
 } from './components/interaction';
+import Title from 'components/title/Title';
 //width and height of the SVG visualization
 const width = window.innerWidth;
 const height = window.innerHeight;
@@ -64,7 +65,6 @@ class App extends React.Component {
         info: null
       },
       dialogueInfo: {},
-      displayTimeline: false,
       filterPosition: [],
       selectedObjects: [],
       selected: {
@@ -77,8 +77,7 @@ class App extends React.Component {
       highlightedClient: null,
       highlightedProject: null,
       highlightedEmployee: null,
-      refreshLegends: false,
-      currentView: ''
+      refreshLegends: false
     };
   }
 
@@ -376,14 +375,12 @@ class App extends React.Component {
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
-    const displayTimeline = this.containsCategory(client) ? false : projects.length <= 1 ? false : true;
     const filterPosition = [0, totalMonths];
     resetBrushedDisplay(projects);
     this.setState({
       currentView: client.type === 'more' ? this.state.currentView : client.name,
       clickedClient,
       filteredClients,
-      displayTimeline: displayTimeline,
       datesBrushed: rangeBrushed,
       totalProjectsMonths: totalMonths,
       filterPosition: filterPosition,
@@ -422,8 +419,10 @@ class App extends React.Component {
       getProjectLogo={this.getProjectLogo}
 
     />;
+    const title = <Title
+      title={this.state.currentView}
+    />;
     const legend = <Legend
-      currentView={this.state.currentView}
       clients={this.state.filteredClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
@@ -448,7 +447,6 @@ class App extends React.Component {
       mouseOutProject={this.unHighlightElements}
       modifyRange={this.brushDates}
       totalProjectsMonths={this.state.totalProjectsMonths}
-      displayTimeline={this.state.displayTimeline}
       filterPosition={this.state.filterPosition}
       formatDate={this.getDateFormated}
     />;
@@ -470,10 +468,11 @@ class App extends React.Component {
         {this.state.isMobileView ? mobileView : this.state.isLoading ? <Loader /> :
           <React.Fragment>
             {header}
+            {title}
             {legend}
             {dialogue}
-            {timeline}
             {vizCircle}
+            {timeline}
           </React.Fragment>
         }
       </React.Fragment>

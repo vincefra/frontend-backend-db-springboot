@@ -1,18 +1,23 @@
 @import 'abstracts/variables';
 
+@import 'components/circle';
 @import 'components/breadcrumb';
 @import 'components/buttons';
 @import 'components/dialogue';
+@import 'components/filter';
+@import 'components/header';
 @import 'components/label';
 @import 'components/legend';
 @import 'components/loader';
 @import 'components/logo';
-@import 'components/skills';
-@import 'components/timeLine';
-@import 'components/filter';
-@import 'components/header';
 @import 'components/search';
+<<<<<<< HEAD
 @import 'components/tagList';
+=======
+@import 'components/skills';
+@import 'components/timeline';
+@import 'components/title';
+>>>>>>> title
 
 @import 'layout/general';
 @import 'layout/mobile';

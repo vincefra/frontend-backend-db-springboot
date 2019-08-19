@@ -12,7 +12,7 @@ class Header extends Component {
 
   render() {
     return (
-      <Navbar className="fixed-top header" variant="header" expand="lg">
+      <Navbar className="header" variant="header" expand="lg">
         <Navbar.Brand className="brandLogo">
           <img src='img/logos/findOut.png' alt='FindOut'></img>
         </Navbar.Brand>

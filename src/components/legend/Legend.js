@@ -100,7 +100,6 @@ class Legend extends React.Component {
 
     return (
       <div className='legend'>
-        {this.props.currentView}
         <ul>
           <LegendItem
             data={totalClients}

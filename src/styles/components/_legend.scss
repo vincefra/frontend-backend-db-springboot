@@ -1,16 +1,16 @@
 .legend {
-  position: absolute;
-  z-index: 10;
-  height: 30vh;
-  width: 200px;
   background-color: transparent;
   padding: 20px;
-  top: 100px;
+  position: absolute;
+  z-index: 1;
+
   &.hidden {
     transform: translateX(-100%);
   }
+
   ul {
     list-style-type: none;
+    
     li {
       margin-bottom: 10px;
     }
