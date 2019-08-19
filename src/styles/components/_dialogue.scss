@@ -8,6 +8,8 @@
   right: 2.5%;
   box-shadow: $box-shadow;
   color: $color-black;
+  max-height: 80vh;
+  overflow: hidden;
 
   .bold {
     font-weight: bold;

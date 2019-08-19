@@ -3,11 +3,16 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  width: 200px;
+  width: 300px;
 
   .fa-times-circle{
     position: absolute;
     right: 0.5em;
+    color: $color-black;
+
+    &:hover {
+      color: $color-light-black;
+    }
   }
   
   .search-bar {

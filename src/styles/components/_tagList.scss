@@ -30,7 +30,7 @@
       margin: 0 0.5em;
 
       &:hover {
-        color: lighten($color-black, 10%);
+        color: $color-light-black;
       }
     }
   }
