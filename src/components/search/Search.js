@@ -81,7 +81,7 @@ class Search extends React.Component {
             value={this.state.searchWord}
             type="text"
             placeholder="Search"
-            className=" mr-sm-2"
+            className="search-bar"
             onChange={this.handleChange}
             onMouseDown={this.focusElement}
           />

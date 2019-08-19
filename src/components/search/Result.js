@@ -39,7 +39,7 @@ class Result extends React.Component {
         onMouseOut={() => this.props.toggleDialogue(false)}
         onMouseDown={() => this.clickHandler(this.props.item)}
       >
-        {icon}
+        <i>{icon}</i>
         {this.props.item.name}
 
       </li>

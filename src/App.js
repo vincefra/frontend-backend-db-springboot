@@ -473,7 +473,7 @@ class App extends React.Component {
             {legend}
             {dialogue}
             {vizCircle}
-            {timeline}
+            {/* {timeline} */}
           </React.Fragment>
         }
       </React.Fragment>
