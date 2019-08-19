@@ -7,7 +7,7 @@ import Header from 'components/header/Header';
 import Loader from 'components/loader/Loader';
 import Title from 'components/title/Title';
 import { load, getLargestClients } from './data';
-import { getObjects } from 'components/general';
+import { getObjects, union } from 'components/general';
 import {
   setHighlight,
   setHighlightElement,
@@ -288,8 +288,10 @@ class App extends React.Component {
       getObjects(client.clients, this.state.unsortedClients);
     const projects = client.type === 'root' ? this.state.projects : 
       getObjects(client.projects, this.state.projects);
+    let employeeSkills = [];
+    employees.forEach(employee => employeeSkills = union(employeeSkills, employee.skills));
     const skills = client.type === 'root' ? this.state.skills : 
-      getObjects(client.skills, this.state.skills);
+      getObjects(union(client.skills, employeeSkills), this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
