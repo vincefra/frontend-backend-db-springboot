@@ -53,8 +53,8 @@ class Skills extends React.Component {
             );
           })
         ) : (
-            <g />
-          )}
+          <g />
+        )}
       </g>
     );
   }

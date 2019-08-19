@@ -100,6 +100,7 @@ class Legend extends React.Component {
             label='client'
             overEvent={this.props.overEvent}
             outEvent={this.props.outEvent}
+            icon='fas fa-building'
           />
           <LegendItem
             data={totalProjects}
@@ -107,6 +108,7 @@ class Legend extends React.Component {
             label='project'
             overEvent={this.props.overEvent}
             outEvent={this.props.outEvent}
+            icon='fas fa-square'
           />
           <LegendItem
             data={totalEmployees}
@@ -114,6 +116,7 @@ class Legend extends React.Component {
             label='employee'
             overEvent={this.props.overEvent}
             outEvent={this.props.outEvent}
+            icon='fas fa-user'
           />
           <LegendItem
             data={totalSkills}
@@ -121,6 +124,7 @@ class Legend extends React.Component {
             label='skill'
             overEvent={this.props.overEvent}
             outEvent={this.props.outEvent}
+            icon='fas fa-wrench'
           />
         </ul>
       </div>

@@ -4,7 +4,11 @@
   right: 0;
   z-index: 0;
   
-  text {
+  .initials {
     fill: $color-dark-black;
+  }
+
+  .label {
+    font-size: calc(0.5em + 1vh);
   }
 }

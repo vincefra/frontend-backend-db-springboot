@@ -84,6 +84,7 @@ class VizClient extends React.Component {
           onMouseOver={() => { this.props.mouseOnClient(d.id); }}
           onMouseOut={() => this.props.mouseOutClient()}
           onClick={() => this.props.clientClick(d.data)}
+          className='label'
         >
           {d.data.name}
         </text> : <g></g>;
