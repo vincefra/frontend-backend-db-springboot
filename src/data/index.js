@@ -201,7 +201,7 @@ async function getData() {
     id: clientList.length,
     name: 'Other',
     hours: 0,
-    color: '#000000',
+    color: '#3E5641',
     logo: '/img/logos/company_placeholder.png',
     highlight: true,
     projects: [],
@@ -345,7 +345,7 @@ async function groupCategories(clients) {
 }
 
 export function getLargestClients(clients) {
-  let imageSrc = '/img/categories/Other.png';
+  let imageSrc = '/img/categories/more.png';
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;
   const clientList = clients.slice(0, maxAnnularSectors);
@@ -355,7 +355,7 @@ export function getLargestClients(clients) {
     category: '',
     type: 'more',
     highlight: true,
-    color: '#000000',
+    color: '#2D2A32',
     hours: 0,
     list: [],
     projects: [],
