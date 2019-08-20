@@ -112,21 +112,33 @@ export function getElementById(id, array) {
 }
 
 /**
- * Filters all the projects within the brInitMonth and the brEndMonth and returns an array with the filtered projects
- * @param {array} projects array with projects to be filtered 
- * @param {date} initDate inital date 
- * @param {date} brInitMonth current init brush week within initial and ending dates
- * @param {date} brEndMonth current end brush week within inital and ending dates
+ * 
+ * @param {*} objArr 
+ * @param {*} initDate 
+ * @param {*} InBruMonth 
+ * @param {*} OutBruMonth 
  */
-export function brushProjects(projects, initDate, brInitMonth, brEndMonth) {
-  const brushedProjects = projects.map(p => {
-    const pInit = getMonthsDifference(initDate, p.dateInit);
-    const pEnd = getMonthsDifference(initDate, p.dateEnd);
-    p.brushedDisplay = pInit - brInitMonth >= 0 && brEndMonth - pEnd >= 0 ? false : true;
-    return p;
+export function brushObjectByDate(objArr, initDate, InBruMonth, OutBruMonth) {
+  return objArr.map(o => {
+    const pInit = getMonthsDifference(initDate, o.dateInit);
+    const pEnd = getMonthsDifference(initDate, o.dateEnd);
+    o.brushedDisplay = OutBruMonth - pInit >= 0 && pEnd - InBruMonth >= 0 ? true : false;
+    return o;
   });
-  return brushedProjects;
 }
+
+export function reCalculateClientHours(clients, projects) {
+  return clients.map(c => {
+    let hours = 0;
+    const projectsFiltered = projects.filter(p => p.clientId === c.id);
+    projectsFiltered.forEach(p => {
+      hours += p.brushedDisplay ? p.hours : 0;
+    });
+    c.hours = hours;
+    return c;
+  });
+}
+
 
 /**
  * returns the differente between two dates in months
@@ -365,13 +377,19 @@ export function getDateRange(projects) {
   return [min, max];
 }
 
+export function getBrushedProjectsEmployees(projects, employees) {
+  let employeesId = [];
+  projects.forEach(p => employeesId = p.brushedDisplay ? [...employeesId, ...p.employees] : employeesId);
+  employeesId = mergeRepeated(employeesId);
+  return employees.filter(e => employeesId.includes(e.id));
+}
+
 export default {
   setHighlight,
   setHighlightElement,
   highlightElementWithSkill,
   getElementById,
   elementWithSkill,
-  brushProjects,
   getDateRange,
   setHighlightText,
   unHighlightText,
@@ -381,5 +399,9 @@ export default {
   addSelected,
   setSelectedState,
   removeSelected,
-  getIdsByEmployeeId
+  getIdsByEmployeeId,
+  brushObjectByDate,
+  reCalculateClientHours,
+  getBrushedProjectsEmployees
 };
+

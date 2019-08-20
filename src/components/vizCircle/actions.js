@@ -119,7 +119,7 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
     .pie()
     .sort(null)
     .value(function (d) {
-      return d.hours;
+      return d.brushedDisplay ? d.hours : 0;
     });
 
   //arc array with the position and information in the pie
@@ -135,10 +135,8 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
       outerRadius: radius - projectRadius + projectHeight / 2,
     });
     d.path = path;
-    return {
-      d
-    };
-  });
+    return d;
+  }).filter(d => d.data.brushedDisplay);
   return slices;
 }
 
@@ -189,9 +187,9 @@ export function getInitials(name) {
   return `${splitted[0].charAt(0)}.${splitted[splitted.length - 1].charAt(0)}`;
 }
 
-export default { 
-  calculatePieClient, 
-  createLinks, 
+export default {
+  calculatePieClient,
+  createLinks,
   calculateEmployee,
   getInitials
 };

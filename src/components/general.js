@@ -6,7 +6,7 @@ export function getObjects(ids, list) {
 * Merge two primitive arrays.
 * Resulting array consists of unique elements from input arrays. 
 */
-export function union(a, b) { 
+export function union(a, b) {
   a.push(...b.filter(e => !a.includes(e)));
 }
 

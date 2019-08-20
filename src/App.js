@@ -13,17 +13,18 @@ import {
   setHighlightElement,
   highlightElementWithSkill,
   getElementById,
-  brushProjects,
   getDateRange,
   setHighlightText,
   unHighlightText,
   getDateFromStep,
   getMonthsDifference,
-  resetBrushedDisplay,
   addSelected,
   setSelectedState,
   removeSelected,
-  getIdsByEmployeeId
+  getIdsByEmployeeId,
+  brushObjectByDate,
+  reCalculateClientHours,
+  getBrushedProjectsEmployees
 } from 'components/interactions';
 //width and height of the SVG visualization
 const width = window.innerWidth;
@@ -56,6 +57,7 @@ class App extends React.Component {
         info: null
       },
       dialogueInfo: {},
+      displayTimeline: false,
       filterPosition: [],
       selectedObjects: [],
       selected: {
@@ -98,7 +100,7 @@ class App extends React.Component {
       employees: employeeList,
       skills: technologyList,
       filteredClients: clientList,
-      filteredProjects: projectList,
+      filteredProjects: [],
       filteredEmployees: employeeList,
       filteredSkills: technologyList,
       range: selectedRange,
@@ -167,11 +169,11 @@ class App extends React.Component {
   showClient = (id) => {
     const client = getElementById(id, this.state.annularSectors);
     let highlightedSectors = setHighlightElement(false, [id], this.state.annularSectors, false);
-    highlightedSectors = client.type !== 'client' ? 
+    highlightedSectors = client.type !== 'client' ?
       setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
     const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.filteredProjects, false);
-    let highlightedSkills = client.type === 'client' ? 
+    let highlightedSkills = client.type === 'client' ?
       setHighlightElement(true, client.skills, this.state.filteredSkills, true) :
       this.state.filteredSkills;
 
@@ -286,9 +288,16 @@ class App extends React.Component {
   * @param enMonth the ending number of the month in the end full date 
   */
   brushDates = (initMonth, enMonth) => {
-    const brushedProjects = brushProjects(this.state.filteredProjects, this.state.datesBrushed[0], initMonth, enMonth);
+    const filteredProjects = brushObjectByDate(this.state.filteredProjects, this.state.datesBrushed[0], initMonth, enMonth);
+    const filteredClients = this.state.filteredClients === null ? null : reCalculateClientHours(this.state.filteredClients, filteredProjects);
+    const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.employees);
+    // const filteredEmployees = brushObjectByDate(this.state.filteredEmployees, this.state.datesBrushed[0], initMonth, enMonth);
+
+    //filter objects
     this.setState({
-      filteredProjects: brushedProjects,
+      filteredProjects,
+      filteredClients,
+      filteredEmployees,
       filterPosition: [initMonth, enMonth]
     });
   };
@@ -354,32 +363,36 @@ class App extends React.Component {
     if (client.list[0].type === 'category') return true;
   }
 
+  toggleTimeLine = (toggle = false) => {
+    this.setState({ displayTimeline: toggle });
+  }
+
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
-    const filteredClients = client.list.length === 0 ? null : 
+    const clients = client.list.length === 0 ? null :
       getObjects(client.clients, this.state.unsortedClients);
-    const projects = client.type === 'root' ? this.state.projects : 
+    const projects = client.type === 'root' ? [] :
       getObjects(client.projects, this.state.projects);
     const skillList = [];
     employees.forEach(employee => union(skillList, employee.skills));
     union(skillList, client.skills);
-    const skills = client.type === 'root' ? this.state.skills : 
+    const skills = client.type === 'root' ? this.state.skills :
       getObjects(skillList, this.state.skills);
     const clickedClient = this.setClickedClient(client, resetClickedClient);
-    const rangeBrushed = getDateRange(projects);
-    const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
-    const filterPosition = [0, totalMonths];
     const currentView = client.type === 'more' ? client.category :
       clickedClient.id === '' ? client.name : clickedClient.name;
-    resetBrushedDisplay(projects);
+    const filteredProjects = brushObjectByDate(projects, this.state.datesBrushed[0], this.state.filterPosition[0], this.state.filterPosition[1]);
+    const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.employees);
+    const filteredClients = client.list.length === 0 || client.list === null ? null : reCalculateClientHours(clients, filteredProjects);
+    const displayTimeline = filteredProjects.length === 0 ? false : true;
     this.setState({
       currentView,
       clickedClient,
       filteredClients,
-      datesBrushed: rangeBrushed,
-      totalProjectsMonths: totalMonths,
-      filterPosition: filterPosition,
+      filteredProjects,
+      filteredEmployees,
+      displayTimeline,
       refreshLegends: !this.state.refreshLegends
     });
     this.unHighlightElements(annularSectors, projects, employees, skills);
@@ -418,8 +431,8 @@ class App extends React.Component {
     const title = <Title
       title={this.state.currentView}
       isHighlighted={
-        this.state.highlightedClient || 
-        this.state.highlightedProject || 
+        this.state.highlightedClient ||
+        this.state.highlightedProject ||
         this.state.highlightedEmployee
       }
     />;
@@ -441,14 +454,18 @@ class App extends React.Component {
       dialogueInfo={this.state.dialogueInfo}
     />;
     const timeline = <VizTimeline
+      size={this.state.size}
+      displayTimeline={this.state.displayTimeline}
+      filterPosition={this.state.filterPosition}
+      totalProjectsMonths={this.state.totalProjectsMonths}
+      range={this.state.range}
       projects={this.state.filteredProjects}
       clients={this.state.clients}
-      size={this.state.size}
+      employees={this.state.filteredEmployees}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
       modifyRange={this.brushDates}
-      totalProjectsMonths={this.state.totalProjectsMonths}
-      filterPosition={this.state.filterPosition}
+      toggleTimeLine={this.toggleTimeLine}
       formatDate={this.getDateFormated}
     />;
     const vizCircle = <VizCircle

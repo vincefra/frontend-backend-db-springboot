@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import Filter from './Filter';
 import * as d3 from 'd3';
-import {
-  getDateRange
-} from '../interactions';
 
 const margin = { top: 20, right: 50, bottom: 30, left: 50 };
 const height = 100;
@@ -20,7 +17,7 @@ class VizTimeline extends Component {
 
   xAxis = d3.axisBottom();
   monthAxis = d3.axisTop();
-  topAxis = d3.axisTop();
+  yearAxis = d3.axisTop();
 
   componentDidMount() {
     this.setState({
@@ -29,10 +26,10 @@ class VizTimeline extends Component {
 
   //create all the data necessary for the timeline visualization and set it up in the state
   static getDerivedStateFromProps(nextProps, prevState) {
-    let { projects, size, clients } = nextProps;
+    let { projects, size, clients, range } = nextProps;
     if (!projects) return {};
 
-    const extent = getDateRange(projects);
+    const extent = range;
     const xScale = d3
       .scaleTime()
       .domain(extent)
@@ -52,10 +49,11 @@ class VizTimeline extends Component {
         fill: !d.highlight ? '#333333' : d.color,
         level: 0,
         id: d.id,
-        opacity: d.brushedDisplay ? '0.2' : d.highlight ? '1' : '0.2',
-        selected: d.selected
+        opacity: d.highlight ? '1' : '0.2',
+        selected: d.selected,
+        brushedDisplay: d.brushedDisplay
       };
-    });
+    }).filter(d => d.brushedDisplay);
     let numLevels = 0;
     // organize the projects so they do not overlap
     for (let i = 0; i < bars.length; i++) {
@@ -88,77 +86,89 @@ class VizTimeline extends Component {
     this.xAxis.tickPadding(10);
     this.xAxis.tickSize(0);
 
+    const monthHeight = this.props.projects.length > 0 ? height - margin.bottom : 0;
     this.monthAxis.tickFormat('');
-    this.monthAxis.tickSize(height - margin.bottom);
+    this.monthAxis.tickSize(monthHeight);
     this.monthAxis.ticks(d3.timeMonth.every(1));
     this.monthAxis.scale(this.state.xScale);
 
+    this.yearAxis.tickFormat('');
+    this.yearAxis.tickSize(monthHeight);
+    this.yearAxis.ticks(d3.timeYear.every(1));
+    this.yearAxis.scale(this.state.xScale);
+
     d3.select(this.refs.xAxis).call(this.xAxis);
     d3.select(this.refs.monthAxis).call(this.monthAxis);
+    d3.select(this.refs.yearAxis).call(this.yearAxis);
+
+  }
+
+  handleButtonClick = () => {
+    this.props.toggleTimeLine(!this.props.displayTimeline);
   }
 
 
 
   render() {
-    const barHeight = (height - margin.bottom) / (this.state.numLevels + 1);
-    const content =
-      < div className={'timeline'}>
-        <svg width={this.props.size[0]} height={height}>
-          <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
-
-          {this.state.bars.map((d) => (
-            <g key={d.id}
-              opacity={d.opacity}
-              onMouseOver={() => { this.props.selectProject(d.id); }}
-              onMouseOut={() => this.props.mouseOutProject()}
-            >
-
-              <rect
-                x={d.x}
-                y={d.y - barHeight - (barHeight * d.level)}
-                rx="5"
-                ry="5"
-                width={d.width}
-                height={barHeight}
-                fill={d.fill}
-              />
-              <rect
-                x={d.x + 1}
-                y={d.y - barHeight - (barHeight * d.level) + 1}
-                rx="5"
-                ry="5"
-                width={d.width - 1}
-                height={barHeight - 1}
-                stroke='#dc3545'
-                fillOpacity='0'
-                strokeWidth="3"
-                opacity={d.selected ? 1 : 0}
-              />
-            </g>
-          ))}
-
-          <g ref="xAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />
-
-        </svg>
-        <Filter
-          beforeVal=""
-          afterVal=""
-          filterName="Time"
-          filterLeftValue=""
-          filterRightValue=""
-          minFilterValue={0}
-          maxFilterValue={this.props.totalProjectsMonths}
-          defaultValueMin={0}
-          defaultValueMax={this.props.totalProjectsMonths}
-          step={1}
-          afterChangeFunction={this.props.modifyRange}
-          filterPosition={this.props.filterPosition}
-          formatDate={this.props.formatDate}
+    const barHeight = this.state.numLevels === 0 ? (height / 4) : (height - margin.bottom) / (this.state.numLevels + 1);
+    const projects = this.state.bars.map((d) => (
+      <g key={d.id} opacity={d.opacity} onMouseOver={() => { this.props.selectProject(d.id); }} onMouseOut={() => this.props.mouseOutProject()}>
+        {/* SELECTED STROKE */}
+        <rect
+          x={d.x}
+          y={d.y - barHeight - (barHeight * d.level)}
+          rx="5"
+          ry="5"
+          width={d.width}
+          height={barHeight}
+          fill={d.fill}
         />
-      </div>;
+        {/*PROJECT RECT  */}
+        <rect
+          x={d.x + 1}
+          y={d.y - barHeight - (barHeight * d.level) + 1}
+          rx="5"
+          ry="5"
+          width={d.width - 1}
+          height={barHeight - 1}
+          stroke='#dc3545'
+          fillOpacity='0'
+          strokeWidth="3"
+          opacity={d.selected ? 1 : 0}
+        />
+      </g>
+    ));
 
+    const filter = <Filter
+      beforeVal=""
+      afterVal=""
+      filterName="Time"
+      filterLeftValue=""
+      filterRightValue=""
+      minFilterValue={0}
+      maxFilterValue={this.props.totalProjectsMonths}
+      defaultValueMin={0}
+      defaultValueMax={this.props.totalProjectsMonths}
+      step={1}
+      afterChangeFunction={this.props.modifyRange}
+      filterPosition={this.props.filterPosition}
+      formatDate={this.props.formatDate}
+    />;
+    const axisMonths = <g className='axisMonths' ref="monthAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />;
+    const yearAxis = <g className='yearAxis' ref="yearAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />;
+    const xAxis = <g ref="xAxis" transform={`translate(${margin.left}, ${height - margin.bottom})`} />;
     return (
-      content
+      <React.Fragment>
+        < div className={this.props.displayTimeline ? 'timeLine' : 'timeLine hidden'} >
+          <svg width={this.props.size[0]} height={height} >
+            {axisMonths}
+            {xAxis}
+            {yearAxis}
+            {projects}
+          </svg>
+          {filter}
+        </div>
+      </React.Fragment>
     );
   }
 }

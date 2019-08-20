@@ -8,7 +8,6 @@ class VizEmployees extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      employees: [],
     };
   }
 
@@ -73,9 +72,7 @@ class VizEmployees extends React.Component {
             />
           );
         })
-      ) : (
-          <div />
-        );
+      ) : '';
 
     //return all the things to render
     return (

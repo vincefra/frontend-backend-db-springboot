@@ -13,7 +13,7 @@ export async function load() {
   const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
   const categories = await groupCategories(clientList);
   categories.clients = clientList.map((_, i) => i);
-  categories.projects = projectList.map((_, i) => i); 
+  categories.projects = projectList.map((_, i) => i);
   categories.employees = employeeList.map((_, i) => i);
   categories.skills = technologyList.map((_, i) => i);
   return {
@@ -33,11 +33,11 @@ async function getData() {
     return techList = techList.map(technology => {
       let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase());
       if (techObj) {
-        if (clientId && !techObj.clients.includes(clientId)) 
+        if (clientId && !techObj.clients.includes(clientId))
           techObj.clients.push(clientId);
-        if (projectId && !techObj.projects.includes(projectId)) 
+        if (projectId && !techObj.projects.includes(projectId))
           techObj.projects.push(projectId);
-        if (employeeId && !techObj.employees.includes(employeeId)) 
+        if (employeeId && !techObj.employees.includes(employeeId))
           techObj.employees.push(employeeId);
       } else {
         techObj = {
@@ -136,13 +136,13 @@ async function getData() {
       projects.shift();
       employees.shift();
       clients.shift();
-      return { clients, projects, employees};
+      return { clients, projects, employees };
     }
   }
-  
+
   const { clients, projects, employees } = await fetchData();
   if (!clients || !projects || !employees) return Error;
-  
+
   let clientList = [];
   let technologyList = [];
   let projectList = [];
@@ -160,10 +160,11 @@ async function getData() {
       id: employee.id,
       name: `${employee.firstName} ${employee.lastName}`,
       highlight: true,
+      brushedDisplay: false,
       roll: `${employee.role ? employee.role : ''}`,
       img,
-      initDate: moment(`${employee.startYear}-01-01`).format(dateFormat),
-      endDate: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
+      dateInit: new Date(`${employee.startYear}-01-01`),//moment(`${employee.startYear}-01-01`).format(dateFormat),
+      dateEnd: new Date(`${employee.endYear ? employee.endYear + '-01-01' : new Date()} `),// `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
       skills: getTechList(employee.technologies, undefined, undefined, employee.id),
       projects: [],
       clients: []
@@ -290,7 +291,7 @@ async function groupCategories(clients) {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';
     }
-  
+
     let employees = [];
     let projects = [];
     let skills = [];
@@ -370,7 +371,7 @@ export function getLargestClients(clients) {
     other.list.push(clients[i]);
     union(other.employees, clients[i].employees);
     other.projects.push(...clients[i].projects);
-    if (clients[i].type === 'category') 
+    if (clients[i].type === 'category')
       other.clients.push(...getClients(clients[i].list));
     else
       other.clients.push(clients[i].id);
@@ -381,7 +382,7 @@ export function getLargestClients(clients) {
   return clientList;
 }
 
-function getClients(clients) { 
+function getClients(clients) {
   const list = [];
   for (let client of clients) {
     if (client.type === 'category') list.push(...getClients(clients));
