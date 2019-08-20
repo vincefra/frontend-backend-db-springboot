@@ -53,13 +53,13 @@ export function getIcon(item) {
     case 'EMPLOYEE':
       return <i className="fas fa-user"></i>;
     case 'CLIENT':
-      return <i className="far fa-building"></i>;
+      return <i className="fas fa-building"></i>;
     case 'PROJECT':
       return <i className="fas fa-square"></i>;
     case 'SKILL':
       return <i className="fas fa-wrench"></i>;
     default:
-      return <i className="far fa-question-circle"></i>;
+      return <i className="fas fa-question-circle"></i>;
   }
 }
 

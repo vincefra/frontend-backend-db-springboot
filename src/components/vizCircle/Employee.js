@@ -23,6 +23,7 @@ class Employee extends React.Component {
         y={this.props.pY + 1}
         dominantBaseline='middle'
         fontSize={this.props.radius}
+        className='initials'
       > 
         {getInitials(this.props.name)}
       </text> :

@@ -9,24 +9,24 @@ class Dialogue extends React.Component {
       case 'CLIENT':
         return (
           <div>
-            <p><span>Location: </span><br></br>{data.location}</p>
-            <p><span>Description: </span><br></br>{data.description}</p>
+            <p><span className='bold'>Location: </span><br></br>{data.location}</p>
+            {<p>{data.description}</p>}
           </div>
         );
       case 'EMPLOYEE':
         return (
           <div>
-            <p><span>Date in: </span><br></br>{data.initDate}</p>
-            <p><span>Date out: </span><br></br>{data.endDate}</p>
+            <p><span className='bold'>Start date: </span><br></br>{data.initDate}</p>
+            <p><span className='bold'>End date: </span><br></br>{data.endDate}</p>
           </div>
         );
       case 'PROJECT':
         return ( 
           <div>
-            <p><span>Client: </span><br></br>{data.clientName}</p>
-            <p><span>Starting date: </span><br></br>{moment(data.dateInit).format(format)}</p>
-            <p><span>Finishing date: </span><br></br>{moment(data.dateEnd).format(format)}</p>
-            <p><span>Description: </span>{data.description}</p>
+            <p><span className='bold'>Client: </span><br></br>{data.clientName}</p>
+            <p><span className='bold'>Start date: </span><br></br>{moment(data.dateInit).format(format)}</p>
+            <p><span className='bold'>End date: </span><br></br>{moment(data.dateEnd).format(format)}</p>
+            <p>{data.description}</p>
           </div>
         );
       default:  

@@ -1,8 +1,9 @@
 .legend {
   background-color: transparent;
-  padding: 20px;
+  padding: 0.5em 2em;
   position: absolute;
   z-index: 1;
+  color: $color-black;
 
   &.hidden {
     transform: translateX(-100%);
@@ -10,16 +11,14 @@
 
   ul {
     list-style-type: none;
+    padding: 0;
     
     li {
-      margin-bottom: 10px;
-    }
-  }
+      margin-bottom: 0.5em;
 
-  a {
-    font-size: 0.875em;
-    color: rgb(106, 102, 111) !important;
-    font-weight: 700;
-    text-decoration: none;
+      i {
+        margin-right: 0.5em;
+      }
+    }
   }
 }

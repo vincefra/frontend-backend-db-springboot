@@ -1,7 +1,7 @@
 import React from 'react';
 import { createLinks } from './actions';
 
-const distance = 0.1;
+const distance = 0.15;
 
 class Skills extends React.Component {
   constructor(props) {
@@ -53,8 +53,8 @@ class Skills extends React.Component {
             );
           })
         ) : (
-            <g />
-          )}
+          <g />
+        )}
       </g>
     );
   }
