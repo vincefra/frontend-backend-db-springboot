@@ -305,7 +305,7 @@ async function groupCategories(clients) {
     sorted.push({
       id: counter++,
       name: category,
-      category: '',
+      category: 'Categories',
       type: 'category',
       list: grouped[category],
       hours: grouped[category].length,
@@ -329,7 +329,7 @@ async function groupCategories(clients) {
   return {
     id: counter++,
     name: 'Categories',
-    category: '',
+    category: 'Categories',
     type: 'root',
     list: categories,
     hours: 0,
@@ -352,7 +352,7 @@ export function getLargestClients(clients) {
   const other = {
     id: -1,
     name: 'More',
-    category: '',
+    category: clients[0].category,
     type: 'more',
     highlight: true,
     color: '#2D2A32',
