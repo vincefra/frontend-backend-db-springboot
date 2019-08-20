@@ -385,7 +385,7 @@ class App extends React.Component {
     const filteredProjects = brushObjectByDate(projects, this.state.datesBrushed[0], this.state.filterPosition[0], this.state.filterPosition[1]);
     const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.employees);
     const filteredClients = client.list.length === 0 || client.list === null ? null : reCalculateClientHours(clients, filteredProjects);
-    const displayTimeline = filteredProjects.length === 0 ? false : true;
+    const displayTimeline = this.containsCategory(client) ? false : true;
     this.setState({
       currentView,
       clickedClient,
