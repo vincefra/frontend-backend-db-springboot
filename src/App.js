@@ -382,7 +382,7 @@ class App extends React.Component {
     const filteredProjects = brushObjectByDate(projects, this.state.datesBrushed[0], this.state.filterPosition[0], this.state.filterPosition[1]);
     const filteredEmployees = client.type === 'root' ? resetBrushedDisplay(this.state.employees) : getBrushedProjectsEmployees(filteredProjects, this.state.employees);
     const filteredClients = client.list.length === 0 || client.list === null ? null : reCalculateClientHours(clients, filteredProjects);
-    const displayTimeline = filteredProjects.length === 0 ? false : true;
+    const displayTimeline = this.containsCategory(client) ? false : true;
     this.setState({
       currentView,
       clickedClient,
@@ -456,8 +456,8 @@ class App extends React.Component {
       filterPosition={this.state.filterPosition}
       totalProjectsMonths={this.state.totalProjectsMonths}
       range={this.state.range}
+      annularSectors={this.state.annularSectors}
       projects={this.state.filteredProjects}
-      clients={this.state.clients}
       employees={this.state.filteredEmployees}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
