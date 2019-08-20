@@ -148,11 +148,15 @@ class App extends React.Component {
 
   showEmployee = id => {
     const employee = getElementById(id, this.state.filteredEmployees);
-    const projectIds = getIdsByEmployeeId(id, this.state.filteredProjects);
-    const clientIds = getIdsByEmployeeId(id, this.state.annularSectors);
+    const brushedProjectIds = this.state.filteredProjects
+      .filter(p => p.brushedDisplay && p.employees.includes(id))
+      .map(p => p.id);
+    const clientIds = this.state.annularSectors
+      .filter(s => s.projects.filter(p => brushedProjectIds.includes(p)).length !== 0)
+      .map(s => s.id);
     const highlightedEmployees = setHighlightElement(false, [id], this.state.filteredEmployees, false);
     const highlightedSectors = setHighlightElement(false, clientIds, this.state.annularSectors, false);
-    const highlightedProjects = setHighlightElement(false, projectIds, this.state.filteredProjects, false);
+    const highlightedProjects = setHighlightElement(false, brushedProjectIds, this.state.filteredProjects, false);
     const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
 
     this.setState({
@@ -171,10 +175,18 @@ class App extends React.Component {
     let highlightedSectors = setHighlightElement(false, [id], this.state.annularSectors, false);
     highlightedSectors = client.type !== 'client' ?
       setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
-    const highlightedEmployees = setHighlightElement(false, client.employees, this.state.filteredEmployees, false);
+    let brushedProjects = [];
+    if (client.type === 'category') brushedProjects = getObjects(client.projects, this.state.projects);
+    else if (client.type === 'more') 
+      brushedProjects = getObjects(client.projects, this.state.projects).filter(p => p.brushedDisplay);
+    else brushedProjects = this.state.filteredProjects.filter(p => p.brushedDisplay && p.clientId === id);
+    const employeeIds = client.employees.filter(eId => brushedProjects.filter(p => p.employees.includes(eId)).length !== 0); 
+    const highlightedEmployees = setHighlightElement(false, employeeIds, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.filteredProjects, false);
+    const skills = [];
+    brushedProjects.forEach(p => union(skills, p.skills));
     let highlightedSkills = client.type === 'client' ?
-      setHighlightElement(true, client.skills, this.state.filteredSkills, true) :
+      setHighlightElement(true, skills, this.state.filteredSkills, true) :
       this.state.filteredSkills;
 
     this.setState({
