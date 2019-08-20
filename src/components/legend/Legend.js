@@ -59,9 +59,8 @@ class Legend extends React.Component {
     const brushedProjects = projects.filter(project => 
       project.employees.includes(employee.id) && project.brushedDisplay);
     const brushedClientIds = brushedProjects.map(p => p.clientId);
-    const totalClients = clients ? 
-      clients.filter(client => 
-        client.employees.includes(employee.id) && brushedClientIds.includes(client.id)).length : 1;
+    const totalClients = clients.filter(client => 
+      client.employees.includes(employee.id) && brushedClientIds.includes(client.id)).length;
     const totalSkills = employee.skills.length;
     this.setState({
       totalClients, 
@@ -84,7 +83,7 @@ class Legend extends React.Component {
     const brushedProjects = projects.filter(p => p.brushedDisplay);
     const totalEmployees = employees.filter(e => e.brushedDisplay);
     const clientIds = brushedProjects.map(p => p.clientId);
-    const totalClients = clients ? clients.filter(c => clientIds.includes(c.id)).length : 1;
+    const totalClients = clients.filter(c => clientIds.includes(c.id)).length;
     const totalSkills = [];
     brushedProjects.forEach(p => union(totalSkills, p.skills));
     employees.forEach(e => union(totalSkills, e.skills));

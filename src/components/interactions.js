@@ -159,7 +159,7 @@ export function getDateFromStep(month, initDate) {
 }
 
 export function resetBrushedDisplay(ModArray) {
-  return ModArray.map(p => p.brushedDisplay = false);
+  return ModArray.map(p => p.brushedDisplay = true);
 }
 
 export function setSelectedState(refArray, modArray) {
