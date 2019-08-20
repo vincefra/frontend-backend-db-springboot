@@ -30,20 +30,17 @@ class VizClient extends React.Component {
     const height = this.props.size[1];
     const clients = <g transform={`translate(${width / 2}, ${height / 2})`}>
       {this.state.clientSlice.map((d, i) => (
-        <g key={i}
-          opacity={d.highlight ? '1' : '0.2'}
-        >
+        <g key={i} opacity={d.highlight ? '1' : '0.2'}>
           <path
             d={d.path}
             stroke='#dc3545'
             fillOpacity='0'
             strokeWidth="6"
-            opacity={d.data.selected ? 1 : 0}
+            opacity={d.data.hours > 0 ? d.data.selected ? 1 : 0 : 0}
           />
           <path
             d={d.path}
             fill={d.fill}
-
             onMouseOver={() => { this.props.mouseOnClient(d.id); }}
             onMouseOut={() => this.props.mouseOutClient()}
             onClick={() => this.props.clientClick(d.data)}
@@ -53,21 +50,18 @@ class VizClient extends React.Component {
     </g>;
     const projects = <g transform={`translate(${width / 2}, ${height / 2})`}>
       {this.state.projectSlice.map((d, i) => (
-        <g key={i}
-          opacity={d.d.data.brushedDisplay ? '0.2' : d.d.data.highlight ? '1' : '0.2'}
-        >
+        <g key={i} opacity={d.data.highlight ? '1' : '0.2'}>
           <path
-            d={d.d.path}
+            d={d.path}
             stroke='#dc3545'
             fillOpacity='0'
             strokeWidth="6"
-            opacity={d.d.data.selected ? 1 : 0}
+            opacity={d.data.selected ? 1 : 0}
           />
           <path
-            d={d.d.path}
+            d={d.path}
             fill='#FFFFFF'
-
-            onMouseOver={() => this.props.mouseOnProject(d.d.data.id)} //TO DO:organize DATA array 
+            onMouseOver={() => this.props.mouseOnProject(d.data.id)} //TO DO:organize DATA array 
             onMouseOut={() => this.props.mouseOutProject()}
           />
         </g>
@@ -88,7 +82,7 @@ class VizClient extends React.Component {
         >
           {d.data.name}
         </text> : <g></g>;
-        return <g key={i}>
+        return d.data.hours > 0 ? <g key={i}>
           < image
             key={i}
             width={imageSize}
@@ -102,7 +96,7 @@ class VizClient extends React.Component {
             onClick={() => this.props.clientClick(d.data)}
           />
           {text}
-        </g>;
+        </g> : '';
       })}
     </g>;
     return (
