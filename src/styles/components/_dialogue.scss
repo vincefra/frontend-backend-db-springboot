@@ -3,11 +3,18 @@
   position: absolute;
   z-index: 10;
   width: 20vw;
-  background-color: $color-light-gray;
+  background-color: $color-gray;
   padding: 20px;
   right: 2.5%;
-  top: 10%;
   box-shadow: $box-shadow;
+  color: $color-black;
+  max-height: 80vh;
+  overflow: hidden;
+
+  .bold {
+    font-weight: bold;
+  }
+  
   &.hidden {
     opacity: 0;
     transform: translateX(10%);
@@ -58,7 +65,5 @@
     align-items: flex-start;
     flex-direction: column;
     flex-wrap: wrap;
-    max-height: 400px;
-    overflow: hidden;
   }
 }

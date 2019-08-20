@@ -41,6 +41,7 @@ class LegendItem extends React.Component {
           onMouseEnter={() => this.props.overEvent(this.props.type)}
           onMouseLeave={() => this.props.outEvent()}
         >
+          <i className={this.props.icon}/>
           {this.state.text}
         </div>
       </li>

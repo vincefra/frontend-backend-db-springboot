@@ -230,7 +230,7 @@ async function getData() {
       name: project.name,
       highlight: true,
       brushedDisplay: false,
-      type: project.type ? project.type : '',
+      type: project.type ? project.type : 'Normal',
       description: project.description,
       clientId,
       employees,

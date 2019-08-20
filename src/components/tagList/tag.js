@@ -11,8 +11,8 @@ class Tag extends Component {
   render() {
     return (
       <li className="tag">
-        <h3>{this.props.name}</h3>
-        <i className="fas fa-minus-circle" onMouseDown={() => this.removeObject()}></i>
+        <span>{this.props.name}</span>
+        <i className="fas fa-times-circle" onMouseDown={() => this.removeObject()}></i>
       </li>
     );
   }

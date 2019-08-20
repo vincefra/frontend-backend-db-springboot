@@ -1,18 +1,28 @@
 .header{
-  padding: 0, 50px;
-  z-index: 1;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5em 2em;
+
+  .h-row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin: 0.5em 0em;
+    height: 100%;
+    div {
+      display: flex;
+    }
+  }
 }
 
 .brandLogo{
-  img{
-    max-height: 40px;
-  }
+  max-height: 40px;
+  margin-right: 1em;
  }
  
 .right {
   display: flex;
-  width: 100%;
   height: 100%;
-  justify-content: space-between;
   align-items: center;
 }
