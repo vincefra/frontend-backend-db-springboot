@@ -370,7 +370,7 @@ class App extends React.Component {
     const rangeBrushed = getDateRange(projects);
     const totalMonths = getMonthsDifference(rangeBrushed[0], rangeBrushed[1]);
     const filterPosition = [0, totalMonths];
-    const currentView = client.type === 'more' ? this.state.currentView :
+    const currentView = client.type === 'more' ? client.category :
       clickedClient.id === '' ? client.name : clickedClient.name;
     resetBrushedDisplay(projects);
     this.setState({
