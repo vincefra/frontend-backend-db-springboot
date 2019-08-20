@@ -459,8 +459,8 @@ class App extends React.Component {
       filterPosition={this.state.filterPosition}
       totalProjectsMonths={this.state.totalProjectsMonths}
       range={this.state.range}
+      annularSectors={this.state.annularSectors}
       projects={this.state.filteredProjects}
-      clients={this.state.clients}
       employees={this.state.filteredEmployees}
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}

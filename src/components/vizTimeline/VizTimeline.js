@@ -26,7 +26,7 @@ class VizTimeline extends Component {
 
   //create all the data necessary for the timeline visualization and set it up in the state
   static getDerivedStateFromProps(nextProps, prevState) {
-    let { projects, size, clients, range } = nextProps;
+    let { annularSectors, projects, size, range } = nextProps;
     if (!projects) return {};
 
     const extent = range;
@@ -37,7 +37,7 @@ class VizTimeline extends Component {
 
 
     //calculate all the bars 
-    const moreProjects = clients.find(client => client.type === 'more');
+    const moreProjects = annularSectors.find(client => client.type === 'more');
     if (moreProjects)
       projects = projects.filter(project => !moreProjects.projects.includes(project.id));
     const bars = projects.map(d => {
