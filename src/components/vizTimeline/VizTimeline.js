@@ -53,7 +53,7 @@ class VizTimeline extends Component {
         selected: d.selected,
         brushedDisplay: d.brushedDisplay
       };
-    }).filter(d => d.brushedDisplay);
+    });
     let numLevels = 0;
     // organize the projects so they do not overlap
     for (let i = 0; i < bars.length; i++) {
@@ -112,7 +112,16 @@ class VizTimeline extends Component {
   render() {
     const barHeight = this.state.numLevels === 0 ? (height / 4) : (height - margin.bottom) / (this.state.numLevels + 1);
     const projects = this.state.bars.map((d) => (
-      <g key={d.id} opacity={d.opacity} onMouseOver={() => { this.props.selectProject(d.id); }} onMouseOut={() => this.props.mouseOutProject()}>
+      <g key={d.id}
+        opacity={d.brushedDisplay ? d.opacity : 0.2}
+        onMouseOver={() => {
+          if (!d.brushedDisplay) {
+            return;
+          } else {
+            this.props.selectProject(d.id);
+          }
+        }}
+        onMouseOut={() => this.props.mouseOutProject()}>
         {/* SELECTED STROKE */}
         <rect
           x={d.x}

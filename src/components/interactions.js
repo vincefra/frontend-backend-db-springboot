@@ -320,10 +320,7 @@ export function removeSelected(selectedData, object, stateData, selectedTagList)
   let delObj = null;
   const tagListObjects = getObjectsFromState(selectedTagList, stateData);
   const dataFromSelectedObjects = getDataFromSelectedObjects(tagListObjects, stateData);
-  //go through the taglist, gather all their data and save it in different arrays
 
-  //ask to delete non repeated objects 
-  //TO DO when deleting an object you should check which are the other 
   switch (object.searchType) {
     case 'EMPLOYEE':
       delObj = stateData.employees.find(o => object.id === o.id);
@@ -379,9 +376,13 @@ export function getDateRange(projects) {
 
 export function getBrushedProjectsEmployees(projects, employees) {
   let employeesId = [];
-  projects.forEach(p => employeesId = p.brushedDisplay ? [...employeesId, ...p.employees] : employeesId);
-  employeesId = mergeRepeated(employeesId);
-  return employees.filter(e => employeesId.includes(e.id));
+  projects.forEach(p => {
+    employeesId = p.brushedDisplay ? [...employeesId, ...p.employees] : employeesId;
+  });
+  return employees.map(e => {
+    e.brushedDisplay = employeesId.includes(e.id) ? false : true;
+    return e;
+  });
 }
 
 export default {

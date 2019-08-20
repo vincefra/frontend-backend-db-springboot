@@ -3,8 +3,8 @@ import * as d3 from 'd3';
 const sliceHeight = 60;
 const projectHeight = 15;
 const projectRadius = sliceHeight / 2;
-const imageSize = 50;
-const imageDistance = 10;
+const imageSize = 60;
+const imageDistance = 60;
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
 const maxSkills = 40;
@@ -30,7 +30,6 @@ export function calculatePieClient(props, radius) {
     .value(function (d) {
       return d.hours;
     });
-
   //arc array with the position and information in the pie
   const arcs = pie(props.annularSectors);
 
@@ -53,20 +52,18 @@ export function calculatePieClient(props, radius) {
     const textPaddingSides = 10;
     const textPaddingUp = 5;
     const halfImage = imageSize / 2;
+    anchor = [centroid[0] - halfImage, centroid[1] - halfImage];
+
     if (anchor[0] > 0 && anchor[1] < 0) {
-      anchor = [centroid[0], centroid[1] - imageSize];
-      textPos = [centroid[0] + imageSize + textPaddingSides, centroid[1] - halfImage + textPaddingUp];
+      textPos = [centroid[0] + halfImage + textPaddingSides, centroid[1]];
     } else if (anchor[0] < 0 && anchor[1] < 0) {
-      anchor = [centroid[0] - imageSize, centroid[1] - imageSize];
-      textPos = [centroid[0] - imageSize - textPaddingSides, centroid[1] - halfImage + textPaddingUp];
+      textPos = [centroid[0] - halfImage - textPaddingSides, centroid[1] + textPaddingUp];
       textAnchor = 'end';
     } else if (anchor[0] < 0 && anchor[1] > 0) {
-      anchor = [centroid[0] - imageSize, centroid[1]];
-      textPos = [centroid[0] - imageSize - textPaddingSides, centroid[1] + halfImage + textPaddingUp];
+      textPos = [centroid[0] - halfImage - textPaddingSides, centroid[1] + textPaddingUp];
       textAnchor = 'end';
     } else if (anchor[0] > 0 && anchor[1] > 0) {
-      anchor = [centroid[0], centroid[1]];
-      textPos = [centroid[0] + imageSize + textPaddingSides, centroid[1] + halfImage + textPaddingUp];
+      textPos = [centroid[0] + halfImage + textPaddingSides, centroid[1]];
     }
 
 
