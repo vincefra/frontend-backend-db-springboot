@@ -16,11 +16,14 @@ class VizEmployees extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (!this.sameEmployees(prevProps.employees, this.props.employees))
+    // console.log(this.props.employees.filter(e => e.brushedDisplay))
+    if (!this.sameEmployees(prevProps.employees, this.props.employees)) {
       this.setLayout(this.props.employees);
+    }
   }
 
   sameEmployees(prevEmpl, nextEmpl) {
+
     if (prevEmpl.length !== nextEmpl.length) return false;
     let pIds = prevEmpl.map(e => e.id);
     let nIds = prevEmpl.map(e => e.id);
@@ -46,6 +49,11 @@ class VizEmployees extends React.Component {
     this.setState({ layout: flayout });
   }
 
+  handleMouseOn = (d) => {
+    if (!d.data.brushedDisplay) {
+      this.props.mouseOnEmployee(d.data.id);
+    }
+  }
   render() {
     //Get the size and diameter of the viz
     const width = this.props.size[0];
@@ -66,9 +74,9 @@ class VizEmployees extends React.Component {
               pX={d.x}
               pY={d.y}
               id={d.data.id}
-              mouseOnEmployee={this.props.mouseOnEmployee}
+              mouseOnEmployee={() => this.handleMouseOn(d)}
               mouseOutEmployee={this.props.mouseOutEmployee}
-              opacity={d.data.highlight ? '1' : '0.1'}
+              opacity={d.data.highlight ? d.data.brushedDisplay ? '0.1' : '1' : '0.1'}
             />
           );
         })
@@ -83,10 +91,10 @@ class VizEmployees extends React.Component {
           diameter / 2})`}
       >
         {/* BACKGROUND CIRCLE */}
-        <g ref='graph'>
+        < g ref='graph' >
           {employeeLayout}
-        </g>
-      </g>
+        </g >
+      </g >
     );
   }
 }

@@ -24,7 +24,8 @@ import {
   getIdsByEmployeeId,
   brushObjectByDate,
   reCalculateClientHours,
-  getBrushedProjectsEmployees
+  getBrushedProjectsEmployees,
+  resetBrushedDisplay
 } from 'components/interactions';
 //width and height of the SVG visualization
 const width = window.innerWidth;
@@ -259,7 +260,6 @@ class App extends React.Component {
   }
 
   removeSelectedObject = (object) => {
-    //change state item, and all items related to it
     const allObjects = {
       clients: this.state.clients,
       projects: this.state.projects,
@@ -290,10 +290,7 @@ class App extends React.Component {
   brushDates = (initMonth, enMonth) => {
     const filteredProjects = brushObjectByDate(this.state.filteredProjects, this.state.datesBrushed[0], initMonth, enMonth);
     const filteredClients = this.state.filteredClients === null ? null : reCalculateClientHours(this.state.filteredClients, filteredProjects);
-    const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.employees);
-    // const filteredEmployees = brushObjectByDate(this.state.filteredEmployees, this.state.datesBrushed[0], initMonth, enMonth);
-
-    //filter objects
+    const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.filteredEmployees);
     this.setState({
       filteredProjects,
       filteredClients,
@@ -307,7 +304,7 @@ class App extends React.Component {
   }
 
   highlightElements = name => {
-    let clients = this.state.annularSectors;
+    let clients = this.state.filteredClients;
     let filteredEmployees = this.state.filteredEmployees;
     let filteredProjects = this.state.filteredProjects;
     let filteredSkills = this.state.filteredSkills;
@@ -383,7 +380,7 @@ class App extends React.Component {
     const currentView = client.type === 'more' ? client.category :
       clickedClient.id === '' ? client.name : clickedClient.name;
     const filteredProjects = brushObjectByDate(projects, this.state.datesBrushed[0], this.state.filterPosition[0], this.state.filterPosition[1]);
-    const filteredEmployees = getBrushedProjectsEmployees(filteredProjects, this.state.employees);
+    const filteredEmployees = client.type === 'root' ? resetBrushedDisplay(this.state.employees) : getBrushedProjectsEmployees(filteredProjects, this.state.employees);
     const filteredClients = client.list.length === 0 || client.list === null ? null : reCalculateClientHours(clients, filteredProjects);
     const displayTimeline = filteredProjects.length === 0 ? false : true;
     this.setState({
