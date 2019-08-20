@@ -100,7 +100,7 @@ class App extends React.Component {
       employees: employeeList,
       skills: technologyList,
       filteredClients: clientList,
-      filteredProjects: [],
+      filteredProjects: projectList,
       filteredEmployees: employeeList,
       filteredSkills: technologyList,
       range: selectedRange,
@@ -295,6 +295,7 @@ class App extends React.Component {
 
     //filter objects
     this.setState({
+      refreshLegends: !this.state.refreshLegends,
       filteredProjects,
       filteredClients,
       filteredEmployees,
@@ -372,8 +373,7 @@ class App extends React.Component {
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const clients = client.list.length === 0 ? null :
       getObjects(client.clients, this.state.unsortedClients);
-    const projects = client.type === 'root' ? [] :
-      getObjects(client.projects, this.state.projects);
+    const projects = getObjects(client.projects, this.state.projects);
     const skillList = [];
     employees.forEach(employee => union(skillList, employee.skills));
     union(skillList, client.skills);

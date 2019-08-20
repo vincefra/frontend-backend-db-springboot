@@ -1,5 +1,6 @@
 import React from 'react';
 import LegendItem from './LegendItem';
+import { union } from 'components/general';
 
 class Legend extends React.Component {
   constructor(props) {
@@ -36,23 +37,35 @@ class Legend extends React.Component {
     if (employee) this.calculateEmployee(props);
   }
 
-  calculateClient({ client }) {
+  calculateClient({ client, projects }) {
+    const brushedProjects = projects.filter(p => p.brushedDisplay);
+    const totalProjects = brushedProjects.filter(p => client.projects.includes(p.id));
+    const totalEmployees = [];
+    const totalSkills = [];
+    totalProjects.forEach(p => {
+      union(totalEmployees, p.employees);
+      union(totalSkills, p.skills);
+    });
+
     this.setState({
       totalClients: 1,
-      totalProjects: client.projects.length,
-      totalEmployees: client.employees.length,
-      totalSkills: client.skills.length
+      totalProjects: totalProjects.length,
+      totalEmployees: totalEmployees.length,
+      totalSkills: totalSkills.length
     });
   }
 
   calculateEmployee({ employee, clients, projects }) {
+    const brushedProjects = projects.filter(project => 
+      project.employees.includes(employee.id) && project.brushedDisplay);
+    const brushedClientIds = brushedProjects.map(p => p.clientId);
     const totalClients = clients ? 
-      clients.filter(client => client.employees.includes(employee.id)).length : 1;
-    const totalProjects = projects.filter(project => project.employees.includes(employee.id)).length;
+      clients.filter(client => 
+        client.employees.includes(employee.id) && brushedClientIds.includes(client.id)).length : 1;
     const totalSkills = employee.skills.length;
     this.setState({
       totalClients, 
-      totalProjects,
+      totalProjects: brushedProjects.length,
       totalEmployees: 1,
       totalSkills
     });
@@ -67,12 +80,18 @@ class Legend extends React.Component {
     });
   }
 
-  resetLegends({clients, projects, employees, skills}) {
+  resetLegends({ clients, projects, employees }) {
+    const brushedProjects = projects.filter(p => p.brushedDisplay);
+    const clientIds = brushedProjects.map(p => p.clientId);
+    const totalClients = clients.filter(c => clientIds.includes(c.id));
+    const totalSkills = [];
+    brushedProjects.forEach(p => union(totalSkills, p.skills));
+    employees.forEach(e => union(totalSkills, e.skills));
     this.setState({
-      totalClients: clients ? clients.length : 1,
-      totalProjects: projects.length,
+      totalClients: clients ? totalClients.length : 1,
+      totalProjects: brushedProjects.length,
       totalEmployees: employees.length,
-      totalSkills: skills.length
+      totalSkills: totalSkills.length
     });
   }
 

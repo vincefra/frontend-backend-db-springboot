@@ -16,8 +16,8 @@ class Dialogue extends React.Component {
       case 'EMPLOYEE':
         return (
           <div>
-            <p><span className='bold'>Start date: </span><br></br>{data.initDate}</p>
-            <p><span className='bold'>End date: </span><br></br>{data.endDate}</p>
+            <p><span className='bold'>Start date: </span><br></br>{data.dateInit}</p>
+            <p><span className='bold'>End date: </span><br></br>{data.dateEnd}</p>
           </div>
         );
       case 'PROJECT':
