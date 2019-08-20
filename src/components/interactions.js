@@ -380,7 +380,7 @@ export function getBrushedProjectsEmployees(projects, employees) {
     employeesId = p.brushedDisplay ? [...employeesId, ...p.employees] : employeesId;
   });
   return employees.map(e => {
-    e.brushedDisplay = employeesId.includes(e.id) ? false : true;
+    e.brushedDisplay = employeesId.includes(e.id) ? true : false;
     return e;
   });
 }

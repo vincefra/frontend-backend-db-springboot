@@ -82,6 +82,7 @@ class Legend extends React.Component {
 
   resetLegends({ clients, projects, employees }) {
     const brushedProjects = projects.filter(p => p.brushedDisplay);
+    const totalEmployees = employees.filter(e => e.brushedDisplay);
     const clientIds = brushedProjects.map(p => p.clientId);
     const totalClients = clients ? clients.filter(c => clientIds.includes(c.id)).length : 1;
     const totalSkills = [];
@@ -90,7 +91,7 @@ class Legend extends React.Component {
     this.setState({
       totalClients,
       totalProjects: brushedProjects.length,
-      totalEmployees: employees.length,
+      totalEmployees: totalEmployees.length,
       totalSkills: totalSkills.length
     });
   }

@@ -50,7 +50,7 @@ class VizEmployees extends React.Component {
   }
 
   handleMouseOn = (d) => {
-    if (!d.data.brushedDisplay) {
+    if (d.data.brushedDisplay) {
       this.props.mouseOnEmployee(d.data.id);
     }
   }
@@ -76,7 +76,7 @@ class VizEmployees extends React.Component {
               id={d.data.id}
               mouseOnEmployee={() => this.handleMouseOn(d)}
               mouseOutEmployee={this.props.mouseOutEmployee}
-              opacity={d.data.highlight ? d.data.brushedDisplay ? '0.1' : '1' : '0.1'}
+              opacity={d.data.highlight ? d.data.brushedDisplay ? '1' : '0.1' : '0.1'}
             />
           );
         })
