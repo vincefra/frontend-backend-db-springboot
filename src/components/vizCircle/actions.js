@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-const sliceHeight = 60;
-const projectHeight = 15;
+const sliceHeight = 50;
+const projectHeight = 12;
 const projectRadius = sliceHeight / 2;
 const imageSize = 60;
 const imageDistance = 60;

@@ -21,7 +21,6 @@ import {
   addSelected,
   setSelectedState,
   removeSelected,
-  getIdsByEmployeeId,
   brushObjectByDate,
   reCalculateClientHours,
   getBrushedProjectsEmployees,
@@ -373,16 +372,12 @@ class App extends React.Component {
     if (client.list[0].type === 'category') return true;
   }
 
-  toggleTimeLine = (toggle = false) => {
-    this.setState({ displayTimeline: toggle });
-  }
-
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
     const clients = client.list.length === 0 ? null :
       getObjects(client.clients, this.state.unsortedClients);
-    const projects = getObjects(client.projects, this.state.projects);
+    const projects = getObjects(client.projects, this.state.projects).sort((a, b) => b.hours - a.hours);
     const skillList = [];
     employees.forEach(employee => union(skillList, employee.skills));
     union(skillList, client.skills);
@@ -476,7 +471,6 @@ class App extends React.Component {
       selectProject={this.showProject}
       mouseOutProject={this.unHighlightElements}
       modifyRange={this.brushDates}
-      toggleTimeLine={this.toggleTimeLine}
       formatDate={this.getDateFormated}
     />;
     const vizCircle = <VizCircle

@@ -103,12 +103,6 @@ class VizTimeline extends Component {
 
   }
 
-  handleButtonClick = () => {
-    this.props.toggleTimeLine(!this.props.displayTimeline);
-  }
-
-
-
   render() {
     const barHeight = this.state.numLevels === 0 ? (height / 4) : (height - margin.bottom) / (this.state.numLevels + 1);
     const projects = this.state.bars.map((d) => (
