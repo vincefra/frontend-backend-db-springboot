@@ -91,17 +91,6 @@ export function elementWithSkill(id, mdArray) {
   });
 }
 
-
-/**
- * Returns a array of ids of list if employee id is included
- * @param {number} id of the employee to search in list
- * @param {array} list array of a list
- */
-export function getIdsByEmployeeId(id, list) {
-  return list.filter(o => o.employees.includes(id)).map(o => o.id);
-}
-
-
 /**
  * search for an element with the id and return it
  * @param {number} id of the element to find
@@ -400,7 +389,6 @@ export default {
   addSelected,
   setSelectedState,
   removeSelected,
-  getIdsByEmployeeId,
   brushObjectByDate,
   reCalculateClientHours,
   getBrushedProjectsEmployees
