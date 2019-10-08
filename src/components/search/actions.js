@@ -13,6 +13,7 @@ export function search(word, props) {
     //search in projects
     const projectResults = projects.filter(p => {
       const name = p.name.toLowerCase();
+      console.log(name)
       p.searchType = 'PROJECT';
       return name.includes(srchWord) && !existsInArray(p, selectedObjects); //check if it exists in tag list. send obj
     });

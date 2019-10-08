@@ -164,7 +164,6 @@ export function createLinks(skills) {
     node.anchorText = node.angle < 90 || node.angle > 270 ? 'start' : 'end';
 
   }
-
   return nodes;
 }
 
