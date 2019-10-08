@@ -83,6 +83,7 @@ class Legend extends React.Component {
     const brushedProjects = projects.filter(p => p.brushedDisplay);
     const totalEmployees = employees.filter(e => e.brushedDisplay);
     const clientIds = brushedProjects.map(p => p.clientId);
+    console.log(clientIds)
     const totalClients = clients.filter(c => clientIds.includes(c.id)).length;
     const totalSkills = [];
     brushedProjects.forEach(p => union(totalSkills, p.skills));

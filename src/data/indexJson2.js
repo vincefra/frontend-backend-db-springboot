@@ -9,7 +9,7 @@ import { union } from 'components/general';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
-const maxAnnularSectors = 11; // total annular sectors = maxAnnular + 1 ('other')
+const maxAnnularSectors = 3; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
   const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
@@ -18,6 +18,7 @@ export async function load() {
   categories.projects = projectList.map((_, i) => i);
   categories.employees = employeeList.map((_, i) => i);
   categories.skills = technologyList.map((_, i) => i);
+  console.log(categories.clients)
   return {
     categories,
     projectList,
@@ -29,7 +30,7 @@ export async function load() {
 }
 
 async function getData() {
-   function getTechList(technologies, clientId, projectId, employeeId) {   
+   function getTechList(technologies, clientId, projectId, employeeId) {
     if (!technologies) return [];
     return technologies.map(technology => {
       let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase());  
@@ -55,42 +56,54 @@ async function getData() {
     });
   }
 
+
   function getClientId(client) {
-    if (client.length === 0) return -1;
+    console.log(client)
+    if (!client) return -1;
     return client.map(client => {
+      console.log(client)
       let clientObj = clientList.find(t => t.name.toLowerCase() === client.toLowerCase());  
+      console.log(clientObj.id)
       return clientObj.id;
     })
   }
 
+
   function getClientColor(client) {
-    if (client.length === 0) return -1;
-    return client.map(client => {
+    if (!client) return -1;
+   return client.map(client => {
       let clientObj = clientList.find(t => t.name.toLowerCase() === client.toLowerCase());  
+
     return clientObj.color;
     });
   }
 
   function updateClient(clientId, projectId, duration, employees, skills) {
-  //  if(clientList[clientId].projects.length === 0) clientList[clientId].projects.push(projectId);
-  //  else 
-   if(!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
+    console.log(projectId)
+    if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
     union(clientList[clientId].employees, employees);
     union(clientList[clientId].skills, skills);
   }
 
+  function updateProject(clientId, projectId, duration, employees, startDate, endDate, technologies){
+    if (!projectList[projectId].clients.includes(clientId)) projectList[projectId].clients.push(clientId);
+
+
+
+  }
+
   function updateEmployee(clientId, projectId, employees) {
-      for(let employeeId = 0; employeeId < employees.length; employeeId ++){
-        if(employeeList[employeeId].projects.length === 0) continue;
-        employeeList[employeeId].projects.push(projectId);
-        if (!employeeList[employeeId].clients.includes(clientId))
+    employees.forEach(employeeId => {
+      employeeList[employeeId].projects.push(projectId);
+      if (!employeeList[employeeId].clients.includes(clientId))
         employeeList[employeeId].clients.push(clientId);
-      }
-    }
+    });
+  }
 
   function getEmployeeList(employees) {
-    return employees.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
+    let empList = employees.split(',').map(employee => employee.trim());
+    return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
 
   function getDates(startDates, endDates) {
@@ -111,8 +124,23 @@ async function getData() {
 
 
 
-  async function fetchEmployee() {
+  async function fetchData() {
 
+     var employee = `[
+  { "id": 0, "firstName":"Håkan" , "lastName":"Schön"  ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista", "Linköping"], "technologies": ["Jenkins","Gerrit","Java"]},
+  { "id": 1, "firstName":"Tommy" , "lastName":"Fagerberg" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]},
+  { "id": 2, "firstName":"Peter" , "lastName":"Roos" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]} ,
+  { "id": 3, "firstName":"Patrik" , "lastName":"Filipsson" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]}]`;
+    var client = `[
+    { "id": 0, "name":"Bombardier" , "category":"Transport"  ,"location": "Canada", "description": ""},
+    { "id": 1, "name":"Intel" , "category":"Technology" ,"location": "USA", "description": ""},
+    { "id": 2, "name":"Ericsson" , "category":"Telecommunication" ,"location": "Sweden", "description": ""} ]`;
+    var project = `[
+      { "id": 0, "name":"Solution Architect" , "type":"Normal"  , "startDates": "2013-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Tommy Fagerberg" , "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+      { "id": 1, "name":"Please work" , "type":"Normal"  , "startDates": "2014-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Håkan Schön", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+      { "id": 2, "name":"Parastu" , "type":""  , "startDates": "2003-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Peter Roos", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+      { "id": 3, "name":"Trains" , "type":"Fagerberg" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Bombardier"], "employees": "Patrik Filipsson", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+      { "id": 4, "name":"Intel" , "type":"Jones" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Intel"], "employees":  "Tommy Fagerberg", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]}]`;
     const requestURL = 'http://localhost:7878/api/employee/findall';
     const options = {
       url: requestURL,
@@ -128,65 +156,16 @@ async function getData() {
     }
 
     if (response.status === 200) {
-      const employees = response.data;
-      return { employees };
-    }
-  }
-  async function fetchCustomer() {
-
-    const requestURL = 'http://localhost:7878/api/customer/findall';
-    const options = {
-      url: requestURL,
-      responseType: "json",
-      method: 'GET',
-    };
-
-    let response;
-    try {
-      response = await axios(options);
-
-    } catch (error) {
-      return {};
-    }
-
-    if (response.status === 200) {
-      const clients = response.data;
-      console.log(clients)
-      return { clients};
+      const projects = JSON.parse(project);
+      const employees = JSON.parse(employee);
+      const clients = JSON.parse(client);
+      return { clients, projects, employees };
     }
   }
 
-  async function fetchProject() {
-
-    const requestURL = 'http://localhost:7878/api/project/findall';
-    const options = {
-      url: requestURL,
-      responseType: "json",
-      method: 'GET',
-    };
-
-    let response;
-    try {
-      response = await axios(options);
-    } catch (error) {
-      return {};
-    }
-
-    if (response.status === 200) {
-      const projects = response.data;
-      return { projects};
-    }
-  }
-
-  const {employees } = await fetchEmployee();
-  if (!employees) return Error;
-
-  const {clients} = await fetchCustomer();
-  if (!clients) return Error;
-  
-  const {projects} = await fetchProject();
-  if (!projects) return Error;
-
+  const { clients, projects, employees } = await fetchData();
+  if (!clients || !projects || !employees) return Error;
+   
   let clientList = [];
   let technologyList = [];
   let projectList = [];
@@ -225,6 +204,7 @@ async function getData() {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';
     }
+
     clientList.push({
       id: client.id,
       name: client.name,
@@ -241,11 +221,10 @@ async function getData() {
       skills: [],
       list: []
     });
-    
   }
 
   clientList.push({
-    id: clientList.length + 1,
+    id: clientList.length,
     name: 'Other',
     hours: 0,
     color: '#3E5641',
@@ -261,21 +240,16 @@ async function getData() {
     list: []
   });
 
- Object.keys(projects).forEach(function(key) {
-  let project = projects[key];
-// for (const project of projects) {
-//   if(project.client.length === 0)
-//     continue;
-     const { startDate, endDate } = getDates(project.startDates, project.endDates);
-     const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
-     let clientId = getClientId(project.client);
-     const color = getClientColor(project.client);
-     clientId = clientId === -1 ? clients.length : clientId[0];
-     console.log(clientId)
-     const employees = getEmployeeList(project.employees);
+
+  for (const project of projects) {
+    const { startDate, endDate } = getDates(project.startDates, project.endDates);
+    const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
+    let clientId = getClientId(project.client)[0];
+    clientId = clientId === -1 ? clients.length : clientId;
+
+    const color = getClientColor(project.client)[0];
+    const employees = getEmployeeList(project.employees);
     const skills = getTechList(project.technologies, clientId, project.id);
-    console.log(clientList)
-    console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
     updateClient(clientId, project.id, duration, employees, skills);
     updateEmployee(clientId, project.id, employees);
     projectList.push({
@@ -293,9 +267,7 @@ async function getData() {
       color,
       hours: duration
     });
-});
-  
-  
+  }
 
   const unsortedClients = [...clientList];
   clientList.sort((a, b) => b.hours - a.hours);
@@ -331,7 +303,6 @@ function imageExists(src) {
 async function groupCategories(clients) {
   const grouped = {};
   for (let client of clients) {
-    console.log(client)
     if (!(client.category in grouped)) grouped[client.category] = [client];
     else grouped[client.category].push(client);
   }
@@ -378,7 +349,6 @@ async function groupCategories(clients) {
 
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = getLargestClients(sorted);
-  console.log(categories.length)
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
 
@@ -401,7 +371,6 @@ async function groupCategories(clients) {
 }
 
 export function getLargestClients(clients) {
-  console.log(clients)
   let imageSrc = '/img/categories/more.png';
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;
