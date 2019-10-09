@@ -18,7 +18,7 @@ class Dialogue extends React.Component {
           <div>
             <p><span className='bold'>Start date: </span><br></br>{data.dateInit}</p>
             <p><span className='bold'>End date: </span><br></br>{data.dateEnd}</p>
-            <p><span className='bold'>Location: </span><br></br>{data.location.join(', ')}</p>
+            <p><span className='bold'>Location: </span><br></br>{data.location}</p>
             <p><span className='bold'>Birthyear: </span><br></br>{data.birthYear}</p>
           </div>
         );

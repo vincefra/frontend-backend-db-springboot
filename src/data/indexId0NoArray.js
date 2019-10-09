@@ -1,8 +1,6 @@
-/* eslint-disable no-undef */
-/* eslint-disable indent */
-/* eslint-disable space-before-blocks */
-/* eslint-disable quotes */
 import axios from 'axios';
+import config from '../config.json';
+import XLSX from 'xlsx';
 import moment from 'moment';
 import ColorThief from 'color-thief';
 import { union } from 'components/general';
@@ -29,19 +27,18 @@ export async function load() {
 }
 
 async function getData() {
-   function getTechList(technologies, clientId, projectId, employeeId) {   
-    if (technologies.length === 0) return [];
-    return technologies.map(technology => {
-      let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase()); 
+  function getTechList(technologies, clientId, projectId, employeeId) {
+    if (!technologies) return [];
+    let techList = technologies.split(',').map(technology => technology.trim());
+    console.log(techList)
+    return techList = techList.map(technology => {
+      let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase());
       if (techObj) {
         if (clientId && !techObj.clients.includes(clientId))
-        console.log('client')
           techObj.clients.push(clientId);
         if (projectId && !techObj.projects.includes(projectId))
-        console.log('project')
           techObj.projects.push(projectId);
         if (employeeId && !techObj.employees.includes(employeeId))
-        console.log('employee')
           techObj.employees.push(employeeId);
       } else {
         techObj = {
@@ -52,7 +49,6 @@ async function getData() {
           projects: projectId ? [projectId] : [],
           employees: employeeId ? [employeeId] : []
         };
-        // console.log(techObj)
         technologyList.push(techObj);
       }
       return techObj.id;
@@ -60,59 +56,37 @@ async function getData() {
   }
 
   function getClientId(client) {
-    if (client.length === 0) return -1;
-    return client.map(client => {
-      let clientObj = clientList.find(t => t.name.toLowerCase() === client.toLowerCase());  
-      return clientObj.id;
-    })
+    if (!client) return -1;
+    let clientObj = clientList.find(c => c.name.toLowerCase() === client.toLowerCase());
+    return clientObj.id;
   }
 
   function getClientColor(client) {
-    if (client.length === 0) return -1;
-    return client.map(client => {
-      let clientObj = clientList.find(t => t.name.toLowerCase() === client.toLowerCase());  
+    if (!client) return -1;
+    const clientObj = clientList.find(c => c.name.toLowerCase() === client.toLowerCase());
     return clientObj.color;
-    });
   }
 
   function updateClient(clientId, projectId, duration, employees, skills) {
-  //  if(clientList[clientId].projects.length === 0) clientList[clientId].projects.push(projectId);
-  //  else 
-   if(!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
+    if (!clientList[clientId].projects.includes(projectId)) clientList[clientId].projects.push(projectId);
     clientList[clientId].hours += duration;
     union(clientList[clientId].employees, employees);
     union(clientList[clientId].skills, skills);
   }
 
   function updateEmployee(clientId, projectId, employees) {
-    // for(let employeeId = 0; employeeId < employees.length; employeeId ++){
-    //   console.log(employeeList[employeeId])
+    for(let employeeId = 0; employeeId < employees.length; employeeId ++){
 
-    //     if(employeeList[employeeId].projects.length === 0) continue;
-    //     console.log( employeeList[employeeId].projects.push(projectId));
-    //     if (!employeeList[employeeId].clients.includes(clientId))
-    //     employeeList[employeeId].clients.push(clientId);
-    //   }
-    console.log(employeeList)
-    Object.keys(employees).forEach(function(key){
-
-       let employeeId = employees[key];
-       if(employeeList[employeeId] !== undefined){
-        employeeList[employeeId].projects.push(projectId);
-        if (!employeeList[employeeId].clients.includes(clientId))
-          employeeList[employeeId].clients.push(clientId);
-       }
-    })
-    // employees.forEach(employeeId => {
-    //   console.log(employeeList[employeeId].projects.length)
-    //   employeeList[employeeId].projects.push(projectId);
-    //   if (!employeeList[employeeId].clients.includes(clientId))
-    //     employeeList[employeeId].clients.push(clientId);
-    // });
+      if(employeeList[employeeId].projects.length === 0) continue;
+      employeeList[employeeId].projects.push(projectId);
+      if (!employeeList[employeeId].clients.includes(clientId))
+      employeeList[employeeId].clients.push(clientId);
     }
+  }
 
   function getEmployeeList(employees) {
-    return employees.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
+    let empList = employees.split(',').map(employee => employee.trim());
+    return empList.map(employee => employeeList.find(e => e.name.toLowerCase() === employee.toLowerCase()).id);
   }
 
   function getDates(startDates, endDates) {
@@ -131,11 +105,9 @@ async function getData() {
     return { startDate, endDate };
   }
 
-
-
   async function fetchEmployee() {
 
-    const requestURL = 'http://localhost:7878/api/employee/findall';
+    const requestURL = 'http://localhost:7878/api/employee/findallnoarray';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -156,7 +128,7 @@ async function getData() {
   }
   async function fetchCustomer() {
 
-    const requestURL = 'http://localhost:7878/api/customer/findall';
+    const requestURL = 'http://localhost:7878/api/customer/findallnoarray';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -180,7 +152,7 @@ async function getData() {
 
   async function fetchProject() {
 
-    const requestURL = 'http://localhost:7878/api/project/findall';
+    const requestURL = 'http://localhost:7878/api/project/findallnoarray';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -231,9 +203,9 @@ async function getData() {
       img,
       dateInit: moment(`${employee.startYear}-01-01`).format(dateFormat),
       dateEnd: `${employee.endYear ? moment(employee.endYear + '-01-01').format(dateFormat) : moment().format(dateFormat)}`,
+      skills: getTechList(employee.technologies, undefined, undefined, employee.id),
       location:employee.location,
       birthYear: employee.birthYear,
-      skills: getTechList(employee.technologies, undefined, undefined, employee.id),
       projects: [],
       clients: []
     });
@@ -247,6 +219,7 @@ async function getData() {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';
     }
+
     clientList.push({
       id: client.id,
       name: client.name,
@@ -263,11 +236,10 @@ async function getData() {
       skills: [],
       list: []
     });
-    
   }
 
   clientList.push({
-    id: clientList.length +1 ,
+    id: clientList.length + 1,
     name: 'Other',
     hours: 0,
     color: '#3E5641',
@@ -283,24 +255,17 @@ async function getData() {
     list: []
   });
 
- Object.keys(projects).forEach(function(key) {
-  let project = projects[key];
-// for (const project of projects) {
-//   if(project.client.length === 0)
-//     continue;
-     const { startDate, endDate } = getDates(project.startDates, project.endDates);
-     const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
-     let clientId = getClientId(project.client);
-     const color = getClientColor(project.client);
-     clientId = clientId === -1 ? clients.length : clientId[0];
-     console.log(clientId)
-     const employees = getEmployeeList(project.employees);
+
+  for (const project of projects) {
+    const { startDate, endDate } = getDates(project.startDates, project.endDates);
+    const duration = Math.floor(moment.duration(moment(endDate).diff(moment(startDate))).asHours());
+    let clientId = getClientId(project.client);
+    clientId = clientId === -1 ? clients.length : clientId;
+    const color = getClientColor(project.client);
+    const employees = getEmployeeList(project.employees);
     const skills = getTechList(project.technologies, clientId, project.id);
-    console.log(clientList)
-    console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
     updateClient(clientId, project.id, duration, employees, skills);
     updateEmployee(clientId, project.id, employees);
-    console.log("updateEmployee" + updateEmployee(clientId, project.id, employees));
     projectList.push({
       id: project.id,
       name: project.name,
@@ -316,11 +281,8 @@ async function getData() {
       color,
       hours: duration
     });
-    console.log(projectList)
-
-});
-  
-  
+    console.log(clientList)
+  }
 
   const unsortedClients = [...clientList];
   clientList.sort((a, b) => b.hours - a.hours);
@@ -356,7 +318,6 @@ function imageExists(src) {
 async function groupCategories(clients) {
   const grouped = {};
   for (let client of clients) {
-    console.log(client)
     if (!(client.category in grouped)) grouped[client.category] = [client];
     else grouped[client.category].push(client);
   }
@@ -403,7 +364,7 @@ async function groupCategories(clients) {
 
   sorted.sort((a, b) => b.list.length - a.list.length);
   const categories = getLargestClients(sorted);
-  console.log(categories.length)
+
   categories[maxAnnularSectors].hours = categories[maxAnnularSectors].list.length;
   categories[maxAnnularSectors].list.sort((a, b) => b.hours - a.hours);
 
@@ -426,7 +387,6 @@ async function groupCategories(clients) {
 }
 
 export function getLargestClients(clients) {
-  console.log(clients)
   let imageSrc = '/img/categories/more.png';
   if (!clients) return clients;
   if (clients.length <= maxAnnularSectors + 1) return clients;

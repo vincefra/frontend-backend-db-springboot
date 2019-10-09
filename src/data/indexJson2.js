@@ -58,12 +58,9 @@ async function getData() {
 
 
   function getClientId(client) {
-    console.log(client)
     if (!client) return -1;
     return client.map(client => {
-      console.log(client)
       let clientObj = clientList.find(t => t.name.toLowerCase() === client.toLowerCase());  
-      console.log(clientObj.id)
       return clientObj.id;
     })
   }
@@ -126,22 +123,22 @@ async function getData() {
 
   async function fetchData() {
 
-     var employee = `[
-  { "id": 0, "firstName":"Håkan" , "lastName":"Schön"  ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista", "Linköping"], "technologies": ["Jenkins","Gerrit","Java"]},
-  { "id": 1, "firstName":"Tommy" , "lastName":"Fagerberg" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]},
-  { "id": 2, "firstName":"Peter" , "lastName":"Roos" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]} ,
-  { "id": 3, "firstName":"Patrik" , "lastName":"Filipsson" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]}]`;
-    var client = `[
-    { "id": 0, "name":"Bombardier" , "category":"Transport"  ,"location": "Canada", "description": ""},
-    { "id": 1, "name":"Intel" , "category":"Technology" ,"location": "USA", "description": ""},
-    { "id": 2, "name":"Ericsson" , "category":"Telecommunication" ,"location": "Sweden", "description": ""} ]`;
-    var project = `[
-      { "id": 0, "name":"Solution Architect" , "type":"Normal"  , "startDates": "2013-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Tommy Fagerberg" , "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
-      { "id": 1, "name":"Please work" , "type":"Normal"  , "startDates": "2014-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Håkan Schön", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
-      { "id": 2, "name":"Parastu" , "type":""  , "startDates": "2003-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Peter Roos", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
-      { "id": 3, "name":"Trains" , "type":"Fagerberg" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Bombardier"], "employees": "Patrik Filipsson", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
-      { "id": 4, "name":"Intel" , "type":"Jones" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Intel"], "employees":  "Tommy Fagerberg", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]}]`;
-    const requestURL = 'http://localhost:7878/api/employee/findall';
+  //    var employee = `[
+  // { "id": 0, "firstName":"Håkan" , "lastName":"Schön"  ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista", "Linköping"], "technologies": ["Jenkins","Gerrit","Java"]},
+  // { "id": 1, "firstName":"Tommy" , "lastName":"Fagerberg" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]},
+  // { "id": 2, "firstName":"Peter" , "lastName":"Roos" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]} ,
+  // { "id": 3, "firstName":"Patrik" , "lastName":"Filipsson" ,"role": "test", "birthYear": 2019, "startYear": 2019, "endYear": 2019, "location": ["Kista"], "technologies": ["Jenkins","Gerrit"]}]`;
+  //   var client = `[
+  //   { "id": 0, "name":"Bombardier" , "category":"Transport"  ,"location": "Canada", "description": ""},
+  //   { "id": 1, "name":"Intel" , "category":"Technology" ,"location": "USA", "description": ""},
+  //   { "id": 2, "name":"Ericsson" , "category":"Telecommunication" ,"location": "Sweden", "description": ""} ]`;
+  //   var project = `[
+  //     { "id": 0, "name":"Solution Architect" , "type":"Normal"  , "startDates": "2013-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Tommy Fagerberg, Hålan Schön" , "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+  //     { "id": 1, "name":"Please work" , "type":"Normal"  , "startDates": "2014-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Håkan Schön", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+  //     { "id": 2, "name":"Parastu" , "type":""  , "startDates": "2003-10-01", "endDates": "2017-10-01", "client": ["Ericsson"], "employees": "Peter Roos", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+  //     { "id": 3, "name":"Trains" , "type":"Fagerberg" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Bombardier"], "employees": "Patrik Filipsson", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]},
+  //     { "id": 4, "name":"Intel" , "type":"Jones" , "startDates": "2007-10-01", "endDates": "2018-10-01", "client": ["Intel"], "employees":  "Tommy Fagerberg", "description": "javascript", "technologies": ["Jenkins","Gerrit","Java"]}]`;
+    const requestURL = 'http://localhost:7878/api/employee/findallnoarray';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -158,6 +155,7 @@ async function getData() {
     if (response.status === 200) {
       const projects = JSON.parse(project);
       const employees = JSON.parse(employee);
+      // const employees = response.data;
       const clients = JSON.parse(client);
       return { clients, projects, employees };
     }
