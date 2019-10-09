@@ -135,7 +135,7 @@ async function getData() {
 
   async function fetchEmployee() {
 
-    const requestURL = 'http://localhost:7878/api/employee/findall';
+    const requestURL = 'http://localhost:7878/api/employee/findallarrayzero';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -156,7 +156,7 @@ async function getData() {
   }
   async function fetchCustomer() {
 
-    const requestURL = 'http://localhost:7878/api/customer/findall';
+    const requestURL = 'http://localhost:7878/api/customer/findallarrayzero';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -180,7 +180,7 @@ async function getData() {
 
   async function fetchProject() {
 
-    const requestURL = 'http://localhost:7878/api/project/findall';
+    const requestURL = 'http://localhost:7878/api/project/findallarrayzero';
     const options = {
       url: requestURL,
       responseType: "json",
@@ -267,7 +267,7 @@ async function getData() {
   }
 
   clientList.push({
-    id: clientList.length +1 ,
+    id: clientList.length ,
     name: 'Other',
     hours: 0,
     color: '#3E5641',
