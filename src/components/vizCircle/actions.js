@@ -3,8 +3,8 @@ import * as d3 from 'd3';
 const sliceHeight = 50;
 const projectHeight = 12;
 const projectRadius = sliceHeight / 2;
-const imageSize = 60;
-const imageDistance = 60;
+const imageSize = 40;
+const imageDistance = 40;
 const projectPadding = (2 * Math.PI) / 180;
 const clientArcPadding = (1.2 * Math.PI) / 180;
 const maxSkills = 40;
@@ -28,7 +28,7 @@ export function calculatePieClient(props, radius) {
     .pie()
     .sort(null)
     .value(function (d) {
-      return d.hours;
+      return 10;
     });
   //arc array with the position and information in the pie
   const arcs = pie(props.annularSectors);
@@ -116,7 +116,7 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
     .pie()
     .sort(null)
     .value(function (d) {
-      return d.brushedDisplay ? d.hours : 0;
+      return d.brushedDisplay ? 10 : 0;
     });
 
   //arc array with the position and information in the pie

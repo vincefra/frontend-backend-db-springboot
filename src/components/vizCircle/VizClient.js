@@ -2,7 +2,7 @@ import React from 'react';
 import { calculatePieClient } from './actions';
 
 const vizHeight = 0.67;
-const imageSize = 60;
+const imageSize = 40;
 
 class VizClient extends React.Component {
   constructor(props) {
