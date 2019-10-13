@@ -2,10 +2,15 @@
 /* eslint-disable indent */
 /* eslint-disable space-before-blocks */
 /* eslint-disable quotes */
-import axios from 'axios';
 import moment from 'moment';
 import ColorThief from 'color-thief';
 import { union } from 'components/general';
+import {
+  fetchEmployee,
+  fetchCustomer,
+  fetchProject,
+  fetchProjectCount,
+} from './api';
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
@@ -14,10 +19,7 @@ const maxAnnularSectors = 15; // total annular sectors = maxAnnular + 1 ('other'
 export async function load() {
   const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
   const categories = await groupCategories(clientList);
-  categories.clients = clientList.map((_, i) => i);
-  categories.projects = projectList.map((_, i) => i);
-  categories.employees = employeeList.map((_, i) => i);
-  categories.skills = technologyList.map((_, i) => i);
+
   return {
     categories,
     projectList,
@@ -111,74 +113,6 @@ async function getData() {
     } else  // Ongoing project
       endDate = moment().format(dateFormat);
     return { startDate, endDate };
-  }
-
-
-
-  async function fetchEmployee() {
-
-    const requestURL = 'http://localhost:7878/api/employee/findallarrayzero';
-    const options = {
-      url: requestURL,
-      responseType: "json",
-      method: 'GET',
-    };
-
-    let response;
-    try {
-      response = await axios(options);
-    } catch (error) {
-      return {};
-    }
-
-    if (response.status === 200) {
-      const employees = response.data;
-      return { employees };
-    }
-  }
-  async function fetchCustomer() {
-
-    const requestURL = 'http://localhost:7878/api/customer/findallarrayzero';
-    const options = {
-      url: requestURL,
-      responseType: "json",
-      method: 'GET',
-    };
-
-    let response;
-    try {
-      response = await axios(options);
-
-    } catch (error) {
-      return {};
-    }
-
-    if (response.status === 200) {
-      const clients = response.data;
-      return { clients};
-    }
-  }
-
-  async function fetchProject() {
-
-    const requestURL = 'http://localhost:7878/api/project/findallarrayzero';
-    const options = {
-      url: requestURL,
-      responseType: "json",
-      method: 'GET',
-    };
-
-    let response;
-    try {
-      response = await axios(options);
-    } catch (error) {
-      return {};
-    }
-
-    if (response.status === 200) {
-      const projects = response.data;
-      return { projects};
-    }
   }
 
   const {employees } = await fetchEmployee();
