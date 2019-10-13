@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 const sliceHeight = 50;
-const projectHeight = 12;
+const projectHeight = 25;
 const projectRadius = sliceHeight / 2;
 const imageSize = 40;
 const imageDistance = 40;
@@ -28,12 +28,12 @@ export function calculatePieClient(props, radius) {
     .pie()
     .sort(null)
     .value(function (d) {
-      return 10;
+      return d.type === 'category' ? 3 : d.hours;
     });
   //arc array with the position and information in the pie
   const arcs = pie(props.annularSectors);
 
-  //create an object SLICES in order to update the state
+    //create an object SLICES in order to update the state
   //contains all the information one slice needs in order to be rendered
   let projectSlice = [];
   const clientSlice = arcs.map((d, i) => {
@@ -116,7 +116,7 @@ function calculatePieProject(initAngle, endAngle, projects, radius) {
     .pie()
     .sort(null)
     .value(function (d) {
-      return d.brushedDisplay ? 10 : 0;
+      return d.brushedDisplay ? d.hours : 0;
     });
 
   //arc array with the position and information in the pie
@@ -164,6 +164,7 @@ export function createLinks(skills) {
     node.anchorText = node.angle < 90 || node.angle > 270 ? 'start' : 'end';
 
   }
+
   return nodes;
 }
 
