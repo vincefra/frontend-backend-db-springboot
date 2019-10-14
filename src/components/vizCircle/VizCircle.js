@@ -29,10 +29,10 @@ class VizCircle extends React.Component {
       <svg className='circle-visualization' width={this.props.size[0]} height={this.props.size[1]}>
         {vizClients}
         {employees}
-        <Skills
+        {/* <Skills
           skills={this.props.skills}
           size={this.props.size}
-        />
+        /> */}
       </svg>;
 
     return content;

@@ -3,7 +3,7 @@ import axios from 'axios';
 const apiRoute = 'http://localhost:7878/api/';
 export async function fetchEmployee() {
 
-  const requestURL = `${apiRoute}employee/findallarrayzero`;
+  const requestURL = `${apiRoute}employee/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -24,7 +24,7 @@ export async function fetchEmployee() {
 }
 export async function fetchCustomer() {
 
-  const requestURL =`${apiRoute}customer/findallarrayzero`;
+  const requestURL =`${apiRoute}customer/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -47,7 +47,7 @@ export async function fetchCustomer() {
 
 export async function fetchProject() {
 
-  const requestURL =`${apiRoute}project/findallarrayzero`;
+  const requestURL =`${apiRoute}project/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -69,7 +69,7 @@ export async function fetchProject() {
 
 export async function fetchProjectCount() {
 
-  const requestURL =`${apiRoute}project/findandcount`;
+  const requestURL =`${apiRoute}project/total`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -84,7 +84,7 @@ export async function fetchProjectCount() {
   }
 
   if (response.status === 200) {
-    const projects = response.data;
-    return { projects};
+    const projectsCount = response.data;
+    return { projectsCount};
   }
 }

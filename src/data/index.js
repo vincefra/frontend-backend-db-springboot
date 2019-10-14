@@ -124,6 +124,8 @@ async function getData() {
   const {projects} = await fetchProject();
   if (!projects) return Error;
 
+  
+
   let clientList = [];
   let technologyList = [];
   let projectList = [];
@@ -207,7 +209,7 @@ async function getData() {
      clientId = clientId === -1 ? clients.length : clientId[0];
      const employees = getEmployeeList(project.employees);
     const skills = getTechList(project.technologies, clientId, project.id);
-    console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
+    // console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
     updateClient(clientId, project.id, duration, employees, skills);
     updateEmployee(clientId, project.id, employees);
     projectList.push({

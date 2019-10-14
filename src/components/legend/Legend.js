@@ -19,7 +19,6 @@ class Legend extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props.client)
     if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
     if (!this.equal(prevProps.client, this.props.client) ||
       !this.equal(prevProps.project, this.props.project) ||
@@ -47,9 +46,7 @@ class Legend extends React.Component {
       union(totalEmployees, p.employees);
       union(totalSkills, p.skills);
     });
-    console.log('total Skills: ' + totalSkills)
-    console.log('total Employees: ' + totalEmployees.length)
-    console.log('total project:' + totalProjects )
+
     this.setState({
       totalClients: 1,
       totalProjects: totalProjects.length,
@@ -83,15 +80,9 @@ class Legend extends React.Component {
   }
 
   resetLegends({ clients, projects, employees }) {
-     console.log(clients)
-     console.log(projects)
-     console.log(employees)
     const brushedProjects = projects.filter(p => p.brushedDisplay);
-    console.log('brushedProjects' + brushedProjects.map(e=>e))
     const totalEmployees = employees.filter(e => e.brushedDisplay);
     const clientIds = brushedProjects.map(p => p.clientId);
-    console.log(clientIds)
-    console.log('totalEmployees:  ' + totalEmployees.length)
     const totalClients = clients.filter(c => clientIds.includes(c.id)).length;
     const totalSkills = [];
     brushedProjects.forEach(p => union(totalSkills, p.skills));

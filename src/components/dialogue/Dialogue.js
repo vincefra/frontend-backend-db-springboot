@@ -10,7 +10,7 @@ class Dialogue extends React.Component {
         return (
           <div>
             <p><span className='bold'>Location: </span><br></br>{data.location}</p>
-            {<p>{data.description}</p>}
+            <p>{data.description}</p>
           </div>
         );
       case 'EMPLOYEE':

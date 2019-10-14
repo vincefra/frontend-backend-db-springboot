@@ -197,10 +197,10 @@ class App extends React.Component {
       highlightedClient: client
     });
 
-    if (client.type === 'client') {
-      this.toggleDialogue();
-      this.modifyDialogueInfo(client, 'CLIENT');
-    }
+    // if (client.type === 'client') {
+    //   this.toggleDialogue();
+    //   this.modifyDialogueInfo(client, 'CLIENT');
+    // }
   };
 
   unHighlightElements = (annularSectors, projects, employees, skills) => {
@@ -330,14 +330,15 @@ class App extends React.Component {
         filteredProjects = setHighlight(false, filteredProjects);
         break;
       case 'PROJECTS':
-        clients = setHighlight(false, clients);
+        clients = setHighlight(true, clients);
         filteredEmployees = setHighlight(false, filteredEmployees);
+        filteredProjects = setHighlight(true, filteredProjects);
         break;
-      case 'SKILLS':
-        clients = setHighlight(false, clients);
-        filteredProjects = setHighlight(false, filteredProjects);
-        filteredEmployees = setHighlight(false, filteredEmployees);
-        filteredSkills = setHighlight(true, filteredSkills);
+        case 'SKILLS':
+          clients = setHighlight(false, clients);
+          filteredProjects = setHighlight(false, filteredProjects);
+          filteredEmployees = setHighlight(false, filteredEmployees);
+          filteredSkills = setHighlight(true, filteredSkills);
         break;
       default:
     }
