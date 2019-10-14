@@ -58,13 +58,19 @@ class VizClient extends React.Component {
             strokeWidth="6"
             opacity={d.data.hours > 0 ? d.data.selected ? 1 : 0 : 0}
           />
+          {d.data.type === 'category' ?
           <path
             d={d.path}
             fill={d.fill}
             onMouseOver={() => { this.props.mouseOnClient(d.id); }}
             onMouseOut={() => this.props.mouseOutClient()}
             onClick={() => this.props.clientClick(d.data)}
-          />
+          /> :   <path
+            d={d.path}
+            fill={d.fill}
+            onClick={() => this.props.clientClick(d.data)}
+          /> }
+
         </g>
       ))}
     </g>;

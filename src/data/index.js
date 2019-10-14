@@ -6,11 +6,10 @@ import moment from 'moment';
 import ColorThief from 'color-thief';
 import { union } from 'components/general';
 import {
-  fetchEmployee,
-  fetchCustomer,
-  fetchProject,
-  fetchProjectCount,
-} from './api';
+   fetchEmployee,
+   fetchProject,
+   fetchCustomer,
+  } from './api'
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
@@ -19,7 +18,10 @@ const maxAnnularSectors = 15; // total annular sectors = maxAnnular + 1 ('other'
 export async function load() {
   const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
   const categories = await groupCategories(clientList);
-
+  categories.clients = clientList.map((_, i) => i);
+  categories.projects = projectList.map((_, i) => i);
+  categories.employees = employeeList.map((_, i) => i);
+  categories.skills = technologyList.map((_, i) => i);
   return {
     categories,
     projectList,
@@ -115,6 +117,7 @@ async function getData() {
     return { startDate, endDate };
   }
 
+
   const {employees } = await fetchEmployee();
   if (!employees) return Error;
 
@@ -123,8 +126,6 @@ async function getData() {
   
   const {projects} = await fetchProject();
   if (!projects) return Error;
-
-  
 
   let clientList = [];
   let technologyList = [];
@@ -209,7 +210,7 @@ async function getData() {
      clientId = clientId === -1 ? clients.length : clientId[0];
      const employees = getEmployeeList(project.employees);
     const skills = getTechList(project.technologies, clientId, project.id);
-    // console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
+    console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
     updateClient(clientId, project.id, duration, employees, skills);
     updateEmployee(clientId, project.id, employees);
     projectList.push({
