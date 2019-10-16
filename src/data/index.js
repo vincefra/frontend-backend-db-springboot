@@ -1,7 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable indent */
-/* eslint-disable space-before-blocks */
-/* eslint-disable quotes */
 import moment from 'moment';
 import ColorThief from 'color-thief';
 import { union } from 'components/general';
@@ -9,14 +5,15 @@ import {
    fetchEmployee,
    fetchProject,
    fetchCustomer,
+   fetchProjectCount
   } from './api'
 
 var colorThief = new ColorThief();
 const dateFormat = 'YYYY-MM-DD';
-const maxAnnularSectors = 15; // total annular sectors = maxAnnular + 1 ('other')
+let maxAnnularSectors = 15; // total annular sectors = maxAnnular + 1 ('other')
 
 export async function load() {
-  const { projectList, employeeList, technologyList, clientList, unsortedClients } = await getData();
+  const { projectList, employeeList, technologyList, clientList, unsortedClients, projectsCount } = await getData();
   const categories = await groupCategories(clientList);
   categories.clients = clientList.map((_, i) => i);
   categories.projects = projectList.map((_, i) => i);
@@ -28,7 +25,8 @@ export async function load() {
     employeeList,
     technologyList,
     clientList,
-    unsortedClients
+    unsortedClients,
+    projectsCount
   };
 }
 
@@ -126,6 +124,10 @@ async function getData() {
   
   const {projects} = await fetchProject();
   if (!projects) return Error;
+  
+  const {projectsCount} = await fetchProjectCount();
+  if (!projectsCount) return Error;
+
 
   let clientList = [];
   let technologyList = [];
@@ -210,7 +212,7 @@ async function getData() {
      clientId = clientId === -1 ? clients.length : clientId[0];
      const employees = getEmployeeList(project.employees);
     const skills = getTechList(project.technologies, clientId, project.id);
-    console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
+    // console.log('clientId: ' + clientId + '\nprojectId: ' + project.id + '\nduration: ' + duration + '\nemployees: ' + employees + '\nskills: ' + skills)
     updateClient(clientId, project.id, duration, employees, skills);
     updateEmployee(clientId, project.id, employees);
     projectList.push({
@@ -235,25 +237,25 @@ async function getData() {
 
   const unsortedClients = [...clientList];
   clientList.sort((a, b) => b.hours - a.hours);
-  return { projectList, employeeList, technologyList, clientList, unsortedClients };
+  return { projectList, employeeList, technologyList, clientList, unsortedClients, projectsCount };
 }
 
 
-function getColor(src) {
-  return new Promise((resolve, reject) => {
-    let img = new Image();
-    img.onload = () => {
-      let dominantColor = colorThief.getColor(img);
-      dominantColor = dominantColor.map(x => {
-        x = parseInt(x).toString(16);
-        return (x.length === 1) ? '0' + x : x;
-      });
-      resolve(`#${dominantColor.join('')}`);
-    };
-    img.onerror = () => reject('');
-    img.src = `${process.env.PUBLIC_URL}${src}`;
-  });
-}
+// function getColor(src) {
+//   return new Promise((resolve, reject) => {
+//     let img = new Image();
+//     img.onload = () => {
+//       let dominantColor = colorThief.getColor(img);
+//       dominantColor = dominantColor.map(x => {
+//         x = parseInt(x).toString(16);
+//         return (x.length === 1) ? '0' + x : x;
+//       });
+//       resolve(`#${dominantColor.join('')}`);
+//     };
+//     img.onerror = () => reject('');
+//     img.src = `${process.env.PUBLIC_URL}${src}`;
+//   });
+// }
 
 function imageExists(src) {
   return new Promise((resolve, reject) => {

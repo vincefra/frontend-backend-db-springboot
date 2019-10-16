@@ -16,13 +16,15 @@ class Legend extends React.Component {
 
   componentDidMount() {
     this.resetLegends(this.props);
+    this.setState({totalProjects: this.props.projectsCount})
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.refreshLegends !== this.props.refreshLegends) this.resetLegends(this.props);
     if (!this.equal(prevProps.client, this.props.client) ||
       !this.equal(prevProps.project, this.props.project) ||
-      !this.equal(prevProps.employee, this.props.employee)) {
+      !this.equal(prevProps.employee, this.props.employee)
+      ) {
       if (this.props.client || this.props.project || this.props.employee)
         this.calculateData(this.props);
       else
@@ -75,7 +77,7 @@ class Legend extends React.Component {
       totalClients: 1,
       totalProjects: 1,
       totalEmployees: project.employees.length,
-      totalSkills: project.skills.length
+      totalSkills: project.skills.length,
     });
   }
 

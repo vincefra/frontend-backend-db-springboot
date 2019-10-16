@@ -45,6 +45,7 @@ class App extends React.Component {
       filteredProjects: [],
       filteredEmployees: [],
       filteredSkills: [],
+      projectsCount: [],
       size: [width, height],
       isLoading: true,
       isMobileView: false,
@@ -84,11 +85,11 @@ class App extends React.Component {
       employeeList,
       technologyList,
       clientList,
-      unsortedClients
+      unsortedClients,
+      projectsCount
     } = await load();
     const selectedRange = getDateRange(projectList);
     let totalMonths = getMonthsDifference(selectedRange[0], selectedRange[1]);
-
     this.setState({
       initialDates: selectedRange,
       datesBrushed: selectedRange,
@@ -97,6 +98,7 @@ class App extends React.Component {
       clients: clientList,
       unsortedClients,
       projects: projectList,
+      projectsCount: projectsCount,
       employees: employeeList,
       skills: technologyList,
       filteredClients: clientList,
@@ -444,6 +446,7 @@ class App extends React.Component {
       }
     />;
     const legend = <Legend
+      projectsCount = {this.state.projectsCount}
       clients={this.state.filteredClients}
       projects={this.state.filteredProjects}
       employees={this.state.filteredEmployees}
