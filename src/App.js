@@ -6,7 +6,8 @@ import VizTimeline from 'components/vizTimeline/VizTimeline';
 import Header from 'components/header/Header';
 import Loader from 'components/loader/Loader';
 import Title from 'components/title/Title';
-import { load, getLargestClients } from './data';
+import { load} from './data/index';
+import {getLargestClients} from './data/utilities/index';
 import { getObjects, union } from 'components/general';
 import {
   setHighlight,
@@ -63,7 +64,8 @@ class App extends React.Component {
       selectedObjects: [],
       selected: {
         employees: [],
-        clients: [],
+        clients:[],
+        category: [],
         projects: [],
         skills: [],
         annularSector: []
@@ -71,7 +73,7 @@ class App extends React.Component {
       highlightedClient: null,
       highlightedProject: null,
       highlightedEmployee: null,
-      refreshLegends: false
+      refreshLegends: false,
     };
   }
 
@@ -151,8 +153,8 @@ class App extends React.Component {
   showEmployee = id => {
     const employee = getElementById(id, this.state.filteredEmployees);
     const brushedProjectIds = this.state.filteredProjects
-      .filter(p => p.brushedDisplay && p.employees.includes(id))
-      .map(p => p.id);
+    .filter(p => p.brushedDisplay && p.employees.includes(id))
+    .map(p => p.id);
     const clientIds = this.state.annularSectors
       .filter(s => s.projects.filter(p => brushedProjectIds.includes(p)).length !== 0)
       .map(s => s.id);
@@ -190,7 +192,7 @@ class App extends React.Component {
     let highlightedSkills = client.type === 'client' ?
       setHighlightElement(true, skills, this.state.filteredSkills, true) :
       this.state.filteredSkills;
-
+      // const selected = addSelected(this.state.selected, object, allObjects);
     this.setState({
       annularSectors: highlightedSectors,
       filteredSkills: highlightedSkills,
@@ -199,10 +201,10 @@ class App extends React.Component {
       highlightedClient: client
     });
 
-    // if (client.type === 'client') {
-    //   this.toggleDialogue();
-    //   this.modifyDialogueInfo(client, 'CLIENT');
-    // }
+    if (client.type === 'client') {
+      this.toggleDialogue();
+      this.modifyDialogueInfo(client, 'CLIENT');
+    }
   };
 
   unHighlightElements = (annularSectors, projects, employees, skills) => {
@@ -378,6 +380,7 @@ class App extends React.Component {
   handleClick = (client, resetClickedClient = false) => {
     const employees = getObjects(client.employees, this.state.employees);
     const annularSectors = client.list.length === 0 ? [client] : getLargestClients(client.list);
+    console.log(annularSectors)
     const clients = client.list.length === 0 ? null :
       getObjects(client.clients, this.state.unsortedClients);
     const projects = getObjects(client.projects, this.state.projects).sort((a, b) => b.hours - a.hours);

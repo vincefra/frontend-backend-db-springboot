@@ -32,6 +32,7 @@ export function calculatePieClient(props, radius) {
     });
   //arc array with the position and information in the pie
   const arcs = pie(props.annularSectors);
+  console.log(props.annularSectors);
 
     //create an object SLICES in order to update the state
   //contains all the information one slice needs in order to be rendered
@@ -80,7 +81,6 @@ export function calculatePieClient(props, radius) {
         projects,
         radius
       );
-
       projectSlice = projectSlice.concat(projectSlices);
     }
 
@@ -93,7 +93,7 @@ export function calculatePieClient(props, radius) {
       img: d.data.logo,
       id: d.data.id,
       highlight: d.data.highlight,
-      data: d.data
+      data: d.data,
     };
   });
 

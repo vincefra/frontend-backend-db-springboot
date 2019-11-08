@@ -41,7 +41,6 @@ class Employee extends React.Component {
       fillOpacity='0'
       strokeWidth="3"
     /> : '';
-
     return (
       < g >
         {
