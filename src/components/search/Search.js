@@ -13,6 +13,7 @@ class Search extends React.Component {
   }
 
   handleChange = (e) => {
+    console.log(this.props)
     const results = search(e.target.value, this.props);
     this.setState({
       list: results,

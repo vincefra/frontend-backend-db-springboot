@@ -10,7 +10,7 @@ class Dialogue extends React.Component {
         return (
           <div>
             <p><span className='bold'>Location: </span><br></br>{data.location}</p>
-            {<p>{data.description}</p>}
+            <p>{data.description}</p>
           </div>
         );
       case 'EMPLOYEE':
@@ -18,6 +18,8 @@ class Dialogue extends React.Component {
           <div>
             <p><span className='bold'>Start date: </span><br></br>{data.dateInit}</p>
             <p><span className='bold'>End date: </span><br></br>{data.dateEnd}</p>
+            <p><span className='bold'>Location: </span><br></br>{data.location}</p>
+            <p><span className='bold'>Birthyear: </span><br></br>{data.birthYear}</p>
           </div>
         );
       case 'PROJECT':
@@ -51,6 +53,7 @@ class Dialogue extends React.Component {
       case 'CLIENT':
         return data.category;
       case 'EMPLOYEE':
+        return data.roll;
       case 'PROJECT':
         return data.type;
       default:

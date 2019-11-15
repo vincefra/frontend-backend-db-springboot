@@ -245,6 +245,7 @@ function getDataFromSelectedObjects(objs, stateData) {
   let employees = [];
   let skills = [];
   let projects = [];
+  let locations = [];
   objs.forEach(o => {
     switch (o.searchType) {
       case 'EMPLOYEE':
@@ -252,6 +253,7 @@ function getDataFromSelectedObjects(objs, stateData) {
         skills = [...skills, ...o.skills];
         projects = [...projects, ...o.projects];
         clients = [...clients, ...o.clients];
+        locations = [...locations, ...o.locations];
         break;
       case 'CLIENT':
         clients = [...clients, o.id];

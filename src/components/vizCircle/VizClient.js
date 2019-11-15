@@ -2,14 +2,15 @@ import React from 'react';
 import { calculatePieClient } from './actions';
 
 const vizHeight = 0.67;
-const imageSize = 60;
+const imageSize = 40;
 
 class VizClient extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       clientSlice: [], //array of svg path commands, repepresenting each client
-      projectSlice: [] //array of svg path commands, representing projects,
+      projectSlice: [], //array of svg path commands, representing projects,
+      currentShowingProject: null,
     };
   }
 
@@ -22,7 +23,27 @@ class VizClient extends React.Component {
 
   componentWillReceiveProps(props) {
     const { clientSlice, projectSlice } = calculatePieClient(props, this.state.radius);
+    console.log(clientSlice);
     this.setState({ clientSlice, projectSlice });
+  }
+
+  showProject({ data }) {
+    const {
+      currentShowingProject
+    } = this.state;
+    const {
+      mouseOnProject,
+      mouseOutProject,
+    } = this.props;
+
+    if (currentShowingProject !== data.id) {
+      mouseOutProject();
+      mouseOnProject(data.id);
+      this.setState({ currentShowingProject: data.id });
+    } else {
+      mouseOutProject();
+      this.setState({ currentShowingProject: null });
+    }
   }
 
   render() {
@@ -38,13 +59,19 @@ class VizClient extends React.Component {
             strokeWidth="6"
             opacity={d.data.hours > 0 ? d.data.selected ? 1 : 0 : 0}
           />
+          {d.data.type === 'category' ?
           <path
             d={d.path}
             fill={d.fill}
             onMouseOver={() => { this.props.mouseOnClient(d.id); }}
             onMouseOut={() => this.props.mouseOutClient()}
             onClick={() => this.props.clientClick(d.data)}
-          />
+          /> :   <path
+            d={d.path}
+            fill={d.fill}
+            onClick={() => this.props.clientClick(d.data)}
+          /> }
+
         </g>
       ))}
     </g>;
@@ -61,8 +88,9 @@ class VizClient extends React.Component {
           <path
             d={d.path}
             fill='#FFFFFF'
-            onMouseOver={() => this.props.mouseOnProject(d.data.id)} //TO DO:organize DATA array 
-            onMouseOut={() => this.props.mouseOutProject()}
+            // onMouseOver={() => this.props.mouseOnProject(d.data.id)} //TO DO:organize DATA array 
+            // onMouseOut={() => this.props.mouseOutProject()}
+            onClick={() => this.showProject(d)}
           />
         </g>
       ))}
@@ -75,8 +103,8 @@ class VizClient extends React.Component {
           opacity={d.data.textHighlight ? '1' : '0'}
           textAnchor={d.textAnchor}
           fill={d.fill}
-          onMouseOver={() => { this.props.mouseOnClient(d.id); }}
-          onMouseOut={() => this.props.mouseOutClient()}
+          // onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+          // onMouseOut={() => this.props.mouseOutClient()}
           onClick={() => this.props.clientClick(d.data)}
           className='label'
         >
@@ -91,8 +119,8 @@ class VizClient extends React.Component {
             y={d.logo.centroid[1]}
             xlinkHref={d.img}
             opacity={d.highlight ? '1' : '0.2'}
-            onMouseOver={() => { this.props.mouseOnClient(d.id); }}
-            onMouseOut={() => this.props.mouseOutClient()}
+            // onMouseOver={() => { this.props.mouseOnClient(d.id); }}
+            // onMouseOut={() => this.props.mouseOutClient()}
             onClick={() => this.props.clientClick(d.data)}
           />
           {text}

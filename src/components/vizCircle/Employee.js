@@ -33,7 +33,6 @@ class Employee extends React.Component {
         cx={this.props.pX}
         fill={fillMask}
       />;
-
     const selected = this.props.selected ? <circle
       cx={this.props.pX}
       cy={this.props.pY}
@@ -42,7 +41,6 @@ class Employee extends React.Component {
       fillOpacity='0'
       strokeWidth="3"
     /> : '';
-
     return (
       < g >
         {

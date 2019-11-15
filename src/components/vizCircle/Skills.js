@@ -29,6 +29,7 @@ class Skills extends React.Component {
     const width = this.props.size[0];
     const height = this.props.size[1];
     const radius = (height - height * distance) / 2;
+   
     return (
       <g transform={`translate(${width / 2}, ${height / 2})`}>
         {this.state.nodes.children !== undefined ? (
