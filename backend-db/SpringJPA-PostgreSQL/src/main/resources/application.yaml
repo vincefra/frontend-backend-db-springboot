@@ -1,0 +1,63 @@
+spring:
+    profiles:
+        active: develop
+
+    database-platform:
+        org.hibernate.dialect.PostgreSQLDialect
+    driverClassName:
+        org.postgresql.Driver
+    jpa:
+        generate-ddl: true
+        properties:
+            hibernate:
+                jdbc:
+                    lob:
+                        non_contextual_creation=true:
+
+server:
+    port: 7878
+    servlet:
+      context-path: /api/
+
+---
+
+spring:
+    profiles: localdocker
+
+    datasource.url:
+        jdbc:postgresql://postgres:5432/postgres?currentSchema=public
+    datasource:
+        username: postgres
+        password: password
+
+---
+
+spring:
+    profiles: local-dockerdb
+
+    datasource.url: 
+        jdbc:postgresql://localhost:5438/postgres?currentSchema=public
+    datasource:
+        username: postgres
+        password: password
+
+---
+
+spring:
+    profiles: develop 
+
+    datasource.url: 
+        jdbc:postgresql://localhost:5432/findout-migrate-new3
+    datasource:
+        username: postgres
+        password: 123456
+
+    flyway: 
+        enabled: true
+
+
+
+        
+
+        
+

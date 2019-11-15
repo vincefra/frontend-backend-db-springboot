@@ -25,3 +25,4 @@ yarn-error.log*
 # config file
 src/config.json
 /nbproject/private/
+/backend-db/SpringJPA-PostgreSQL/target/
