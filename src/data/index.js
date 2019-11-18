@@ -32,10 +32,8 @@ export async function load() {
 async function getData() {
    function getTechList(technologies, clientId, projectId, employeeId) {   
     if (technologies.length === 0) return [];
-    console.log(technologies)
     return technologies.map(technology => {
       let techObj = technologyList.find(t => t.name.toLowerCase() === technology.toLowerCase()); 
-      console.log(techObj)
       if (techObj) {
         if (clientId && !techObj.clients.includes(clientId))
           techObj.clients.push(clientId);
@@ -157,14 +155,12 @@ async function getData() {
       projects: [],
       clients: []
     });
-    console.log(employeeList)
   }
 
   for (const client of clients) {
     let imageSrc = `/img/logos/${client.name.trim().replace(/\s/g, '_')}.png`;
     try {
       var color = await getColor(imageSrc);
-      console.log(color)
     } catch (error) {
       color = '';
       imageSrc = '/img/logos/company_placeholder.png';

@@ -46,8 +46,9 @@ class Employee extends React.Component {
         {
           circle ? (
             <g
-              onMouseOver={() => this.props.mouseOnEmployee(this.props.id)}
-              onMouseOut={() => this.props.mouseOutEmployee()}
+              onClick={() => this.props.mouseOnEmployee(this.props.id)}
+              //onMouseOver={() => this.props.mouseOnEmployee(this.props.id)}
+              //onMouseOut={() => this.props.mouseOutEmployee()}
               opacity={this.props.opacity}
             >
 
