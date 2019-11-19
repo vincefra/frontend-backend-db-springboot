@@ -10,7 +10,11 @@ public class SimpleCORSFilter implements WebMvcConfigurer
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
+            .allowedOrigins("*")
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-            .exposedHeaders("Authorization");
+            .allowedHeaders("Content-Type")
+            .exposedHeaders("header-1", "header-2")
+            .allowCredentials(false)
+            .maxAge(6000);
     }
 }
