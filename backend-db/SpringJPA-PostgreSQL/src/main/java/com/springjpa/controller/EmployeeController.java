@@ -13,7 +13,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", maxAge = 3000)
 @RequestMapping("/employee")
 public class EmployeeController {
 
