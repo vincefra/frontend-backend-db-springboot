@@ -9,7 +9,8 @@ public class SimpleCORSFilter implements WebMvcConfigurer
 {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("GET", "POST");
+        registry.addMapping("/api/**")
+            .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+            .exposedHeaders("Authorization");
     }
 }
