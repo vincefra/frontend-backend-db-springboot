@@ -13,8 +13,8 @@ import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
-@RequestMapping("/employee")
 @CrossOrigin(origins = "*")
+@RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
