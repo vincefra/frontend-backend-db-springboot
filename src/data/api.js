@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiRoute = 'http://localhost:7878/api/';
+const apiRoute = 'http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com:7878/api/';
 export async function fetchEmployee() {
 
   const requestURL = `${apiRoute}employee/all/zero`;
