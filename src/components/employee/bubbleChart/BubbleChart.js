@@ -87,7 +87,7 @@ class BubbleChart extends Component {
           R: data.color.R,
           G: data.color.G,
           B: data.color.B,
-          radius:  countCat > 70 ? 30 : countCat > 50 ? 40 : 50, //original radius
+          radius:  countCat > 70 ? 30 : countCat > 30 ? 40 : 50, //original radius
           id: data.category + "." + data.name.replace(/\s/g, "-"),
           cat: data.category,
           name: data.name,
@@ -150,7 +150,7 @@ class BubbleChart extends Component {
       .enter()
       .append("tspan")
       .style("fill", "#fff")
-      .style("font-size", countCat > 70 ? "0.8em" : countCat > 50 ? "1em" : "1.2em")
+      .style("font-size", countCat > 70 ? "0.8em" : countCat > 30 ? "1em" : "1.2em")
       .attr("x", 0)
       .attr("y", (d, i, nodes) => 13 + (i - nodes.length / 2 - 0.5) * 12)
       .text(name => name);

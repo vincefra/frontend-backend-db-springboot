@@ -39,21 +39,21 @@ class BarChart extends Component {
     let cummulative = 0;
 
     const data = Object.keys(this.state.data).map((companyName, i) => {
-   
       let returnValue = {
         values: this.state.data[companyName],
         companyName: companyName,
         cummulative: cummulative,
       };
       cummulative += this.state.data[companyName].length;
-
+      
       this.state.data[companyName].map(value => {
         returnValue['color'] = value.color;
         rangeBands.push(i);
       });
       return returnValue;
     });
-
+    
+    console.log(this.state.data)
     const margin = { top: 20, right: 20, bottom: 60, left: 190 },
       width = this.state.width - margin.left - margin.right,
       height = this.state.height - margin.top - margin.bottom;
@@ -67,14 +67,16 @@ class BarChart extends Component {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // The scale spacing the groups:
-    const y_category = d3.scaleLinear().rangeRound([0, height]);
+    const y_category = d3.scaleLinear().rangeRound([0,
+        cummulative > 8 ? height  : cummulative < 4 ? 150 : 400
+    ]);
 
     const y_defect = d3
     .scaleBand()
     .rangeRound([0, height], 0.1)
     .domain(rangeBands);
 
-    const y_category_domain = y_defect.bandwidth() * rangeBands.length;
+    const y_category_domain = y_defect.bandwidth() * rangeBands.length ;
   
     y_category.domain([0, y_category_domain]);
 
