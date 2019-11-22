@@ -26,6 +26,7 @@ class VizEmployees extends React.Component {
   showEmployee({ data }){
     const { currentShowingEmployee } = this.state;
     const { mouseOnEmployee, mouseOutEmployee } = this.props;
+
   
     if(currentShowingEmployee !== data.id){
       mouseOutEmployee();
