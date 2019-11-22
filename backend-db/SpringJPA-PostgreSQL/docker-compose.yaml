@@ -29,7 +29,7 @@ services:
     build: .
     ports:
       - "7878:7878"
-      - "8005:8005"
+      - "80:8005"
     depends_on:
       - postgres
     links:
