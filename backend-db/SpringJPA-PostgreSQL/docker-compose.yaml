@@ -28,8 +28,8 @@ services:
   api-service:
     build: .
     ports:
-      - "80:7878"
-      - "80:8005"
+      - "7878:7878"
+      - "8005:8005"
     depends_on:
       - postgres
     links:
