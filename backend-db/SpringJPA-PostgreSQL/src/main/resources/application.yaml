@@ -17,7 +17,7 @@ spring:
 server:
     port: 7878
     servlet:
-      context-path: /api/
+      context-path: /
 
 ---
 
