@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-  const api_URL = `http://localhost:7878/api`;
+  const api_URL = ``;
   export  async function fetchData(id){
 
     const employeeApiRequest = `${api_URL}/employee?id=${id}`;
