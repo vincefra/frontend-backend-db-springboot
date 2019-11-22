@@ -42,7 +42,7 @@ export async function getData(id) {
       endDate:
         endDateList.length !== startDateList.length ? "Ongoing" : endDate,
       description: project.description,
-      img: `${process.env.REACT_APP_PUBLIC_URL}/${imageSrc}`,
+      img: `${process.env.PUBLIC_URL}/${imageSrc}`,
       color: color,
       projectPeriod: duration
     });

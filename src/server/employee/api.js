@@ -1,9 +1,9 @@
 import axios from 'axios'
 
-  const api_URL = `http://localhost:7878/`;
+  const api_URL = `http://localhost:7878/api`;
   export  async function fetchData(id){
 
-    const employeeApiRequest = `${api_URL}/api/employee?id=${id}`;
+    const employeeApiRequest = `${api_URL}/employee?id=${id}`;
 
         const options = {
             url: employeeApiRequest,

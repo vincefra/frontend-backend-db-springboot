@@ -4,7 +4,7 @@ import { profileImageGetter } from '../../../server/employee/utilities/index';
 
 export default class Profile extends Component {
   addDefaultSrc(ev){
-    ev.target.src = `${process.env.REACT_APP_PUBLIC_URL}/img/employees/employee_placeholder.jpg`;
+    ev.target.src = `${process.env.PUBLIC_URL}/img/employees/employee_placeholder.jpg`;
   }
 
   render() {

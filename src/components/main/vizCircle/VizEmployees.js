@@ -8,6 +8,7 @@ class VizEmployees extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentShowingEmployee: null
     };
   }
 
@@ -20,6 +21,21 @@ class VizEmployees extends React.Component {
     if (!this.sameEmployees(prevProps.employees, this.props.employees)) {
       this.setLayout(this.props.employees);
     }
+  }
+
+  showEmployee({ data }){
+    const { currentShowingEmployee } = this.state;
+    const { mouseOnEmployee, mouseOutEmployee } = this.props;
+  
+    if(currentShowingEmployee !== data.id){
+      mouseOutEmployee();
+      mouseOnEmployee(data.id);
+      this.setState({ currentShowingEmployee: data.id})
+    } else { 
+      mouseOutEmployee();
+      this.setState({ currentShowingEmployee: null });
+    }
+    
   }
 
   sameEmployees(prevEmpl, nextEmpl) {
@@ -73,9 +89,10 @@ class VizEmployees extends React.Component {
               selected={d.data.selected}
               pX={d.x}
               pY={d.y}
-              id={d.data.id} 
-              mouseOnEmployee={() => this.handleMouseOn(d)}
-              mouseOutEmployee={this.props.mouseOutEmployee}
+              id={d.data.id}
+              mouseOnEmployee={() => this.showEmployee(d)} 
+              //mouseOnEmployee={() => this.handleMouseOn(d)}
+              //mouseOutEmployee={this.props.mouseOutEmployee}
               opacity={d.data.highlight ? d.data.brushedDisplay ? '1' : '0.1' : '0.1'}
             />
           );

@@ -5,23 +5,23 @@ const profileImageGetter = ({ firstName, lastName }) => {
   const imagePath = `img/employees/${[firstName, lastName]
     .join("_")
     .replace(/\s/g, "_")}.jpg`;
-  return `${process.env.REACT_APP_PUBLIC_URL}/${imagePath}`;
+  return `${process.env.PUBLIC_URL}/${imagePath}`;
 };
 
 /* To get logo image */
 const logoImageGetter = ({ client }) => {
   const imagePath = `img/logos/${client.trim().replace(/\s/g, "_")}.png`;
 
-  return `${process.env.REACT_APP_PUBLIC_URL}/${imagePath}`;
+  return `${process.env.PUBLIC_URL}/${imagePath}`;
 };
 
 /* To get category image */
 const categoryImageGetter = category => {
-  const imagePath = `/img/categories/${category
+  const imagePath = `img/categories/${category
     .trim()
     .replace(/\s/g, "_")}.png`;
 
-  return `${process.env.REACT_APP_PUBLIC_URL}/${imagePath}`;
+  return `${process.env.PUBLIC_URL}/${imagePath}`;
 };
 
 /* To get skills logo image */

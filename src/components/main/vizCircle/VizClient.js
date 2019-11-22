@@ -23,7 +23,6 @@ class VizClient extends React.Component {
 
   componentWillReceiveProps(props) {
     const { clientSlice, projectSlice } = calculatePieClient(props, this.state.radius);
-    console.log(clientSlice);
     this.setState({ clientSlice, projectSlice });
   }
 
