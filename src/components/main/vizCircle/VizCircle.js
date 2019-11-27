@@ -24,6 +24,7 @@ class VizCircle extends React.Component {
       size={this.props.size}
       mouseOnEmployee={this.props.mouseOnEmployee}
       mouseOutEmployee={this.props.unHighlightElements}
+      toggleDialogue={this.props.toggleDialogue}
     /> : '';
     const content =
       <svg className='circle-visualization' width={this.props.size[0]} height={this.props.size[1]}>

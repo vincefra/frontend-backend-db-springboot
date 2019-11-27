@@ -13,6 +13,7 @@ import { getData } from "../server/employee/index";
 class Employee extends React.Component {
   constructor(props) {
     super(props);
+    this._isMounted = false;
     this.state = {
       isLoading: true,
       profile: {},
@@ -23,6 +24,7 @@ class Employee extends React.Component {
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     const id = this.props.match.params.id;
     window.addEventListener("resize", this.resize.bind(this));
     this.resize();
@@ -35,6 +37,10 @@ class Employee extends React.Component {
       projectsBarChartData : projectsBarChart,
       technologies : technology
     });
+  }
+
+  componentWillUnmount(){
+    this._isMounted = false;
   }
 
   resize() {
