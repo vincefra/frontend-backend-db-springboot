@@ -48,8 +48,10 @@ Congratulations, you have just updated the server!
 
 ## Accessing the application
 
-The backend server is available at, 
+Localhost, 
 http://localhost:7878/
+
+Amazon Server,
 http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com
 
 Sample call: /ping
