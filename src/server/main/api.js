@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-// const apiRoute = 'http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com/';
-const apiRoute = 'http://localhost:7878/api/';
+// const apiRoute = 'http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com';
+const apiRoute = 'http://localhost';
 export async function fetchEmployee() {
 
-  const requestURL = `${apiRoute}employee/all/zero`;
+  const requestURL = `${apiRoute}/employee/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -25,7 +25,7 @@ export async function fetchEmployee() {
 }
 export async function fetchCustomer() {
 
-  const requestURL =`${apiRoute}customer/all/zero`;
+  const requestURL =`${apiRoute}/customer/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -48,7 +48,7 @@ export async function fetchCustomer() {
 
 export async function fetchProject() {
 
-  const requestURL =`${apiRoute}project/all/zero`;
+  const requestURL =`${apiRoute}/project/all/zero`;
   const options = {
     url: requestURL,
     responseType: "json",
@@ -70,7 +70,7 @@ export async function fetchProject() {
 
 export async function fetchProjectCount() {
 
-  const requestURL =`${apiRoute}project/total`;
+  const requestURL =`${apiRoute}/project/total`;
   const options = {
     url: requestURL,
     responseType: "json",
