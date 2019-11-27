@@ -65,7 +65,7 @@ class Employee extends React.Component {
                     <image
                       height={this.props.radius * 2}
                       width={this.props.radius * 2}
-                      xlinkHref={this.props.img}
+                      href={this.props.img}
                     />
                   </pattern>
                 </defs>

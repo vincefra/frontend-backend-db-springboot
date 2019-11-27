@@ -159,7 +159,7 @@ class BubbleChart extends Component {
       .filter(d => String(d.icon).includes("img/"))
       .append("image")
       .classed("node-icon hidden", true)
-      .attr("xlink:href", d => d.icon)
+      .attr("href", d => d.icon)
       .attr("x", d => -d.radius * 0.6)
       .attr("y", d => -d.radius * 0.1)
       .attr("height", d => d.radius * 2 * 0.6)

@@ -116,7 +116,7 @@ class VizClient extends React.Component {
             height={imageSize}
             x={d.logo.centroid[0]}
             y={d.logo.centroid[1]}
-            xlinkHref={d.img}
+            href={d.img}
             opacity={d.highlight ? '1' : '0.2'}
             // onMouseOver={() => { this.props.mouseOnClient(d.id); }}
             // onMouseOut={() => this.props.mouseOutClient()}

@@ -133,7 +133,7 @@ async function getData() {
   for (let employee of employees) {
     let img;
     try {
-      img = `img/employees/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`;
+      img = `/img/employees/${[employee.firstName, employee.lastName].join('_').replace(/\s/g, '_')}.jpg`;
       await imageExists(img);
     } catch {
       img = null;

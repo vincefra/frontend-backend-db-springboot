@@ -27,6 +27,7 @@ class Dialogue extends React.Component {
   render() {
     const { dialogueIsShown, dialogueInfo } = this.props;
     const data = dialogueInfo;
+    console.log(data)
     const text = data ? this.setText(data) : <div />;
 
     return (

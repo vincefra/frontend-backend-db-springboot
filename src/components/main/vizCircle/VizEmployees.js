@@ -25,7 +25,8 @@ class VizEmployees extends React.Component {
 
   showEmployee({ data }){
     const { currentShowingEmployee } = this.state;
-    const { mouseOnEmployee, mouseOutEmployee } = this.props;
+    const { mouseOnEmployee, mouseOutEmployee, toggleDialogue } = this.props;
+
   
     if(currentShowingEmployee !== data.id){
       mouseOutEmployee();
@@ -33,6 +34,7 @@ class VizEmployees extends React.Component {
       this.setState({ currentShowingEmployee: data.id})
     } else { 
       mouseOutEmployee();
+      toggleDialogue(false)
       this.setState({ currentShowingEmployee: null });
     }
     

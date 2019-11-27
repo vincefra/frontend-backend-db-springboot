@@ -35,7 +35,8 @@ const height = window.innerHeight;
 class Main extends React.Component {
   constructor(props) {
     super(props);
-
+    
+    this._isMounted = false;
     this.state = {
       clients: [],
       unsortedClients: [],
@@ -75,10 +76,12 @@ class Main extends React.Component {
       highlightedProject: null,
       highlightedEmployee: null,
       refreshLegends: false,
+      employeeClicked: false
     };
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     window.addEventListener('resize', this.resize.bind(this));
     this.resize();
     this.setState({ isLoading: true });
@@ -114,6 +117,10 @@ class Main extends React.Component {
       annularSectors: categories.list,
       currentView: categories.name
     });
+  }
+
+  componentWillUnmount(){
+    this._isMounted = false;
   }
 
 
@@ -152,6 +159,7 @@ class Main extends React.Component {
   };
 
   showEmployee = id => {
+
     const employee = getElementById(id, this.state.filteredEmployees);
     const brushedProjectIds = this.state.filteredProjects
     .filter(p => p.brushedDisplay && p.employees.includes(id))
@@ -163,6 +171,7 @@ class Main extends React.Component {
     const highlightedSectors = setHighlightElement(false, clientIds, this.state.annularSectors, false);
     const highlightedProjects = setHighlightElement(false, brushedProjectIds, this.state.filteredProjects, false);
     const highlightedSkills = setHighlightElement(true, employee.skills, this.state.filteredSkills, true);
+
 
     this.setState({
       annularSectors: highlightedSectors,
@@ -181,10 +190,12 @@ class Main extends React.Component {
     highlightedSectors = client.type !== 'client' ?
       setHighlightText(true, [id], highlightedSectors, true) : highlightedSectors;
     let brushedProjects = [];
-    if (client.type === 'category') brushedProjects = getObjects(client.projects, this.state.projects);
+    if (client.type === 'category') {
+      brushedProjects = getObjects(client.projects, this.state.projects)
+    }
     else if (client.type === 'more') 
       brushedProjects = getObjects(client.projects, this.state.projects).filter(p => p.brushedDisplay);
-    else brushedProjects = this.state.filteredProjects.filter(p => p.brushedDisplay && p.clientId === id);
+    else  brushedProjects = this.state.filteredProjects.filter(p => p.brushedDisplay && p.clientId === id);
     const employeeIds = client.employees.filter(eId => brushedProjects.filter(p => p.employees.includes(eId)).length !== 0); 
     const highlightedEmployees = setHighlightElement(false, employeeIds, this.state.filteredEmployees, false);
     const highlightedProjects = setHighlightElement(false, client.projects, this.state.filteredProjects, false);
@@ -213,7 +224,8 @@ class Main extends React.Component {
     projects = projects || this.state.filteredProjects;
     employees = employees || this.state.filteredEmployees;
     skills = skills || this.state.filteredSkills;
-    if (this.state.dialogueIsShown) this.toggleDialogue(false);
+    if (annularSectors.length === 17 && this.state.dialogueIsShown) this.toggleDialogue();
+    else this.toggleDialogue(false);
     let unhighligtedSectors = setHighlight(true, annularSectors);
     unhighligtedSectors = unHighlightText(unhighligtedSectors);
     const unhighlightedProjects = setHighlight(true, projects);
@@ -493,6 +505,7 @@ class Main extends React.Component {
       mouseOnProject={this.showProject}
       unHighlightElements={this.unHighlightElements}
       clientClick={this.handleClick}
+      toggleDialogue={this.toggleDialogue}
     />;
     return (
       <React.Fragment>
