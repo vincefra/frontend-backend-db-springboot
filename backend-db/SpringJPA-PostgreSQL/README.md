@@ -31,16 +31,17 @@ If you setup a new server, it is important to regenerate a new key for your gitl
 
 Go to following folder,
  `findout/findout-infographics`
- ##
+
+Pull latest code from git,
  `git pull`
  
 After pulling new update, go to
  `backend-db/SpringJPA-PostgreSQL`
  
-Run following command
+Run following command,
  `mvn clean install`
 
-And then run this command to update container
+And then run this command to update container,
  `docker-compose up --build -d` 
  
 Congratulations, you have just updated the server!
