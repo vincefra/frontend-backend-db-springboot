@@ -39,7 +39,8 @@ After pulling new update, go to
  
 Run following command
  `mvn clean install`
- ##
+
+And then run this command to update container
  `docker-compose up --build -d` 
  
 Congratulations, you have just updated the server!
