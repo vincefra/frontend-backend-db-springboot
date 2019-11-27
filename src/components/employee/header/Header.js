@@ -17,7 +17,7 @@ class Header extends Component {
         <Navbar className="header" variant="header" expand="lg">
           <div className="h-row">
             <img
-              src="../img/logos/findOut.png"
+              src="../img/logos/FindOut.png"
               alt="FindOut"
               className="brandLogo"
             />

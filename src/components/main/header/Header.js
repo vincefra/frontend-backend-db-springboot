@@ -15,7 +15,7 @@ class Header extends Component {
       <Navbar className='header' variant='header' expand='lg'>
         <div className='h-row'>
           <div>
-            <img src='img/logos/findOut.png' alt='FindOut' className='brandLogo'/>
+            <img src='img/logos/FindOut.png' alt='FindOut' className='brandLogo'/>
             
             <Form inline className='searchForm' onSubmit={e => e.preventDefault()}>
               <Search
