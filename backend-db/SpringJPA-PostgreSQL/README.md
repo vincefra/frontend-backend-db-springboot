@@ -11,6 +11,10 @@ If running Docker from Ubuntu on Windows, make sure to update base mount point i
 
 ## Running the application LOCAL
 
+In application.yaml, you find the profiles. When developing on your computer, profile will be set to "develop". It is important you link to correct database, setup a database in PostgresSQL and flyway will take care of the rest. 
+
+Current link is jdbc:postgresql://localhost:5432/findout-migrate-new3, change this one to your own database. You can also use docker container for database, its already been configured. You can just copy the link from "localdocker" profile. 
+
 ### Build
 `./mvn clean install`
 ### Run the application along with the DB 
@@ -78,3 +82,6 @@ Here are the scriptfiles for database.
 
 ## Problem (?)
 Try using `sudo` when using command.
+
+Try this commando to take down containers,
+`docker-compose down`
