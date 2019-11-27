@@ -31,6 +31,7 @@ If you setup a new server, it is important to regenerate a new key for your gitl
 
 Go to following folder,
  `findout/findout-infographics`
+ ##
  `git pull`
  
 After pulling new update, go to
@@ -38,6 +39,7 @@ After pulling new update, go to
  
 Run following command
  `mvn clean install`
+ ##
  `docker-compose up --build -d` 
  
 Congratulations, you have just updated the server!
