@@ -9,7 +9,7 @@
 
 If running Docker from Ubuntu on Windows, make sure to update base mount point in wsl.conf (https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly#ensure-volume-mounts-work)  
 
-## Running the application
+## Running the application LOCAL
 
 ### Build
 `./mvn clean install`
@@ -18,19 +18,39 @@ If running Docker from Ubuntu on Windows, make sure to update base mount point i
 ### Run integration tests using pre-running docker DB
 `mvn integrationTest`  [TBD]
 
-## Problem (?)
-Try running this command:
-
 ### Run this command to remove docker-builds
 `docker-compose down`
 
+## Updating the application on AWS
+
+### Connect to TEST-AWS (Talk to Gustav to get PEM and correct ssh-link)
+`ssh -i "vincent.pem" ubuntu@ec2-3-123-154-0.eu-central-1.compute.amazonaws.com`
+
+### How to pull from repository (gitlab)
+If you setup a new server, it is important to regenerate a new key for your gitlab account.
+
+Go to following folder,
+ `findout/findout-infographics`
+ `git pull`
+ 
+After pulling new update, go to
+ `backend-db/SpringJPA-PostgreSQL`
+ 
+Run following command
+ `mvn clean install`
+ `docker-compose up --build -d` 
+ 
+Congratulations, you have just updated the server!
+
 ## Accessing the application
 
-The backend server is available at http://localhost:7878/api/
+The backend server is available at, 
+http://localhost:7878/
+http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com
 
-Sample call: http://localhost:7878/api/ping
+Sample call: /ping
 
-Swagger UI: http://localhost:7878/api/swagger-ui.html
+Swagger UI: /swagger-ui.html
 
 DB console is available at http://localhost:9081/ with default settings:
 - System: PostgreSQL
@@ -40,12 +60,15 @@ DB console is available at http://localhost:9081/ with default settings:
 - Database: postgres
 
 ## Settings for the application
-- src/main/resources
+- sources/backend-db/SpringJPA-PostgreSQL/src/main/resources
 
 --/application.yaml
 
 Here are the settings for database and flyway. If set to true, flyway till run all the scripts and make the databas ready with data.
 
---/migration
+--/db/migration
 
 Here are the scriptfiles for database.
+
+## Problem (?)
+Try using `sudo` when using command.
