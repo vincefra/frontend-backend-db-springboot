@@ -1,4 +1,93 @@
-# FindOut Infographics
+# API service for Find-Out Infographics visualization  
+
+
+## Prerequisites
+- [Java](https://java.com/en/download/)
+- [Maven](https://maven.apache.org/)
+- [Docker](https://www.docker.com/)
+- [Docker Compose Tools](https://docs.docker.com/compose/install/)
+
+If running Docker from Ubuntu on Windows, make sure to update base mount point in wsl.conf (https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly#ensure-volume-mounts-work)  
+
+## Running the application LOCAL
+
+In application.yaml, you find the profiles. When developing on your computer, profile will be set to "develop". It is important you link to correct database, setup a database in PostgresSQL and flyway will take care of the rest. 
+
+Current link is jdbc:postgresql://localhost:5432/findout-migrate-new3, change this one to your own database. You can also use docker container for database, its already been configured. You can just copy the link from "localdocker" profile. 
+
+### Build
+`./mvn clean install`
+### Run the application along with the DB 
+`docker-compose up --build`
+### Run integration tests using pre-running docker DB
+`mvn integrationTest`  [TBD]
+
+### Run this command to remove docker-builds
+`docker-compose down`
+
+## Updating the application on AWS
+
+### Connect to TEST-AWS (Talk to Gustav to get PEM and correct ssh-link)
+`ssh -i "vincent.pem" ubuntu@ec2-3-123-154-0.eu-central-1.compute.amazonaws.com`
+
+### How to pull from repository (gitlab)
+If you setup a new server, it is important to regenerate a new key for your gitlab account.
+
+Go to following folder,
+ `findout/findout-infographics`
+
+Pull latest code from git,
+ `git pull`
+ 
+After pulling new update, go to
+ `backend-db/SpringJPA-PostgreSQL`
+ 
+Run following command,
+ `mvn clean install`
+
+And then run this command to update container,
+ `docker-compose up --build -d` 
+ 
+Congratulations, you have just updated the server!
+
+## Accessing the application
+
+Localhost, 
+http://localhost:7878/
+
+Amazon Server,
+http://ec2-3-123-154-0.eu-central-1.compute.amazonaws.com
+
+Sample call: /ping
+
+Swagger UI: /swagger-ui.html
+
+DB console is available at http://localhost:9081/ with default settings:
+- System: PostgreSQL
+- server: postgres:5432
+- username: postgres
+- password: password
+- Database: postgres
+
+## Settings for the application
+- sources/backend-db/SpringJPA-PostgreSQL/src/main/resources
+
+--/application.yaml
+
+Here are the settings for database and flyway. If set to true, flyway till run all the scripts and make the databas ready with data.
+
+--/db/migration
+
+Here are the scriptfiles for database.
+
+## Problem (?)
+Try using `sudo` when using command.
+
+Try this commando to take down containers,
+`docker-compose down`
+
+
+# FindOut Infographics (Old readme before implementation of Backend)
 
 A visualization over FindOut's projects, employees and clients.
 
